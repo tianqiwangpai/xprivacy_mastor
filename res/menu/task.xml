@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <item
+        android:id="@+id/task_menu_create"
+        android:title="创建任务"/>
+    <item
+        android:id="@+id/task_import_file"
+        android:title="导入数据"/>
+    <item
+        android:id="@+id/task_permission_manager"
+        android:title="权限设置"/>
+    <!-- <item
+        android:id="@+id/task_menu_model"
+        android:title="机型文件"/>
+    <item
+        android:id="@+id/xp_read_file_count"
+        android:title="计量"/> -->
+
+</menu>

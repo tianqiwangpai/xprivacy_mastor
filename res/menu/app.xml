@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <!--
+   <item
+        android:id="@+id/menu_usage"
+        android:title="@string/menu_usage"/>
+    <item
+        android:id="@+id/menu_applications"
+        android:title="@string/menu_applications"/>
+    <item
+        android:id="@+id/menu_whitelists"
+        android:title="@string/menu_whitelists"/>
+    <item
+        android:id="@+id/menu_apply"
+        android:title="@string/menu_apply"/>
+    <item
+        android:id="@+id/menu_clear"
+        android:title="@string/menu_clear"/>
+   <item
+        android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"/>
+    -->
+    <!--
+        <item
+        android:id="@+id/menu_dump"
+        android:title="Dump"
+        tools:ignore="HardcodedText"/>
+    -->
+
+</menu>

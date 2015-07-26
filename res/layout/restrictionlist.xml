@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <!-- Title -->
+    <!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/title_restrict"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textIsSelectable="false" />
+
+        <Switch
+            android:id="@+id/swEnable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:id="@+id/imgCbOnDemand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dip"
+            android:contentDescription="@string/title_restrict" />
+    </LinearLayout>
+    -->
+    <!-- Thin divider -->
+    <!--
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@android:color/darker_gray" />
+    -->
+    <!-- What it is all about -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ExpandableListView
+            android:id="@+id/elvRestriction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_list"
+            android:choiceMode="none"
+            android:paddingRight="6dip"
+            android:scrollbarStyle="insideInset" />
+    </RelativeLayout>
+
+</LinearLayout>
