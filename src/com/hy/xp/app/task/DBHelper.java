@@ -26,20 +26,22 @@ public class DBHelper extends SQLiteOpenHelper
 				.append(TaskAttribute.TASKNEXTDAYVISITINTERVALCOUNT).append(" text, ")
 				.append(TaskAttribute.TASKNEXTDAYVISITDECLINEFLAG).append(" int, ")
 				.append(TaskAttribute.TASKNEXTDAYVISITDECILNERATIO).append(" text, ")
-				.append(TaskAttribute.FILENAME).append(" text, ").append(TaskAttribute.TASKNEXTDAYVISITDECILNEMIN).append(" int,")
+				.append(TaskAttribute.FILENAME).append(" text,").append(TaskAttribute.TASKNEXTDAYVISITDECILNEMIN).append(" int,")
 				.append(TaskAttribute.TASKSTAYWAY).append(" int,").append(TaskAttribute.TASKNEXTDAYVISITSTAYWAY).append(" int,")
+				
+				.append(TaskAttribute.TASKNEXTWEEKFLAG).append(" int,")
 				.append(TaskAttribute.TASKNEXTWEEKVISITINTERVALRETURNRATIO).append(" double,")
 				.append(TaskAttribute.TASKNEXTWEEKVISITDECLINEFLAG).append(" int,")
 				.append(TaskAttribute.TASKNEXTWEEKVISITDECILNERATIO).append(" double,")
 				.append(TaskAttribute.TASKNEXTWEEKVISITDECILNEMIN).append(" int,")
 				.append(TaskAttribute.TASKNEXTWEEKVISITSTAYWAY).append(" int,")
+				
+				.append(TaskAttribute.TASKNEXTMONTHFLAG).append(" int,")
 				.append(TaskAttribute.TASKNEXTMONTHVISITINTERVALRETURNRATIO).append(" double,")
 				.append(TaskAttribute.TASKNEXTMONTHVISITDECLINEFLAG).append(" int,")
 				.append(TaskAttribute.TASKNEXTMONTHVISITDECILNERATIO).append(" double,")
 				.append(TaskAttribute.TASKNEXTMONTHVISITDECILNEMIN).append(" int,")
-				.append(TaskAttribute.TASKNEXTMONTHVISITSTAYWAY).append(" int,")
-				.append(TaskAttribute.TASKSECONDACTIVEF).append(" int,")
-				.append(TaskAttribute.TASKSECONDACTIVES).append(" int);");
+				.append(TaskAttribute.TASKNEXTMONTHVISITSTAYWAY).append(" int);");
 		db.execSQL(sb.toString());
 
 		// 生成的数据文件

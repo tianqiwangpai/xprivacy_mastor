@@ -3,8 +3,6 @@ package com.hy.xp.app;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hy.xp.app.XHook;
-
 import android.os.Environment;
 import android.util.Log;
 

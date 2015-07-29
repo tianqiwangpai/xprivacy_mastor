@@ -1,8 +1,8 @@
 package com.github.snowdream.android.util;
 
-import android.text.TextUtils;
-
 import java.security.InvalidParameterException;
+
+import android.text.TextUtils;
 
 /**
  * Decide which log will be written to the file.

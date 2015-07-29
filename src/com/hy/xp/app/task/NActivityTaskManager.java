@@ -9,7 +9,6 @@ import java.util.concurrent.ThreadFactory;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,7 +45,6 @@ import com.hy.xp.app.ApplicationEx;
 import com.hy.xp.app.PrivacyService;
 import com.hy.xp.app.R;
 import com.hy.xp.app.Util;
-import com.hy.xp.app.task.ActivityModel.Add_TaskAsyncTask;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
@@ -162,7 +160,7 @@ public class NActivityTaskManager extends ActivityBase {
 						case 1:
 							// delete
 							optionTaskdelete(mTaskAttribute);
-							mTaskDescs.remove(position);
+							//mTaskDescs.remove(position);
 							mAdapter.notifyDataSetChanged();
 							break;
 						case 2:
@@ -307,10 +305,8 @@ public class NActivityTaskManager extends ActivityBase {
 			mBuilder.setNeutralButton(NActivityTaskManager.this
 					.getString(android.R.string.cancel),
 					new DialogInterface.OnClickListener() {
-
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
 							arg0.cancel();
 						}
 					});
@@ -578,6 +574,10 @@ public class NActivityTaskManager extends ActivityBase {
 				if (result == null)
 					Toast.makeText(NActivityTaskManager.this, "无效的文件！", 1)
 							.show();
+				else{
+					Toast.makeText(NActivityTaskManager.this, "数据插入成功！", 1)
+					.show();
+				}
 			}
 		}
 

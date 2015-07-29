@@ -18,11 +18,11 @@ public class SetConfigData
 	public static void SetDataByfile(Context mContext, PhoneDataBean mPhoneDataBean)
 	{
 
-		if(mPhoneDataBean == null){
-			Intent localIntent = new Intent();
-		    localIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
-		    localIntent.putExtra("Action", UpdateService.cActionDataNull);
-		    ApplicationEx.getContextObject().startService(localIntent);
+		if(mPhoneDataBean != null){
+			Intent changeIntent = new Intent();
+	        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
+	        changeIntent.putExtra("Action", UpdateService.cActionReady);
+	        ApplicationEx.getContextObject().startService(changeIntent);
 		}
 		
 		String s = Environment.getExternalStorageState();

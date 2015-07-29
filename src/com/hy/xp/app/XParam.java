@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.util.Log;
-
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 
 public class XParam

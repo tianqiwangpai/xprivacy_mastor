@@ -1,7 +1,5 @@
 package com.hy.xp.app;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -12,14 +10,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.hy.xp.app.task.DBMgr;
-import com.hy.xp.app.task.PhoneDataBean;
-import com.hy.xp.app.task.PreferenceUtils;
 
 public class XpWidget extends AppWidgetProvider
 {
@@ -67,12 +60,11 @@ public class XpWidget extends AppWidgetProvider
 		SetConfigData.SetDataByfile(ApplicationEx.getContextObject(), DBMgr.getInstance(context).getNextData(0));
 		super.onReceive(context, intent);
 		
-		return;
 		/*long start = System.currentTimeMillis();
 		String fileTask = PreferenceUtils.getParam(context, "taskname", "").toString();
 		String mode = PreferenceUtils.getParam(context, fileTask, "curl_file_read_mode", "").toString();
 		sum = (Integer) PreferenceUtils.getParam(context, fileTask, "curl_file_count", 1);
-		settingReadFilesum = (Integer) PreferenceUtils.getParam(context, fileTask, "cSettingReadFileSum", 1);
+		settingReadFilesum = (Integer) PreferenceUtils.getParam(context, fileTask, "cSettingReadFileSum", 1);*/
 
 		if (intent.getAction().equals("com.sec.android.widgetapp.APPWIDGET_RESIZE") || intent.getAction().equals("com.hy.xp.app.update")) {
 			rv = new RemoteViews(context.getPackageName(), R.layout.widget);
@@ -81,7 +73,7 @@ public class XpWidget extends AppWidgetProvider
 			PendingIntent Pintent = PendingIntent.getBroadcast(context, 0, startServiceInten, 0);
 			rv.setOnClickPendingIntent(R.id.imageView1, Pintent);
 		}
-		if (intent.getAction().equals(ACTION_CLICK_NAME2)) {
+		/*if (intent.getAction().equals(ACTION_CLICK_NAME2)) {
 			// 从文件中读取
 			PhoneDataBean mBean = null;
 			if ("随机读取".equals(mode)) {

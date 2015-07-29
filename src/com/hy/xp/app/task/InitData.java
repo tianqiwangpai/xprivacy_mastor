@@ -1,19 +1,19 @@
 package com.hy.xp.app.task;
 
-import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.hy.xp.app.AppAdapte;
 import com.hy.xp.app.ApplicationEx;
+import com.hy.xp.app.ManagerCertermActivity;
 import com.hy.xp.app.SetConfigData;
-import com.hy.xp.app.UpdateService;
 
 public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {    
     protected void onPostExecute(String result) {
-        Intent changeIntent = new Intent();
-        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
-        changeIntent.putExtra("Action", UpdateService.cActionReady);
-        ApplicationEx.getContextObject().startService(changeIntent);
+        Toast.makeText(ApplicationEx.getContextObject(), "任务数据已就绪", Toast.LENGTH_LONG).show();
+        if(ManagerCertermActivity.uihandler != null){
+        	ManagerCertermActivity.uihandler.sendEmptyMessage(0);
+        }
     }
 
 	@Override

@@ -16,12 +16,11 @@
 
 package com.github.snowdream.android.util;
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+
+import android.text.TextUtils;
 
 /**
  * Wrapper API for sending log output

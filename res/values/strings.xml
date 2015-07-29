@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Translators: do not include texts with translatable="false" -->
-    <string name="app_name" translatable="false">hytmotest</string>
+    <string name="app_name" translatable="false">InfoMargic</string>
     <string name="app_notenabled">hytmotest is not enabled in the Xposed installer</string>
     <string name="app_wrongandroid">Only for Android version 4.0.3+</string>
     <string name="app_incompatible">hytmotest is incompatible with %1$s</string>
@@ -264,5 +264,11 @@ however it is impossible to guarantee it will work flawlessly on each and every 
     <string name="choose_file">Select a file</string>
     <string name="error_selecting_file">Error selecting File</string>
     <string name="internal_storage">Internal storage</string>
+    
+    <string name="def_stayway">抽取方式</string>
+    <string-array name="stayway">
+        <item >随机抽取</item>
+        <item >固定抽取</item>
+    </string-array>
     
 </resources>

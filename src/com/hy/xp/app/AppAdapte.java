@@ -132,10 +132,10 @@ public class AppAdapte extends SimpleAdapter {
 		SharedPreferences prefs = mcontext.getSharedPreferences("ModSettings",
 				Context.MODE_WORLD_READABLE);
 		SharedPreferences.Editor e = prefs.edit();
-		e.putBoolean("/" + "mdatatype", true).commit();
-		e.putBoolean("/" + "updateDisplayInfoLocked", true).commit();
-		e.putBoolean("/" + "timeMachine", true).commit();
-		e.putInt("/recents-mode", 0x2).commit();
+		e.putBoolean(packagename + "/" + "mdatatype", true).commit();
+		e.putBoolean(packagename + "/" + "updateDisplayInfoLocked", true).commit();
+		e.putBoolean(packagename + "/" + "timeMachine", true).commit();
+		e.putInt(packagename + "/recents-mode", 0x2).commit();
 	}
 
 	private void cleanuidper(int uid, String packagename) {
@@ -147,10 +147,10 @@ public class AppAdapte extends SimpleAdapter {
 		SharedPreferences prefs = mcontext.getSharedPreferences("ModSettings",
 				Context.MODE_WORLD_READABLE);
 		SharedPreferences.Editor e = prefs.edit();
-		e.remove("/" + "mdatatype");
-		e.remove("/" + "updateDisplayInfoLocked");
-		e.remove("/" + "timeMachine");
-		e.remove("/recents-mode");
+		e.remove(packagename + "/" + "mdatatype");
+		e.remove(packagename + "/" + "updateDisplayInfoLocked");
+		e.remove(packagename + "/" + "timeMachine");
+		e.remove(packagename + "/recents-mode");
 		e.commit();
 	}
 

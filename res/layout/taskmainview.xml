@@ -129,7 +129,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.0"
                             android:text="任务管理" />
+                        
+                        <Button
+                            android:id="@+id/tset"
+                            android:layout_width="1.0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:text="软件使用时长" />
                     </TableRow>
+                    
                 </TableLayout>
 
                 <TableLayout

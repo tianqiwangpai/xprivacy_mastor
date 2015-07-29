@@ -63,14 +63,14 @@ public class XX extends AppWidgetProvider
 			
 			SetConfigData.SetDataByfile(ApplicationEx.getContextObject(), DBMgr.getInstance(context).getNextData(0));
 
-			long start = System.currentTimeMillis();
+			/*long start = System.currentTimeMillis();
 			String fileTask = PreferenceUtils.getParam(context, "taskname", "").toString();
 			String mode = PreferenceUtils.getParam(context, fileTask, "curl_file_read_mode", "").toString();
 			sum = (Integer) PreferenceUtils.getParam(context, fileTask, "curl_file_count", 1);
 			settingReadFilesum = (Integer) PreferenceUtils.getParam(context, fileTask, "cSettingReadFileSum", 1);
-
+*/
 			
-			
+			/*
 			
 			// 从文件中读取
 			PhoneDataBean mBean = null;
@@ -135,10 +135,10 @@ public class XX extends AppWidgetProvider
 				} else {
 					Toast.makeText(context, "请设置数据文件或者请查看数据是否正确！", Toast.LENGTH_SHORT).show();
 				}
-			}
+			}*/
 
-			long ms = System.currentTimeMillis() - start;
-			Util.log(null, Log.WARN, String.format("小部件--->:" + "%d ms", ms));
+			//long ms = System.currentTimeMillis() - start;
+			//Util.log(null, Log.WARN, String.format("小部件--->:" + "%d ms", ms));
 
 		}
 		super.onReceive(context, intent);

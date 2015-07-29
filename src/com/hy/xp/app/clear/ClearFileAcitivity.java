@@ -15,7 +15,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hy.xp.app.ActivityBase;
-import com.hy.xp.app.ActivityMain;
 import com.hy.xp.app.Common;
 import com.hy.xp.app.PrivacyService;
 import com.hy.xp.app.R;

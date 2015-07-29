@@ -21,18 +21,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -196,7 +200,51 @@ public class TaskMainActivity extends Activity {
 			}
 		});
         initData();
+        findViewById(R.id.tset).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				optionApptime();
+			}
+		});
     }
+    
+    private void optionApptime()
+	{
+		// TODO Auto-generated method stub
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View mView = inflater.inflate(R.layout.apptime, null);
+		final EditText etAppusetime = (EditText) mView.findViewById(R.id.apptime_edit);
+		AlertDialog.Builder mBuilder = new AlertDialog.Builder(TaskMainActivity.this);
+		String str = PrivacyManager.getSetting(0, PrivacyManager.cSettingTimeApp, "30");
+		etAppusetime.setText(str);
+		mBuilder.setView(mView);
+		mBuilder.setTitle(R.string.menu_apptime);
+		mBuilder.setIcon(R.drawable.ic_launcher);
+		mBuilder.setPositiveButton(TaskMainActivity.this.getString(android.R.string.ok), new DialogInterface.OnClickListener()
+		{
+
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				PrivacyManager.setSetting(0, PrivacyManager.cSettingTimeApp, etAppusetime.getText().toString());
+			}
+		});
+
+		mBuilder.setNegativeButton(TaskMainActivity.this.getString(android.R.string.cancel), new DialogInterface.OnClickListener()
+		{
+
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		});
+		AlertDialog mAlertDialog = mBuilder.create();
+		mAlertDialog.show();
+	}
+
     
     protected void onPause() {
         super.onPause();
@@ -253,10 +301,10 @@ public class TaskMainActivity extends Activity {
     	return;
     }
     
-    private String[] getListapp() {
+    public static String[] getListapp() {
 		try {
 			String[] arrayOfString = new BufferedReader(new InputStreamReader(
-					openFileInput("applistselect"))).readLine().split("[|]");
+					ApplicationEx.getContextObject().openFileInput("applistselect"))).readLine().split("[|]");
 			return arrayOfString;
 		} catch (Exception localException) {
 		}

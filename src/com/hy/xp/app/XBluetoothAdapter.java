@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.hy.xp.app.XHook;
-
 import android.bluetooth.BluetoothDevice;
 import android.os.Binder;
 

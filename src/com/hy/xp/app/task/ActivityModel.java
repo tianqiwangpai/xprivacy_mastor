@@ -7,10 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import com.hy.xp.app.ActivityBase;
-import com.hy.xp.app.PrivacyService;
-import com.hy.xp.app.R;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -33,6 +29,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hy.xp.app.ActivityBase;
+import com.hy.xp.app.PrivacyService;
+import com.hy.xp.app.R;
 
 public class ActivityModel extends ActivityBase
 {

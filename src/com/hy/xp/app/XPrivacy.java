@@ -193,21 +193,24 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 			}
 
 			if (prefs.getBoolean(lpparam.packageName + "/updateDisplayInfoLocked", false)) {
-				/*XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.view.Display", lpparam.classLoader), "updateDisplayInfoLocked", new XC_MethodHook()
-				{
-					@Override
-					protected void afterHookedMethod(MethodHookParam param) throws Throwable
+				try{
+					XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.view.Display", lpparam.classLoader), "updateDisplayInfoLocked", new XC_MethodHook()
 					{
-						// TODO Auto-generated method stub
-						String mString = (String) PrivacyManager.getDefacedProp(Process.myUid(), "DENSITY");
-						String mUpperCase = mString.toUpperCase();
-						String[] s = mUpperCase.split("X");
-						Object mDisplayInfoW = XposedHelpers.getObjectField(param.thisObject, "mDisplayInfo");
-						XposedHelpers.setIntField(mDisplayInfoW, "appWidth", new Integer(s[0]));
-						Object mDisplayInfoH = XposedHelpers.getObjectField(param.thisObject, "mDisplayInfo");
-						XposedHelpers.setIntField(mDisplayInfoH, "appHeight", new Integer(s[1]));
-					}
-				});*/
+						@Override
+						protected void afterHookedMethod(MethodHookParam param) throws Throwable
+						{
+							String mString = (String) PrivacyManager.getDefacedProp(Process.myUid(), "DENSITY");
+							String mUpperCase = mString.toUpperCase();
+							String[] s = mUpperCase.split("X");
+							Object mDisplayInfoW = XposedHelpers.getObjectField(param.thisObject, "mDisplayInfo");
+							XposedHelpers.setIntField(mDisplayInfoW, "appWidth", new Integer(s[0]));
+							Object mDisplayInfoH = XposedHelpers.getObjectField(param.thisObject, "mDisplayInfo");
+							XposedHelpers.setIntField(mDisplayInfoH, "appHeight", new Integer(s[1]));
+						}
+					});
+				}catch(Exception e){
+					
+				}
 				
 				XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.view.Display", lpparam.classLoader), "getMetrics", DisplayMetrics.class, new XC_MethodHook()
 				{
@@ -258,6 +261,12 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 				String stime = PrivacyManager.getSetting(0, PrivacyManager.cSettingTimeApp, "10");
 
 				int mMinute = Integer.valueOf(stime);
+				
+				//TODO 指定随机数
+				Random random = new Random();
+				mMinute = random.nextInt(mMinute);
+				
+				
 				// System.err.println(mMinute);
 				calendar.add(Calendar.MINUTE, mMinute);
 				String str = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(calendar.getTime());
@@ -661,14 +670,20 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 			}
 
 		// Build MODEL
-		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "MODEL", secret))
+		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "MODEL", secret)){
 			try {
 				Field mmod = Build.class.getField("MODEL");
 				mmod.setAccessible(true);
 				mmod.set(null, PrivacyManager.getDefacedProp(Process.myUid(), "MODEL"));
+				
+				//TODO SDK_INI不对，猜猜这样改试试
+				/*Field msdkini = Build.VERSION.class.getField("SDK_INT");
+				msdkini.setAccessible(true);
+				msdkini.set(null, new Random().nextInt(20));*/
 			} catch (Throwable ex) {
 				Util.bug(null, ex);
 			}
+		}
 		// Build MANUFACTURER
 		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "MANUFACTURER", secret))
 			try {
@@ -678,6 +693,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 			} catch (Throwable ex) {
 				Util.bug(null, ex);
 			}
+		
 		// Build PRODUCT
 		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "PRODUCT", secret))
 			try {

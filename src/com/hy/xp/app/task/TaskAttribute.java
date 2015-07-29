@@ -16,6 +16,10 @@ public class TaskAttribute implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	public static final String FILENAME = "tb_filename";
+
+	
+
+	
     private String FileName;
     public static final String TASKDECILNEMIN = "tb_taskdecilnemin";
     public static final String TASKDECILNERATIO = "tb_TaskDecilneRatio";
@@ -31,11 +35,15 @@ public class TaskAttribute implements Serializable
     public static final String TASKNEXTDAYVISITINTERVALCOUNT = "tb_TaskNextDayVisitIntervalCount";
     public static final String TASKNEXTDAYVISITINTERVALRETURNRATIO = "tb_TaskNextDayVisitIntervalReturnRatio";
     public static final String TASKNEXTDAYVISITSTAYWAY = "tb_TaskNextDayVisitStayWay";
+    
+    public static final String TASKNEXTMONTHFLAG = "tb_TaskNextMonthFlag";
     public static final String TASKNEXTMONTHVISITDECILNEMIN = "tb_TaskNextMonthVisitDecilneMin";
     public static final String TASKNEXTMONTHVISITDECILNERATIO = "tb_TaskNextMonthVisitDecilneRatio";
     public static final String TASKNEXTMONTHVISITDECLINEFLAG = "tb_TaskNextMonthVisitDeclineFlag";
     public static final String TASKNEXTMONTHVISITINTERVALRETURNRATIO = "tb_TaskNextMonthVisitIntervalReturnRatio";
     public static final String TASKNEXTMONTHVISITSTAYWAY = "tb_TaskNextMonthVisitStayWay";
+   
+    public static final String TASKNEXTWEEKFLAG = "tb_tasknextweekflag";
     public static final String TASKNEXTWEEKVISITDECILNEMIN = "tb_TaskNextWeekVisitDecilneMin";
     public static final String TASKNEXTWEEKVISITDECILNERATIO = "tb_TaskNextWeekVisitDecilneRatio";
     public static final String TASKNEXTWEEKVISITDECLINEFLAG = "tb_TaskNextWeekVisitDeclineFlag";
@@ -46,35 +54,41 @@ public class TaskAttribute implements Serializable
     public static final String TASKSECONDACTIVEF = "tb_TaskSecondActiveF";
     public static final String TASKSECONDACTIVES = "tb_TaskSecondActiveS";
     public static final String TASKSTAYWAY = "tb_taskstayway";
-    private int TaskDecilneMin;
-    private double TaskDecilneRatio;
-    private boolean TaskDeclineFlag;
-    private String TaskDesc;
-    private String TaskName;
-    private int TaskNewdata;
-    private boolean TaskNextDayFlag;
-    private int TaskNextDayVisitDecilneMin;
-    private double TaskNextDayVisitDecilneRatio;
-    private boolean TaskNextDayVisitDeclineFlag;
-    private int TaskNextDayVisitInterval;
-    private int TaskNextDayVisitIntervalCount;
-    private double TaskNextDayVisitIntervalReturnRatio;
-    private int TaskNextDayVisitStayWay;
-    private int TaskNextMonthVisitDecilneMin;
-    private double TaskNextMonthVisitDecilneRatio;
-    private boolean TaskNextMonthVisitDeclineFlag;
-    private double TaskNextMonthVisitIntervalReturnRatio;
-    private int TaskNextMonthVisitStayWay;
-    private int TaskNextWeekVisitDecilneMin;
-    private double TaskNextWeekVisitDecilneRatio;
-    private boolean TaskNextWeekVisitDeclineFlag;
-    private double TaskNextWeekVisitIntervalReturnRatio;
-    private int TaskNextWeekVisitStayWay;
-    private int TaskNumber;
-    private double TaskReturnratio;
-    private int TaskSecondActiveF;
-    private int TaskSecondActiveS;
-    private int TaskStayWay;
+    private int TaskDecilneMin = 0;
+    private double TaskDecilneRatio = 0;
+    private boolean TaskDeclineFlag = false;
+    private String TaskDesc = "";
+    private String TaskName = "";
+    private int TaskNewdata = 0;
+    private boolean TaskNextDayFlag = false;
+    private int TaskNextDayVisitDecilneMin = 0;
+    private double TaskNextDayVisitDecilneRatio = 0;
+    private boolean TaskNextDayVisitDeclineFlag = false;
+    private int TaskNextDayVisitInterval = 0;
+    private int TaskNextDayVisitIntervalCount = 0;
+    private double TaskNextDayVisitIntervalReturnRatio = 0;
+    private int TaskNextDayVisitStayWay = 0;
+    
+    private boolean TaskNextMonthFlag = false;
+    private int TaskNextMonthVisitDecilneMin = 0;
+    private double TaskNextMonthVisitDecilneRatio = 0;
+    private boolean TaskNextMonthVisitDeclineFlag = false;
+    private double TaskNextMonthVisitIntervalReturnRatio= 0;
+    private int TaskNextMonthVisitStayWay= 0;
+    
+
+    private boolean TaskNextWeekFlag = false;
+    private int TaskNextWeekVisitDecilneMin= 0;
+    private double TaskNextWeekVisitDecilneRatio= 0;
+    private boolean TaskNextWeekVisitDeclineFlag = false;
+    private double TaskNextWeekVisitIntervalReturnRatio= 0;
+    private int TaskNextWeekVisitStayWay= 0;
+    
+    private int TaskNumber= 0;
+    private double TaskReturnratio= 0;
+    private int TaskSecondActiveF= 0;
+    private int TaskSecondActiveS= 0;
+    private int TaskStayWay= 0;
     
     public static final String table_name = "tb_task_attribute";
     
@@ -86,7 +100,23 @@ public class TaskAttribute implements Serializable
         return TaskName;
     }
     
-    public String getTaskDesc() {
+    public boolean isTaskNextMonthFlag() {
+		return TaskNextMonthFlag;
+	}
+
+	public void setTaskNextMonthFlag(boolean taskNextMonthFlag) {
+		TaskNextMonthFlag = taskNextMonthFlag;
+	}
+
+	public boolean isTaskNextWeekFlag() {
+		return TaskNextWeekFlag;
+	}
+
+	public void setTaskNextWeekFlag(boolean taskNextWeekFlag) {
+		TaskNextWeekFlag = taskNextWeekFlag;
+	}
+
+	public String getTaskDesc() {
         return TaskDesc;
     }
     

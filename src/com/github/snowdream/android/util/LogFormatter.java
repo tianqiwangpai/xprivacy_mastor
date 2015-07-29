@@ -1,7 +1,8 @@
 package com.github.snowdream.android.util;
 
-import android.text.TextUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+
+import android.text.TextUtils;
 
 /**
  * Decide the format of log will be written to the file.

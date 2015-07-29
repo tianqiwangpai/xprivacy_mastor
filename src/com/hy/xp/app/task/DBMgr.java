@@ -1,5 +1,7 @@
 package com.hy.xp.app.task;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,13 +12,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.text.Editable;
 
 import com.hy.xp.app.AppAdapte;
 import com.hy.xp.app.ApplicationEx;
 import com.hy.xp.app.ApplicationInfoEx;
+import com.hy.xp.app.TaskMainActivity;
 import com.hy.xp.app.UpdateService;
 import com.hy.xp.app.Util;
 
@@ -110,8 +115,6 @@ public class DBMgr {
 
 	public long update_task(ContentValues values) {
 		String whereClause = (String) values.get(TaskAttribute.TASKNAME);
-		// System.out.println(values.toString());
-
 		return db.update(TaskAttribute.table_name, values,
 				TaskAttribute.TASKNAME + "=?", new String[] { whereClause });
 	}
@@ -208,6 +211,21 @@ public class DBMgr {
 		}
 		return mTaskBeansList;
 	}
+	
+	// 获取任务基本属性列表
+	public List<String> getTaskNameList() {
+		List<String> tasknamelist = new ArrayList<String>();
+		String sql = "select tb_TaskName from tb_task_attribute";
+		Cursor mCursor = db.rawQuery(sql, null);
+		if (mCursor == null || mCursor.getCount()<1)				
+			return null;
+		mCursor.moveToFirst();
+		do{
+			tasknamelist.add(mCursor.getString(
+					mCursor.getColumnIndex(TaskAttribute.TASKNAME)));
+		}while (mCursor.moveToNext());
+		return tasknamelist;
+	}
 
 	/**
 	 * 根据任务名称获取任务属性
@@ -231,14 +249,22 @@ public class DBMgr {
 					.getColumnIndex(TaskAttribute.TASKDESC)));
 			mBean.setTaskNewdata(new Integer(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKNEWDATA))));
-			mBean.setTaskNumber(new Integer(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNUMBER))));
+			String num = mCursor.getString(mCursor
+					.getColumnIndex(TaskAttribute.TASKNUMBER));
+			if(num != null){
+				mBean.setTaskNumber(new Integer(num));
+			}			
 			mBean.setTaskReturnratio(Double.valueOf(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKRETURNRATIO))));
 			int TaskDeclineFlag = new Integer(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKDECLINEFLAG)));
+			
 			if (TaskDeclineFlag > 0) {
 				mBean.setTaskDeclineFlag(true);
+				mBean.setTaskDecilneRatio(Double.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKDECILNERATIO))));
+				mBean.setTaskDecilneMin(Integer.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKDECILNEMIN))));
 			} else {
 				mBean.setTaskDeclineFlag(false);
 			}
@@ -251,85 +277,82 @@ public class DBMgr {
 					.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITSTAYWAY))));
 			mBean.setTaskNextMonthVisitStayWay(new Integer(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITSTAYWAY))));
-
-			mBean.setTaskDecilneRatio(Double.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKDECILNERATIO))));
-			mBean.setTaskDecilneMin(Integer.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKDECILNEMIN))));
-			// mBean.setTaskNextDayFlag(new
-			// Boolean(mCursor.getString(mCursor.getColumnIndex(TaskAttribute.TASKNEXTDAYFLAG))));
+			
 			int TaskNextDayFlag = new Integer(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKNEXTDAYFLAG)));
 			if (TaskNextDayFlag > 0) {
 				mBean.setTaskNextDayFlag(true);
+				mBean.setTaskNextDayVisitInterval(new Integer(
+						mCursor.getString(mCursor
+								.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITINTERVAL))));
+				mBean.setTaskNextDayVisitIntervalReturnRatio(Double.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITINTERVALRETURNRATIO))));
+				mBean.setTaskNextDayVisitIntervalCount(new Integer(
+						mCursor.getString(mCursor
+								.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITINTERVALCOUNT))));
+				int TaskNextDayVisitDeclineFlag = new Integer(
+						mCursor.getString(mCursor
+								.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECLINEFLAG)));
+				if (TaskNextDayVisitDeclineFlag > 0) {
+					mBean.setTaskNextDayVisitDeclineFlag(true);
+					mBean.setTaskNextDayVisitDecilneRatio(Double.valueOf(mCursor.getString(mCursor
+							.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECILNERATIO))));
+					mBean.setTaskNextDayVisitDecilneMin(Integer.valueOf(mCursor.getString(mCursor
+							.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECILNEMIN))));
+				} else {
+					mBean.setTaskNextDayVisitDeclineFlag(false);
+				}
 			} else {
 				mBean.setTaskNextDayFlag(false);
 			}
-
-			mBean.setTaskNextDayVisitInterval(new Integer(
-					mCursor.getString(mCursor
-							.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITINTERVAL))));
-			mBean.setTaskNextDayVisitIntervalReturnRatio(Double.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITINTERVALRETURNRATIO))));
-			mBean.setTaskNextDayVisitIntervalCount(new Integer(
-					mCursor.getString(mCursor
-							.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITINTERVALCOUNT))));
-
-			// mBean.setTaskNextDayVisitDeclineFlag(new
-			// Boolean(mCursor.getString(mCursor.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECLINEFLAG))));
-			int TaskNextDayVisitDeclineFlag = new Integer(
-					mCursor.getString(mCursor
-							.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECLINEFLAG)));
-			if (TaskNextDayVisitDeclineFlag > 0) {
-				mBean.setTaskNextDayVisitDeclineFlag(true);
-			} else {
-				mBean.setTaskNextDayVisitDeclineFlag(false);
-			}
-			mBean.setTaskNextDayVisitDecilneRatio(Double.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECILNERATIO))));
-			mBean.setTaskNextDayVisitDecilneMin(Integer.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITDECILNEMIN))));
-			
-			mBean.setTaskNextWeekVisitIntervalReturnRatio(Double.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITINTERVALRETURNRATIO))));
-			mBean.setTaskNextWeekVisitStayWay(Integer.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITSTAYWAY))));
-			
-			if(Integer.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITDECLINEFLAG))) == 1){
-				mBean.setTaskNextWeekVisitDeclineFlag(true);
-				mBean.setTaskNextWeekVisitDecilneMin(Integer.valueOf(mCursor.getString(mCursor
-						.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITDECILNEMIN))));
-				mBean.setTaskNextWeekVisitDecilneRatio(Double.valueOf(mCursor.getString(mCursor
-						.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITDECILNERATIO))));
+						
+			int TaskNextWeekFlag = mCursor.getInt(mCursor
+											.getColumnIndex(TaskAttribute.TASKNEXTWEEKFLAG));
+			if (TaskNextWeekFlag > 0) {
+				mBean.setTaskNextWeekFlag(true);
+				mBean.setTaskNextWeekVisitIntervalReturnRatio(Double.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITINTERVALRETURNRATIO))));
+				mBean.setTaskNextWeekVisitStayWay(Integer.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITSTAYWAY))));
+				
+				if(Integer.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITDECLINEFLAG))) == 1){
+					mBean.setTaskNextWeekVisitDeclineFlag(true);
+					mBean.setTaskNextWeekVisitDecilneMin(Integer.valueOf(mCursor.getString(mCursor
+							.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITDECILNEMIN))));
+					mBean.setTaskNextWeekVisitDecilneRatio(Double.valueOf(mCursor.getString(mCursor
+							.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITDECILNERATIO))));
+				}else{
+					mBean.setTaskNextWeekVisitDeclineFlag(false);
+				}
 			}else{
-				mBean.setTaskNextWeekVisitDeclineFlag(false);
-				mBean.setTaskNextWeekVisitDecilneMin(0);
-				mBean.setTaskNextWeekVisitDecilneRatio(0);
+				mBean.setTaskNextWeekFlag(false);
 			}
 			
-			mBean.setTaskNextMonthVisitIntervalReturnRatio(Double.valueOf(mCursor.getString(mCursor
+			int TaskNextMonthFlag = new Integer(mCursor.getString(mCursor
+					.getColumnIndex(TaskAttribute.TASKNEXTWEEKFLAG)));
+			if (TaskNextMonthFlag > 0) {
+				mBean.setTaskNextMonthFlag(true);
+				mBean.setTaskNextMonthVisitIntervalReturnRatio(Double.valueOf(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITINTERVALRETURNRATIO))));
-			mBean.setTaskNextMonthVisitStayWay(Integer.valueOf(mCursor.getString(mCursor
+				mBean.setTaskNextMonthVisitStayWay(Integer.valueOf(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITSTAYWAY))));
 			
-			if(Integer.valueOf(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITDECLINEFLAG))) == 1){
-				mBean.setTaskNextMonthVisitDeclineFlag(true);
-				mBean.setTaskNextMonthVisitDecilneMin(Integer.valueOf(mCursor.getString(mCursor
-						.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITDECILNEMIN))));
-				mBean.setTaskNextMonthVisitDecilneRatio(Double.valueOf(mCursor.getString(mCursor
-						.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITDECILNERATIO))));
+				if(Integer.valueOf(mCursor.getString(mCursor
+						.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITDECLINEFLAG))) == 1){
+					mBean.setTaskNextMonthVisitDeclineFlag(true);
+					mBean.setTaskNextMonthVisitDecilneMin(Integer.valueOf(mCursor.getString(mCursor
+							.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITDECILNEMIN))));
+					mBean.setTaskNextMonthVisitDecilneRatio(Double.valueOf(mCursor.getString(mCursor
+							.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITDECILNERATIO))));
+				}else{
+					mBean.setTaskNextMonthVisitDeclineFlag(false);
+					mBean.setTaskNextMonthVisitDecilneMin(0);
+					mBean.setTaskNextMonthVisitDecilneRatio(0);
+				}
 			}else{
-				mBean.setTaskNextMonthVisitDeclineFlag(false);
-				mBean.setTaskNextMonthVisitDecilneMin(0);
-				mBean.setTaskNextMonthVisitDecilneRatio(0);
+				mBean.setTaskNextMonthFlag(false);
 			}
-			
-			mBean.setTaskSecondActiveF(mCursor.getInt(mCursor
-					.getColumnIndex(TaskAttribute.TASKSECONDACTIVEF)));
-			mBean.setTaskSecondActiveS(mCursor.getInt(mCursor
-					.getColumnIndex(TaskAttribute.TASKSECONDACTIVES)));
 			mTaskBeansList.add(mBean);
 		}
 		return mTaskBeansList;
@@ -973,7 +996,7 @@ public class DBMgr {
         	mCursor.moveToFirst();
         	do{
         		String appname = mCursor.getString(mCursor.getColumnIndex("packagename"));
-                int tmp = appcord.getInt(appname, 0) + newadd;
+                int tmp = appcord.getInt(appname, 1) + newadd;
                 editor.putInt(appname, tmp);
                 editor.commit();
         	}while(mCursor.moveToNext());
@@ -1101,47 +1124,105 @@ public class DBMgr {
 				.getSharedPreferences("task", Context.MODE_PRIVATE);
 		return preferences.getString("currenttask", null);
 	}
+	
+	public static void setOnlyStay(boolean isstay){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putBoolean("onlystay", isstay);
+		editor.commit();
+	}
+	
+	public static boolean isOnlyStay(){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		return preferences.getBoolean("onlystay", false);
+	}
+	
+	public static void setsecondelive(boolean on){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putBoolean("secondliveflag", on);
+		editor.commit();
+	}
 
+	public static boolean issecondelive(){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		return preferences.getBoolean("secondliveflag", false);
+	}
+	
+	public static void setsecondlivef(int value){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putInt("secondlivef", value);
+		editor.commit();
+	}
+	public static void setsecondlives(int value){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putInt("secondlives", value);
+		editor.commit();
+	}
+	public static int getsecondef(){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		return preferences.getInt("secondlivef", 10);
+	}
+	
+	public static int getsecondes(){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		return preferences.getInt("secondlives", 50);
+	}
+	
+	
 	private void secondtest() {
 		if ((ApplicationInfoEx.secondef) && (ApplicationInfoEx.secondes)) {
 			return;
 		}
+
+		if (!issecondelive()) {
+			return;
+		}
 		String currenttask = getCurrentTaskname();
-		if (currenttask != null) {
-			String sql = "select " + TaskAttribute.TASKSECONDACTIVEF + ", "
-					+ TaskAttribute.TASKSECONDACTIVES + " from "
-					+ TaskAttribute.table_name + " where "+TaskAttribute.TASKNAME+"='"
-					+ currenttask + "'";
-			Cursor cursor = db.rawQuery(sql, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToFirst();
-				int first = cursor.getInt(cursor
-						.getColumnIndex(TaskAttribute.TASKSECONDACTIVEF));
-				int seconde = cursor.getInt(cursor
-						.getColumnIndex(TaskAttribute.TASKSECONDACTIVES));
-				int taskid = getLastnewCord(currenttask,
-						AppAdapte.dataselected.toArray())[1];
-				if ((!ApplicationInfoEx.secondef)
-						&& (gethour(taskid, 10) >= first)) {
-					initseconddatatable(4, taskid);
-					ApplicationInfoEx.secondef = true;
-				}
-				if ((!ApplicationInfoEx.secondes) && (seconde > 48)
-						&& (gethour(taskid, 60) >= seconde)) {
-					ApplicationInfoEx.secondes = true;
-					initseconddatatable(60, taskid);
-				} else if ((!ApplicationInfoEx.secondes) && (seconde > 24)
-						&& (gethour(taskid, 30) >= seconde)) {
-					ApplicationInfoEx.secondes = true;
-					initseconddatatable(20, taskid);
-				}
-			}
+		int taskid = getLastnewCord(currenttask,
+				getListapp())[1];
+
+		int first = getsecondef();
+		int seconde = getsecondes();
+
+		if ((!ApplicationInfoEx.secondef) && (gethour(taskid, 10) >= first)) {
+			initseconddatatable(4, taskid);
+			ApplicationInfoEx.secondef = true;
+		}
+		if ((!ApplicationInfoEx.secondes) && (seconde > 48)
+				&& (gethour(taskid, 60) >= seconde)) {
+			ApplicationInfoEx.secondes = true;
+			initseconddatatable(60, taskid);
+		} else if ((!ApplicationInfoEx.secondes) && (seconde > 24)
+				&& (gethour(taskid, 30) >= seconde)) {
+			ApplicationInfoEx.secondes = true;
+			initseconddatatable(20, taskid);
 		}
 	}
 
+	public static String[] getListapp() {
+		try {
+			String[] arrayOfString = new BufferedReader(new InputStreamReader(
+					ApplicationEx.getContextObject().openFileInput("applistselect"))).readLine().split("[|]");
+			return arrayOfString;
+		} catch (Exception localException) {
+		}
+		return null;
+    }
+	
 	private PhoneDataBean getfromnewdata() {
 		PhoneDataBean data = null;
-		int taskid = getLastnewCord(getCurrentTaskname(),AppAdapte.dataselected.toArray())[1];
+		int taskid = getLastnewCord(getCurrentTaskname(),getListapp())[1];
 		String sql = "select enddataid, current, day from newdata where taskid="+ taskid + " order by day DESC";
 		Cursor cursor = db.rawQuery(sql, null);
 		if ((cursor != null) && (cursor.getCount() > 0)) {
@@ -1151,10 +1232,15 @@ public class DBMgr {
 			int day = cursor.getInt(cursor.getColumnIndex("day"));
 			if (id <= endid) {
 				data = getPhoneDataBeanById(id);
+				if(data == null){
+					Util.error_code = Util.error.NoPhoneInfo.ordinal();
+				}
 				ContentValues values = new ContentValues();
 				values.put("current", id + 1);
 				db.update("newdata", values, "day=?", new String[] { day + "" });
 			}
+		}else{
+			Util.error_code = Util.error.FinishedNEWDATA.ordinal();
 		}
 		return data;
 	}
@@ -1167,9 +1253,14 @@ public class DBMgr {
 			cursor.moveToFirst();
 			int _id = cursor.getInt(cursor.getColumnIndex("dataid"));
 			data = getPhoneDataBeanById(_id);
+			if(data == null){
+				Util.error_code = Util.error.NoPhoneInfo.ordinal();
+			}
 			ContentValues value = new ContentValues();
 			value.put("visted", 1);
 			db.update("backrecord", value, "dataid=?",new String[] { _id + "" });
+		}else{
+			Util.error_code = Util.error.FinishedBackrecord.ordinal();
 		}
 		return data;
 	}
@@ -1201,7 +1292,12 @@ public class DBMgr {
 
 	public PhoneDataBean getNextData(int stayway) {
 		secondtest();
-
+		Util.error_code = Util.error.Normal.ordinal();
+		
+		if(isOnlyStay()){
+			stayway = 0x3;
+		}
+		
 		PhoneDataBean data = null;
 		if (stayway == 0) {
 			data = getfromnewdata();
@@ -1238,10 +1334,20 @@ public class DBMgr {
 		} else if (stayway == 0x3) {
 			data = getfrombackrecord();
 		}
+		
+		//TODO 提示信息
 		if(data == null){
 			Intent localIntent = new Intent();
 	        localIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
-	        localIntent.putExtra("Action", UpdateService.cActionFinished);
+	        int action = 0;
+	        if(Util.error_code == Util.error.FinishedBackrecord.ordinal()
+	        		|| Util.error_code == Util.error.FinishedNEWDATA.ordinal()){
+	        	action = UpdateService.cActionFinished;
+	        }else if(Util.error_code == Util.error.NoPhoneInfo.ordinal()){
+	        	action = UpdateService.cActionDataNull;
+	        }
+	        
+	        localIntent.putExtra("Action", action);
 	        ApplicationEx.getContextObject().startService(localIntent);
 		}
 		return data;
@@ -1302,7 +1408,7 @@ public class DBMgr {
 						//随机抽取
 						if(myrandom.nextBoolean()
 								|| breakcount >= count - num){
-							if(t - start -breakcount > num){
+							if(t - start -breakcount >= num){
 								break;
 							}
 							insertback(t);
@@ -1345,6 +1451,53 @@ public class DBMgr {
 		}
 		cursor.moveToFirst();
 		return cursor.getInt(cursor.getColumnIndex("day"));
+	}
+	
+	public int[] getnewdatacount(int taskid){
+		int[] rst = {0,0};
+		String sql = "select startdataid, enddataid, current from newdata where taskid="+taskid+" order by _id DESC";
+		Cursor cursor = db.rawQuery(sql, null);
+		if ((cursor == null) || (cursor.getCount() < 1)) {
+			return rst;
+		}
+		cursor.moveToFirst();
+		rst[1] = cursor.getInt(cursor.getColumnIndex("enddataid")) - 
+							cursor.getInt(cursor.getColumnIndex("startdataid"));
+		rst[0] = cursor.getInt(cursor.getColumnIndex("current")) - 
+				cursor.getInt(cursor.getColumnIndex("startdataid"));
+		return rst;
+	}
+	
+	public int[] getbackdatacount(){
+		int[] rst = {0,0};
+		String sql = "select COUNT(*) as count from backrecord";
+		String sql2 = "select COUNT(*) as count from backrecord where visted=1";
+		Cursor cursor = db.rawQuery(sql, null);
+		if ((cursor == null) || (cursor.getCount() < 1)) {
+			return rst;
+		}
+		cursor.moveToFirst();
+		rst[1] = cursor.getInt(cursor.getColumnIndex("count"));
+		
+		cursor = db.rawQuery(sql2, null);
+		if ((cursor == null) || (cursor.getCount() < 1)) {
+			return rst;
+		}
+		cursor.moveToFirst();
+		rst[0] = cursor.getInt(cursor.getColumnIndex("count"));
+		return rst;
+	}
+	
+	public int getdayinfo(int taskid){
+		int rst = 0;
+		String sql = "select MAX(day) as mday from newdata where taskid="+taskid;
+		Cursor cursor = db.rawQuery(sql, null);
+		if ((cursor == null) || (cursor.getCount() < 1)) {
+			return rst;
+		}
+		cursor.moveToFirst();
+		rst = cursor.getInt(cursor.getColumnIndex("mday"));
+		return rst;
 	}
 
 }

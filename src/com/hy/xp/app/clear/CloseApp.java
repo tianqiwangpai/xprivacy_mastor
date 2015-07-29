@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.ActivityManager;

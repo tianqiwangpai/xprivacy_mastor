@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import android.app.PendingIntent;
-import android.location.Location;
-import android.os.Binder;
-import android.os.IInterface;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
+import android.location.Location;
 import android.location.LocationListener;
+import android.os.Binder;
+import android.os.IInterface;
 
 public class XLocationManager extends XHook
 {

@@ -75,11 +75,14 @@ public class UpdateService extends Service
 
 			if(action == cActionFinished){
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "任务已完成");
+				return 0;
 			}else if(action == cActionReady){
-				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "任务已就绪");
+				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "数据已就绪");
+				return 0;
 			}else if(action == cActionDataNull)
 			{
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "手机信息数据库已经耗完，请插入新数据!");
+				return 0;
 			}else{
 				// Start foreground service
 				NotificationCompat.Builder builder = new NotificationCompat.Builder(UpdateService.this);
@@ -377,14 +380,25 @@ public class UpdateService extends Service
 		notificationManager.notify(id, notification);
 	}
 	
+	public static NotificationManager notificationManager = null;
+	
+	
+	public static NotificationCompat.Builder builder = null;
+	
 	private static void notifynormalmessage(Context context, int id, String message){
+		if(notificationManager == null){
+			notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		}
+		if(builder == null){
+			builder = new NotificationCompat.Builder(context);
+		}	
+		notificationManager.cancelAll();
 		
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 		builder.setSmallIcon(R.drawable.ic_launcher);
 		builder.setContentTitle(context.getString(R.string.app_name));
 		builder.setContentText(message);
 		builder.setWhen(System.currentTimeMillis());
+		builder.setAutoCancel(true);
 		Notification notification = builder.build();
 		notificationManager.notify(id, notification);
 	}

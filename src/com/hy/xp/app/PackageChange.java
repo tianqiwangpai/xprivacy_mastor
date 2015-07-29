@@ -1,6 +1,7 @@
 package com.hy.xp.app;
 
-import com.hy.xp.app.task.PreferenceUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,6 +14,9 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.hy.xp.app.task.DBMgr;
+import com.hy.xp.app.task.PreferenceUtils;
 
 /**
  * 
@@ -59,6 +63,15 @@ public class PackageChange extends BroadcastReceiver
 							PrivacyManager.deleteUsage(uid);
 							PrivacyManager.clearPermissionCache(uid);
 
+							//TODO 处理新增安装包
+							List<String> liststr = new ArrayList<String>();
+							String[] old = DBMgr.getListapp();
+							for(int i=0; i<old.length; i++){
+								liststr.add(old[i]);
+							}
+							liststr.add(packageName);
+							ManagerCertermActivity.Saveapplist(liststr);
+							
 							// Apply template
 							PrivacyManager.applyTemplate(uid, Meta.cTypeTemplate, null, true, true, false);
 
@@ -102,7 +115,7 @@ public class PackageChange extends BroadcastReceiver
 						String title = String.format("%s %s %s", context.getString(replacing ? R.string.msg_update : R.string.msg_new), appInfo.getApplicationName(packageName), appInfo.getPackageVersionName(context, packageName));
 						if (!replacing)
 							title = String.format("%s %s", title, context.getString(R.string.msg_applied));
-
+						/*
 						// Build notification
 						NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
 						notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
@@ -119,6 +132,7 @@ public class PackageChange extends BroadcastReceiver
 						// Notify
 						Notification notification = notificationBuilder.build();
 						notificationManager.notify(appInfo.getUid(), notification);
+						*/
 					}
 
 				} else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -138,6 +152,17 @@ public class PackageChange extends BroadcastReceiver
 							PrivacyManager.deleteUsage(uid);
 							PrivacyManager.clearPermissionCache(uid);
 							String packageName = inputUri.getSchemeSpecificPart();
+							
+							//TODO 处理卸载安装包
+							List<String> liststr = new ArrayList<String>();
+							String[] old = DBMgr.getListapp();
+							for(int i=0; i<old.length; i++){
+								if(!old[i].equals(packageName)){
+									liststr.add(old[i]);
+								}
+							}
+							ManagerCertermActivity.Saveapplist(liststr);
+							
 							/**
 							 * update : @date Mar 17, 2015 9:11:21 PM
 							 */

@@ -1,12 +1,13 @@
 package com.github.snowdream.android.util;
 
-import android.content.Context;
-import android.text.TextUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+
+import org.apache.commons.lang3.time.FastDateFormat;
+
+import android.content.Context;
+import android.text.TextUtils;
 
 /**
  * Decide the absolute path of the file which log will be written to.

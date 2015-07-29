@@ -1,6 +1,5 @@
 package com.hy.xp.app.task;
 
-import android.R.integer;
 
 public class AppUid
 {

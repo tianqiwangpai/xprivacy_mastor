@@ -38,7 +38,6 @@ import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.hy.xp.app.task.PhoneDataBean;
-import com.hy.xp.app.task.SetData;
 
 public class PrivacyManager
 {

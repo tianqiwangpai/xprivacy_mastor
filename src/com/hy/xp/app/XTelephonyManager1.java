@@ -7,12 +7,12 @@ import java.util.WeakHashMap;
 
 import android.os.Binder;
 import android.os.Bundle;
+import android.telephony.CellInfo;
 import android.telephony.CellLocation;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
-import android.telephony.CellInfo;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 

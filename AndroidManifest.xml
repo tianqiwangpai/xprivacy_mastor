@@ -101,10 +101,11 @@
             android:name="com.saurik.substrate.main"
             android:value=".XPrivacy" />
 		
-		<activity
-		    android:name=".TaskMainActivity"
-		    android:configChanges="keyboardHidden|orientation|screenSize" >
-		    <intent-filter>
+        <activity 
+            android:name=".ManagerCertermActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+            <intent-filter>
 		        <action android:name="android.intent.action.MAIN" />
 		
 		        <category android:name="android.intent.category.LAUNCHER" />
@@ -115,6 +116,12 @@
 		
 		        <category android:name="android.intent.category.DEFAULT" />
 		    </intent-filter>
+        </activity>
+        
+		<activity
+		    android:name=".TaskMainActivity"
+		    android:configChanges="keyboardHidden|orientation|screenSize" >
+ 			
 		</activity>
 
         <activity

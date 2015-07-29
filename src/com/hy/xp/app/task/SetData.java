@@ -1,13 +1,10 @@
 package com.hy.xp.app.task;
 
-import com.hy.xp.app.PrivacyProvider;
-
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.util.Log;
+
+import com.hy.xp.app.PrivacyProvider;
 
 public class SetData
 {

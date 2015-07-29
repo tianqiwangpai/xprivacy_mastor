@@ -42,7 +42,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.hy.xp.app.IPrivacyService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,6 +60,15 @@ public class Util
 	public static int NOTIFY_RANDOMIZE = 4;
 	public static int NOTIFY_UPGRADE = 5;
 	public static int NOTIFY_UPDATE = 6;
+	
+	public static int error_code;
+	public static enum error{
+		Normal,
+		NoPhoneInfo,
+		FinishedNEWDATA,
+		FinishedBackrecord
+	}
+	
 	public static Random r = new Random();
 
 	public static void log(XHook hook, int priority, String msg)
