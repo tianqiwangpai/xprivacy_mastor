@@ -91,6 +91,9 @@ public class ActivityModel extends ActivityBase
 		// TODO Auto-generated method stub
 		super.onResume();
 		xpmodelsList = DBMgr.getInstance(ActivityModel.this).getXpmpdellist();
+		if(xpmodelsList.size() == 0){
+			return;
+		}
 		modelAdapter = new ModelAdapter(ActivityModel.this, xpmodelsList);
 		mListView.setAdapter(modelAdapter);
 

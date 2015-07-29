@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+	<Button
+	    android:id="@+id/appsetting"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="应用设置" />
+
+    <ListView
+        android:id="@+id/appset"
+        android:layout_width="fill_parent"
+        android:layout_height="400dip"
+        android:visibility="gone" />
+
+    <Button 
+        android:id="@+id/hidapplist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="收起应用列表"/>
+    
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="wrap_content"
+        android:layout_height="340dip" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TableLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="3dip" >
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#1976D2" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="任务名称:" />
+
+                        <Spinner
+                            android:id="@+id/taskname"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4" />
+
+                        <EditText
+                            android:id="@+id/et_taskname"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="Task1"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="日新增量:" />
+
+                        <EditText
+                            android:id="@+id/datanew"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="20"
+                            android:hint="正整数" />
+                    </TableRow>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dip"
+                        android:background="#B6B6B6" />
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2196F3" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="日存留率:" />
+
+                        <EditText
+                            android:id="@+id/datastaylv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="存留方式:" />
+
+                        <Spinner
+                            android:id="@+id/datastayway"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:entries="@array/stayway"
+                            android:prompt="@string/def_stayway" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/datalowflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="递减" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2196F3" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减比例:" />
+
+                        <EditText
+                            android:id="@+id/datalowlv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减最小:" />
+
+                        <EditText
+                            android:id="@+id/datalowest"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="5"
+                            android:hint="正整数" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/secondeliveflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="二次激活" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2196F3" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="时间点一:" />
+
+                        <EditText
+                            android:id="@+id/secondlivef"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="10"
+                            android:hint="正整数" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="时间点二:" />
+
+                        <EditText
+                            android:id="@+id/secondlives"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="30"
+                            android:hint="正整数" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/onlystayflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="只存留" />
+                    </TableRow>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dip"
+                        android:background="#B6B6B6" />
+                </TableLayout>
+                
+                <TableLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/nextdayflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="隔日" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="间隔天数:" />
+
+                        <EditText
+                            android:id="@+id/nextdayinterval"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="2"
+                            android:hint="正整数" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="回访次数:" />
+
+                        <EditText
+                            android:id="@+id/nextdayintervalcount"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="3"
+                            android:hint="正整数" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="隔日存率:" />
+
+                        <EditText
+                            android:id="@+id/nextdaystaylv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="存留方式:" />
+
+                        <Spinner
+                            android:id="@+id/nextdaystayway"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:entries="@array/stayway"
+                            android:prompt="@string/def_stayway" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/nextdaydatalowflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="递减" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2196F3" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减比例:" />
+
+                        <EditText
+                            android:id="@+id/nextdaydatalowlv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减最小:" />
+
+                        <EditText
+                            android:id="@+id/nextdaydatalowest"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="3"
+                            android:hint="正整数" />
+                    </TableRow>
+                </TableLayout>
+                
+                <TableLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/nextweekflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="隔周" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="周存留率:" />
+
+                        <EditText
+                            android:id="@+id/nextweekstaylv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="存留方式:" />
+
+                        <Spinner
+                            android:id="@+id/nextweekstayway"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:entries="@array/stayway"
+                            android:prompt="@string/def_stayway" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/nextweekdatalowflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="递减" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2196F3" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减比例:" />
+
+                        <EditText
+                            android:id="@+id/nextweekdatalowlv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减最小:" />
+
+                        <EditText
+                            android:id="@+id/nextweekdatalowest"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="4"
+                            android:hint="正整数" />
+                    </TableRow>
+                </TableLayout>
+                
+                <TableLayout
+                    android:id="@+id/tab4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/nextmonthflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="隔月" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="月存留率:" />
+
+                        <EditText
+                            android:id="@+id/nextmonthstaylv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="存留方式:" />
+
+                        <Spinner
+                            android:id="@+id/nextmonthstayway"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:entries="@array/stayway"
+                            android:prompt="@string/def_stayway" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <CheckBox
+                            android:id="@+id/nextmonthdatalowflag"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="递减" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#2196F3" >
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减比例:" />
+
+                        <EditText
+                            android:id="@+id/nextmonthdatalowlv"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="0.20"
+                            android:hint="0~1" />
+
+                        <TextView
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="递减最小:" />
+
+                        <EditText
+                            android:id="@+id/nextmonthdatalowest"
+                            android:layout_width="1dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="2"
+                            android:hint="正整数" />
+                    </TableRow>
+                </TableLayout>
+            </FrameLayout>
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </TabHost>
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/createtask"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="创建任务" />
+
+            <Button
+                android:id="@+id/edittask"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="编辑任务" />
+
+            <Button
+                android:id="@+id/deletetask"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="删除任务" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/starttask"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="开始任务" />
+
+            <Button
+                android:id="@+id/oldsetting"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="老版设置" />
+
+            <Button
+                android:id="@+id/importdata"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="导入数据" />
+        </TableRow>
+        
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+			<Button
+                android:id="@+id/importmachine"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="导入机型" />
+            
+            <Button
+                android:id="@+id/createphoneinfo"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="生成数据" />
+            
+            
+            <Button
+                android:id="@+id/softwareusertime"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="软件时长" />
+        </TableRow>
+        
+        <TableRow 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView 
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="日新增量(已完成/全部)"/>
+            <TextView 
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:id="@+id/newdatashow"/>
+            
+            <TextView 
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="留存量(已完成/全部)"/>
+            <TextView 
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:id="@+id/backdatashow"/>
+        </TableRow>
+        
+        <TableRow 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView 
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="日期:"/>
+            
+            <TextView 
+                android:id="@+id/nowdate"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
