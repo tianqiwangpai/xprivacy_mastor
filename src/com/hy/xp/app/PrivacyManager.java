@@ -1242,6 +1242,36 @@ public class PrivacyManager
 		// Host name
 		if (name.equals("%hostname"))
 			return cDeface;
+		
+		// BMAC addresses
+		if (name.equals("BMAC")) {
+			String value = null;
+			File sdcardDir = Environment.getExternalStorageDirectory();
+			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			File mFile = new File(path);
+			if (mFile.exists()) {
+				try {
+					String result = BufferedReaderJSON(path);
+
+					if (result != null) {
+						Gson mGson = new Gson();
+						PhoneDataBean mBases = mGson.fromJson(result,
+								PhoneDataBean.class);
+						value = mBases.getBMacAddress();
+						return value;
+					}
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// System.out.println("1");
+				return getRandomProp("BMAC");
+			} else {
+				return getRandomProp("BMAC");
+			}
+
+		}
 
 		// MAC addresses
 		if (name.equals("MAC") || name.equals("%macaddr")) {
@@ -1950,6 +1980,19 @@ public class PrivacyManager
 		}
 
 		if (name.equals("MAC")) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < 6; i++) {
+				if (i != 0)
+					sb.append(':');
+				int v = r.nextInt(256);
+				if (i == 0)
+					v = v & 0xFC; // unicast, globally unique
+				sb.append(Integer.toHexString(0x100 | v).substring(1));
+			}
+			return sb.toString().toUpperCase();
+		}
+		
+		if (name.equals("BMAC")) {
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < 6; i++) {
 				if (i != 0)

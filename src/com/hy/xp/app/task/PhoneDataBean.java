@@ -40,6 +40,9 @@ public class PhoneDataBean implements Serializable
 	public static final String ANDROIDCODE = "AndroidCode";
 	public static final String DENSITY = "density";
 	public static final String TIMEPAPP = "timeapp";
+	
+	//TODO add by ltz.support blutooth mac
+	public static final String BMACADDRESS = "BMacAddress";
 
 	public String getTimeapp()
 	{
@@ -141,6 +144,8 @@ public class PhoneDataBean implements Serializable
 	private String timeapp;
 	private String SystemCode;
 	private String datatype;
+	
+	private String BMacAddress = "";
 
 	public String getModel()
 	{
@@ -362,11 +367,19 @@ public class PhoneDataBean implements Serializable
 		Ua = ua;
 	}
 
+	public String getBMacAddress() {
+		return BMacAddress;
+	}
+
+	public void setBMacAddress(String bMacAddress) {
+		BMacAddress = bMacAddress;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "PhoneDataBean [datatype=" + datatype + ", SystemCode=" + SystemCode + ", AndroidCode=" + AndroidCode + ", density=" + density + ", Serial=" + Serial + ", Latitude=" + Latitude + ", Longitude=" + Longitude + ", Altitude=" + Altitude + ", MacAddress=" + MacAddress + ", IpAddress=" + IpAddress + ", Imei=" + Imei + ", PhoneNumber=" + PhoneNumber + ", AndroidID=" + AndroidID
-				+ ", GsfId=" + GsfId + ", AdvertisementID=" + AdvertisementID + ", Mcc=" + Mcc + ", Mnc=" + Mnc + ", Country=" + Country + ", Operator=" + Operator + ", IccId=" + IccId + ", GsmCallID=" + GsmCallID + ", GsmLac=" + GsmLac + ", Imsi=" + Imsi + ", Ssid=" + Ssid + ", Ua=" + Ua + ", Model=" + Model + ", Manufacturer=" + Manufacturer + ", Product=" + Product + "]";
+				+ ", GsfId=" + GsfId + ", AdvertisementID=" + AdvertisementID + ", Mcc=" + Mcc + ", Mnc=" + Mnc + ", Country=" + Country + ", Operator=" + Operator + ", IccId=" + IccId + ", GsmCallID=" + GsmCallID + ", GsmLac=" + GsmLac + ", Imsi=" + Imsi + ", Ssid=" + Ssid + ", Ua=" + Ua + ", Model=" + Model + ", Manufacturer=" + Manufacturer + ", Product=" + Product + ", BMacAddress=" + BMacAddress + "]";
 	}
 
 }

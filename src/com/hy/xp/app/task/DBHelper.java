@@ -63,7 +63,7 @@ public class DBHelper extends SQLiteOpenHelper
 				.append(PhoneDataBean.MACADDRESS).append(" text, ").append(PhoneDataBean.IPADDRESS).append(" text, ").append(PhoneDataBean.IMEI).append(" text, ").append(PhoneDataBean.PHONENUMBER).append(" text, ").append(PhoneDataBean.ANDROIDID).append(" text, ").append(PhoneDataBean.GSFID).append(" text, ").append(PhoneDataBean.ADVERTISEMENTID).append(" text, ").append(PhoneDataBean.MCC)
 				.append(" text, ").append(PhoneDataBean.MNC).append(" text, ").append(PhoneDataBean.COUNTRY).append(" text, ").append(PhoneDataBean.OPERATOR).append(" text, ").append(PhoneDataBean.ICCID).append(" text, ").append(PhoneDataBean.GSMCALLID).append(" text, ").append(PhoneDataBean.GSMLAC).append(" text, ").append(PhoneDataBean.IMSI).append(" text, ").append(PhoneDataBean.SSID)
 				.append(" text, ").append(PhoneDataBean.UA).append(" text, ").append(PhoneDataBean.MODEL).append(" text, ").append(PhoneDataBean.MANUFACTURER).append(" text, ").append(PhoneDataBean.PRODUCT).append(" text, ").append(PhoneDataBean.ANDROIDCODE).append(" text, ").append(PhoneDataBean.SYSTEMCODE).append(" text, ").append(PhoneDataBean.DATATYPE).append(" text, ")
-				.append(PhoneDataBean.DENSITY).append(" text  ); ");
+				.append(PhoneDataBean.DENSITY).append(" text, ").append(PhoneDataBean.BMACADDRESS).append(" text  ); ");
 		db.execSQL(phone.toString());
 
 		

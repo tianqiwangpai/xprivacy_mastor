@@ -554,14 +554,14 @@ public class DBMgr {
 		db.delete("tb_phone", null, null);
 		db.execSQL(sql_del_updat);
 		String sql = "insert into tb_phone(Serial," + "Latitude,"
-				+ "Longitude," + "Altitude," + "MacAddress," + "IpAddress,"
+				+ "Longitude," + "Altitude," + "MacAddress,"+ "IpAddress,"
 				+ "Imei," + "PhoneNumber," + "AndroidID," + "GsfId,"
 				+ "AdvertisementID," + "Mcc," + "Mnc," + "Country,"
 				+ "Operator," + "IccId," + "GsmCallID," + "GsmLac," + "IMSI,"
 				+ "SSID," + "Ua," + "Model," + "Manufacturer," + "Product,"
-				+ "AndroidCode," + "SystemCode," + "datatype," + "density"
+				+ "AndroidCode," + "SystemCode," + "datatype," + "density,"+"BMacAddress" 
 				+ ") " + "values(?,"
-				+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		SQLiteStatement stat = db.compileStatement(sql);
 		db.beginTransaction();
@@ -595,6 +595,7 @@ public class DBMgr {
 			stat.bindString(26, mBean.getSystemCode());
 			stat.bindString(27, mBean.getDatatype());
 			stat.bindString(28, mBean.getDensity());
+			stat.bindString(29, mBean.getBMacAddress());
 			stat.executeInsert();
 		}
 		// end
@@ -822,6 +823,12 @@ public class DBMgr {
 					.getString(mCursor.getColumnIndex(PhoneDataBean.MACADDRESS))
 					: "";
 			mPhoneDataBean.setMacAddress(macAddress);
+			
+			String bmacAddress = mCursor.getString(
+					mCursor.getColumnIndex(PhoneDataBean.BMACADDRESS)).length() > 0 ? mCursor
+					.getString(mCursor.getColumnIndex(PhoneDataBean.BMACADDRESS))
+					: "";
+			mPhoneDataBean.setBMacAddress(bmacAddress);
 
 			String ipAddress = mCursor.getString(
 					mCursor.getColumnIndex(PhoneDataBean.IPADDRESS)).length() > 0 ? mCursor
@@ -904,8 +911,8 @@ public class DBMgr {
 			mPhoneDataBean.setImsi(iMSI);
 
 			String ssid = mCursor.getString(
-					mCursor.getColumnIndex(PhoneDataBean.IMSI)).length() > 0 ? mCursor
-					.getString(mCursor.getColumnIndex(PhoneDataBean.IMSI)) : "";
+					mCursor.getColumnIndex(PhoneDataBean.SSID)).length() > 0 ? mCursor
+					.getString(mCursor.getColumnIndex(PhoneDataBean.SSID)) : "";
 			mPhoneDataBean.setSsid(ssid);
 
 			String ua = mCursor.getString(
@@ -1125,18 +1132,31 @@ public class DBMgr {
 		return preferences.getString("currenttask", null);
 	}
 	
-	public static void setOnlyStay(boolean isstay){
+	public static String getTaskstartime(int id) {
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		return preferences.getString("taskstarttime"+id, null);
+	}
+	
+	public static void setTaskstarttime(String value, int id){
 		SharedPreferences preferences = ApplicationEx.getContextObject()
 				.getSharedPreferences("task", Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
-		editor.putBoolean("onlystay", isstay);
+		editor.putString("taskstarttime"+id, value).commit();
+	}
+	
+	public static void setGetStayway(int getway){
+		SharedPreferences preferences = ApplicationEx.getContextObject()
+				.getSharedPreferences("task", Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putInt("getway", getway);
 		editor.commit();
 	}
 	
-	public static boolean isOnlyStay(){
+	public static int getGetStayway(){
 		SharedPreferences preferences = ApplicationEx.getContextObject()
 				.getSharedPreferences("task", Context.MODE_PRIVATE);
-		return preferences.getBoolean("onlystay", false);
+		return preferences.getInt("getway", 0);
 	}
 	
 	public static void setsecondelive(boolean on){
@@ -1294,9 +1314,7 @@ public class DBMgr {
 		secondtest();
 		Util.error_code = Util.error.Normal.ordinal();
 		
-		if(isOnlyStay()){
-			stayway = 0x3;
-		}
+		stayway = getGetStayway();
 		
 		PhoneDataBean data = null;
 		if (stayway == 0) {
@@ -1304,7 +1322,12 @@ public class DBMgr {
 			if (data == null) {
 				data = getfrombackrecord();
 			}
-		} else if (stayway == 0x1) {
+		}else if (stayway == 0x1) {
+			data = getfrombackrecord();			
+			if (data == null) {
+				data = getfromnewdata();
+			}
+		} else if (stayway == 0x2) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				data = getfromnewdata();
@@ -1317,7 +1340,9 @@ public class DBMgr {
 					data = getfromnewdata();
 				}
 			}
-		} else if (stayway == 0x2) {
+		} else if (stayway == 0x3) {
+			data = getfrombackrecord();
+		} else if (stayway == 0x4) {
 			if (isfollownewdata) {
 				data = getfromnewdata();
 				if (data == null) {
@@ -1331,8 +1356,6 @@ public class DBMgr {
 				}
 				isfollownewdata = true;
 			}
-		} else if (stayway == 0x3) {
-			data = getfrombackrecord();
 		}
 		
 		//TODO 提示信息

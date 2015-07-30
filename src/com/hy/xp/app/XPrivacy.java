@@ -194,7 +194,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 
 			if (prefs.getBoolean(lpparam.packageName + "/updateDisplayInfoLocked", false)) {
 				try{
-					XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.view.Display", lpparam.classLoader), "updateDisplayInfoLocked", new XC_MethodHook()
+					/*XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.view.Display", lpparam.classLoader), "updateDisplayInfoLocked", new XC_MethodHook()
 					{
 						@Override
 						protected void afterHookedMethod(MethodHookParam param) throws Throwable
@@ -207,7 +207,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 							Object mDisplayInfoH = XposedHelpers.getObjectField(param.thisObject, "mDisplayInfo");
 							XposedHelpers.setIntField(mDisplayInfoH, "appHeight", new Integer(s[1]));
 						}
-					});
+					});*/
 				}catch(Exception e){
 					
 				}

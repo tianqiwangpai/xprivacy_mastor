@@ -31,10 +31,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Process;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +43,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -54,13 +52,11 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hy.xp.app.task.ActivityCreateTask;
 import com.hy.xp.app.task.ActivityModel;
 import com.hy.xp.app.task.DBMgr;
 import com.hy.xp.app.task.InitData;
 import com.hy.xp.app.task.PhoneDataBean;
 import com.hy.xp.app.task.TaskAttribute;
-import com.hy.xp.app.task.TaskListActivity;
 import com.hy.xp.app.task.XpHelper;
 import com.hy.xp.app.task.xpmodel;
 import com.ipaulpro.afilechooser.FileChooserActivity;
@@ -123,7 +119,7 @@ public class ManagerCertermActivity extends Activity {
 	private EditText et_secondlivef = null;
 	private EditText et_secondlives = null;
 	
-	private CheckBox ck_onlystayflag = null;
+	private RadioGroup getway = null;
 	
 	private Button createtask = null;
 	private Button editetask = null;
@@ -179,7 +175,6 @@ public class ManagerCertermActivity extends Activity {
 		mcontext = this;
 		
 		Meta.annotate(getResources());
-		uihandler = new Myhandler();
 		
 		TabHost th = (TabHost)findViewById(R.id.tabhost);
         th.setup();
@@ -228,11 +223,11 @@ public class ManagerCertermActivity extends Activity {
 		inittaskprocess();
 	}
 
-	private void inittaskprocess(){
+	public void inittaskprocess(){
 		int[] backrst = dbmgr.getbackdatacount();
 		int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
 		int[] newrst = dbmgr.getnewdatacount(taskid);
-		newdatashow.setText(newrst[0]+"/"+newrst[1]);
+		newdatashow.setText(newrst[0]-1+"/"+newrst[1]);
 		backdatashow.setText(backrst[0]+"/"+backrst[1]);
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 
@@ -270,7 +265,6 @@ public class ManagerCertermActivity extends Activity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				
 			}
 			
 		});
@@ -397,8 +391,49 @@ public class ManagerCertermActivity extends Activity {
 		hiddataseconde(ck_secondeliveflag.isChecked());
 		ck_secondeliveflag.setOnCheckedChangeListener(new OnCheckedChangerListener());
 		
-		ck_onlystayflag = (CheckBox) findViewById(R.id.onlystayflag);
-		ck_onlystayflag.setOnCheckedChangeListener(new OnCheckedChangerListener());
+		getway = (RadioGroup) findViewById(R.id.getway);
+		getway.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup arg0, int arg1) {
+				int value = 0;
+				switch (arg1) {
+				case R.id.xlstayflag:
+					value = 0;
+					break;
+				case R.id.lxstayflag:
+					value = 1;
+					break;
+				case R.id.randomstayflag:
+					value = 2;
+					break;
+				case R.id.onlystayflag:
+					value = 3;
+					break;
+				default:
+					break;
+				}
+				
+				stor_getstayway(value);
+			}
+		});
+		int id = R.id.xlstayflag;
+		switch (dbmgr.getGetStayway()) {
+			case 0:
+				id = R.id.xlstayflag;
+				break;
+			case 1:
+				id = R.id.lxstayflag;	
+				break;
+			case 2:
+				id = R.id.randomstayflag;
+				break;
+			case 3:
+				id = R.id.onlystayflag;
+				break;
+			default:
+				break;
+		}
+		((RadioButton)getway.findViewById(id)).setChecked(true);
 		
 		appset = (ListView) findViewById(R.id.appset);
 		hidapplist = (Button) findViewById(R.id.hidapplist);
@@ -565,9 +600,6 @@ public class ManagerCertermActivity extends Activity {
 			case R.id.secondeliveflag:
 				hiddataseconde(isChecked);
 				break;
-			case R.id.onlystayflag:
-				stor_onlystay(isChecked);
-				break;
 			default:
 				break;
 			}
@@ -621,8 +653,8 @@ public class ManagerCertermActivity extends Activity {
 		}
 	}
 	
-	private void stor_onlystay(boolean ischecked) {
-		dbmgr.setOnlyStay(ischecked);
+	private void stor_getstayway(int way) {
+		dbmgr.setGetStayway(way);
 	}
 	
 	private void stor_secondlive(boolean ischecked){
@@ -975,6 +1007,7 @@ public class ManagerCertermActivity extends Activity {
 
 	private void starttask(){
 		InitData initdata = new InitData();
+		initdata.setThis(this);
         SharedPreferences preferences = ApplicationEx.getContextObject().getSharedPreferences("task", Context.MODE_PRIVATE);
         String currenttaskname = preferences.getString("currenttask", null);
         if(currenttaskname != null) {
@@ -1183,16 +1216,6 @@ public class ManagerCertermActivity extends Activity {
 				});
 		mBuilder.create().show();
 	}
-	public static Handler uihandler = null;
-	class Myhandler extends Handler{
-		@Override
-		public void handleMessage(Message msg) {
-			inittaskprocess();
-			super.handleMessage(msg);
-		}
-	}
-	
-	
 	
 	public List<PhoneDataBean> CreateTaskDataFile(int tasknewdata, ProgressDialog dialog) {
 		List<PhoneDataBean> mList = new ArrayList<PhoneDataBean>();
@@ -1258,6 +1281,8 @@ public class ManagerCertermActivity extends Activity {
 			mPhoneDataBean.setAltitude(PrivacyManager.getRandomProp("ALT"));
 			// MacAddress
 			mPhoneDataBean.setMacAddress(PrivacyManager.getRandomProp("MAC"));
+			// BMacAddress
+			mPhoneDataBean.setBMacAddress(PrivacyManager.getRandomProp("BMAC"));			
 			// IpAddress
 			mPhoneDataBean.setIpAddress(PrivacyManager
 					.getRandomProp("IPADDRESS"));

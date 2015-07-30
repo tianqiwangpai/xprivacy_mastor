@@ -218,13 +218,35 @@
                     <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
-
-                        <CheckBox
-                            android:id="@+id/onlystayflag"
+                        
+                        <RadioGroup android:id="@+id/getway"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="只存留" />
+                            android:orientation="horizontal">                            
+                            <RadioButton 
+                                android:id="@+id/xlstayflag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="新-留"/>
+                            <RadioButton 
+                                android:id="@+id/lxstayflag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="留-新"/>
+                            <RadioButton 
+                                android:id="@+id/randomstayflag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="随机"/>     
+                            <RadioButton 
+                                android:id="@+id/onlystayflag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="只留存"/>                       
+                        </RadioGroup>
+                        
                     </TableRow>
 
                     <View

@@ -45,7 +45,8 @@ public class PackageChange extends BroadcastReceiver
 				// Check action
 				if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
 					// Check privacy service
-					if (PrivacyService.getClient() == null)
+					boolean flag = true;
+					if (PrivacyService.getClient() == null || flag)
 						return;
 
 					// Get data
@@ -69,7 +70,7 @@ public class PackageChange extends BroadcastReceiver
 							for(int i=0; i<old.length; i++){
 								liststr.add(old[i]);
 							}
-							liststr.add(packageName);
+							liststr.add(appInfo.getApplicationName().get(0));
 							ManagerCertermActivity.Saveapplist(liststr);
 							
 							// Apply template
@@ -139,29 +140,30 @@ public class PackageChange extends BroadcastReceiver
 					// Check privacy service
 					if (PrivacyService.getClient() == null)
 						return;
+					
+					String packageName = inputUri.getSchemeSpecificPart();
+					ApplicationInfoEx appInfo = new ApplicationInfoEx(context, uid);
+					String appname = appInfo.getApplicationName().get(0);
+					//TODO 处理卸载安装包
+					List<String> liststr = new ArrayList<String>();
+					String[] old = DBMgr.getListapp();
+					for(int i=0; i<old.length; i++){
+						if(!old[i].equals(appname)){
+							liststr.add(old[i]);
+						}
+					}
+					ManagerCertermActivity.Saveapplist(liststr);
 
 					if (!replacing) {
 						// Package removed
 						notificationManager.cancel(uid);
-
-						// Delete restrictions
-						ApplicationInfoEx appInfo = new ApplicationInfoEx(context, uid);
+						// Delete restrictions						
 						if (appInfo.getPackageName().size() == 0) {
 							PrivacyManager.deleteRestrictions(uid, null, false);
 							PrivacyManager.deleteSettings(uid);
 							PrivacyManager.deleteUsage(uid);
 							PrivacyManager.clearPermissionCache(uid);
-							String packageName = inputUri.getSchemeSpecificPart();
 							
-							//TODO 处理卸载安装包
-							List<String> liststr = new ArrayList<String>();
-							String[] old = DBMgr.getListapp();
-							for(int i=0; i<old.length; i++){
-								if(!old[i].equals(packageName)){
-									liststr.add(old[i]);
-								}
-							}
-							ManagerCertermActivity.Saveapplist(liststr);
 							
 							/**
 							 * update : @date Mar 17, 2015 9:11:21 PM

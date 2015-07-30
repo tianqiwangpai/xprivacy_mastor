@@ -67,7 +67,7 @@ public class XBluetoothAdapter extends XHook
 		case Srv_getAddress:
 			if (param.getResult() != null)
 				if (isRestricted(param))
-					param.setResult(PrivacyManager.getDefacedProp(uid, "MAC"));
+					param.setResult(PrivacyManager.getDefacedProp(uid, "BMAC"));
 			break;
 
 		case Srv_getName:
