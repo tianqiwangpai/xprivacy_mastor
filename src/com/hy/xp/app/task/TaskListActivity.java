@@ -338,7 +338,7 @@ public class TaskListActivity extends ActivityBase
 				startActivity(new Intent(TaskListActivity.this, ActivityCreateTask.class));
 				return true;
 
-			/*case R.id.task_menu_manager:
+			case R.id.task_menu_manager:
 				startActivity(new Intent(TaskListActivity.this, ActivityTaskManager.class));
 				return true;
 
@@ -355,7 +355,7 @@ public class TaskListActivity extends ActivityBase
 
 			case R.id.xp_read_file_count:
 				optionReadFileCount();
-				return true;*/
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 			}

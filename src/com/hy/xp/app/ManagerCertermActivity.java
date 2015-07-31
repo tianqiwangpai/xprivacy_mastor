@@ -183,16 +183,20 @@ public class ManagerCertermActivity extends Activity {
         th.addTab(th.newTabSpec("tab3").setIndicator("∏Ù÷‹").setContent(R.id.tab3));
         th.addTab(th.newTabSpec("tab4").setIndicator("∏Ù‘¬").setContent(R.id.tab4));
 		
-        String[] applist = DBMgr.getListapp();
+        updatelist();
+        
+		initUI();
+		initData();
+		initPrivacyManager();
+	}
+	
+	private void updatelist(){
+		String[] applist = DBMgr.getListapp();
         if((applist != null) && (AppAdapte.dataselected.size() == 0)) {
             for(int i = 0; i < applist.length; i++) {
             	AppAdapte.dataselected.add(applist[i]);
             }
         }
-        
-		initUI();
-		initData();
-		initPrivacyManager();
 	}
 	
 	private void initPrivacyManager() {
@@ -768,19 +772,24 @@ public class ManagerCertermActivity extends Activity {
 
 	
 	public static void Saveapplist(List<String> applist) {
-    	if (ischanged(applist))
+    	if (ischanged(applist)){
     	      DBMgr.getInstance(ApplicationEx.getContextObject()).clean_task_cache(DBMgr.getCurrentTaskname());
-    	    try
+    	      AppAdapte.dataselected = applist;
+    	}
+    	  try
     	    {
     	      BufferedWriter localBufferedWriter = new BufferedWriter(new OutputStreamWriter(ApplicationEx.getContextObject().openFileOutput("applistselect", Context.MODE_PRIVATE)));
     	      StringBuffer localStringBuffer = new StringBuffer();
     	     
-    	      for(int i=0; i<applist.size()-1; i++){    	    	  
+    	      for(int i=0; i<applist.size()-1; i++){    
+    	    	  if(applist.size() == 1){
+    	    		  break;
+    	    	  }
     	    	  localStringBuffer.append(applist.get(i)).append("|");
     	      }
     	      if(applist.size() != 0){
     	    	  localStringBuffer.append(applist.get(applist.size() - 1));
-    	      }    	      
+    	      }
     	      localBufferedWriter.write(localStringBuffer.toString());
     	      localBufferedWriter.flush();
     	      localBufferedWriter.close();

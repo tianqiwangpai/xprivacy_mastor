@@ -1,6 +1,7 @@
 package com.hy.xp.app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Notification;
@@ -45,7 +46,7 @@ public class PackageChange extends BroadcastReceiver
 				// Check action
 				if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
 					// Check privacy service
-					boolean flag = true;
+					boolean flag = false;
 					if (PrivacyService.getClient() == null || flag)
 						return;
 
@@ -67,14 +68,32 @@ public class PackageChange extends BroadcastReceiver
 							//TODO 处理新增安装包
 							List<String> liststr = new ArrayList<String>();
 							String[] old = DBMgr.getListapp();
-							for(int i=0; i<old.length; i++){
-								liststr.add(old[i]);
-							}
-							liststr.add(appInfo.getApplicationName().get(0));
-							ManagerCertermActivity.Saveapplist(liststr);
+							boolean findit = false;
+							if(old != null){
+								for(int i=0; i<old.length; i++){
+									Log.e("LTZ",old[i]+"O:O"+packageName);
+									if(old[i].equals(packageName)){
+										findit = true;
+									}
+									liststr.add(old[i]);
+								}
+							}							
+							if(!findit){
+								liststr.add(packageName);
+								ManagerCertermActivity.Saveapplist(liststr);
+							}				
 							
 							// Apply template
 							PrivacyManager.applyTemplate(uid, Meta.cTypeTemplate, null, true, true, false);
+							PreferenceUtils
+								.setParam(context, "xp_clear", packageName, packageName);
+							SharedPreferences prefs = context.getSharedPreferences("ModSettings",
+									Context.MODE_WORLD_READABLE);
+							SharedPreferences.Editor e = prefs.edit();
+							e.putBoolean(packageName + "/" + "mdatatype", true).commit();
+							e.putBoolean(packageName + "/" + "updateDisplayInfoLocked", true).commit();
+							e.putBoolean(packageName + "/" + "timeMachine", true).commit();
+							e.putInt(packageName + "/recents-mode", 0x2).commit();
 
 							// Enable on demand
 							if (ondemand)
@@ -137,21 +156,25 @@ public class PackageChange extends BroadcastReceiver
 					}
 
 				} else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+					Log.e("LTZ","ACTION_PACKAGE_REMOVED");
 					// Check privacy service
 					if (PrivacyService.getClient() == null)
 						return;
 					
 					String packageName = inputUri.getSchemeSpecificPart();
 					ApplicationInfoEx appInfo = new ApplicationInfoEx(context, uid);
-					String appname = appInfo.getApplicationName().get(0);
 					//TODO 处理卸载安装包
 					List<String> liststr = new ArrayList<String>();
 					String[] old = DBMgr.getListapp();
-					for(int i=0; i<old.length; i++){
-						if(!old[i].equals(appname)){
-							liststr.add(old[i]);
+					if(old != null){
+						for(int i=0; i<old.length; i++){
+							Log.e("LTZ",old[i]+"-:-"+packageName);
+							if(!old[i].equals(packageName)){
+								liststr.add(old[i]);
+								Log.e("LTZ",old[i]+":"+packageName);
+							}
 						}
-					}
+					}					
 					ManagerCertermActivity.Saveapplist(liststr);
 
 					if (!replacing) {
@@ -159,12 +182,13 @@ public class PackageChange extends BroadcastReceiver
 						notificationManager.cancel(uid);
 						// Delete restrictions						
 						if (appInfo.getPackageName().size() == 0) {
+							Log.e("LTZ","CLEAN VALUE");
 							PrivacyManager.deleteRestrictions(uid, null, false);
 							PrivacyManager.deleteSettings(uid);
 							PrivacyManager.deleteUsage(uid);
 							PrivacyManager.clearPermissionCache(uid);
 							
-							
+							DBMgr.getInstance(context).cleandatabaserecord(packageName);
 							/**
 							 * update : @date Mar 17, 2015 9:11:21 PM
 							 */
@@ -178,6 +202,7 @@ public class PackageChange extends BroadcastReceiver
 							e.remove(packageName + "/" + "mdatatype");
 							e.remove(packageName + "/" + "updateDisplayInfoLocked");
 							e.remove(packageName + "/" + "timeMachine");
+							e.remove(packageName + "/recents-mode");
 							e.commit();
 						}
 					}

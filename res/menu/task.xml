@@ -6,16 +6,16 @@
         android:id="@+id/task_menu_create"
         android:title="创建任务"/>
     <item
-        android:id="@+id/task_import_file"
-        android:title="导入数据"/>
+        android:id="@+id/task_curr_file"
+        android:title="数据生成"/>
     <item
-        android:id="@+id/task_permission_manager"
-        android:title="权限设置"/>
-    <!-- <item
+        android:id="@+id/task_menu_manager"
+        android:title="任务管理"/>
+    <item
         android:id="@+id/task_menu_model"
         android:title="机型文件"/>
     <item
         android:id="@+id/xp_read_file_count"
-        android:title="计量"/> -->
+        android:title="计量"/>
 
 </menu>

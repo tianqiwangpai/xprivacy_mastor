@@ -1013,26 +1013,32 @@ public class PrivacyManager
 		if (name.equals("MODEL")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			//String path = "/mnt/sdcard" + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
 					String result = BufferedReaderJSON(path);
-
+					Log.e("LTZ","---------------------1---------------------------");
+					Log.e("LTZ", "GET RST FROM "+path);
 					if (result != null) {
+						Log.e("LTZ", "RST is NOT NULL");
 						Gson mGson = new Gson();
 						PhoneDataBean mBases = mGson.fromJson(result, PhoneDataBean.class);
 						value = mBases.getModel();
+
+						Log.e("LTZ", "GET RST VALUE " + value);
 						return value;
 					}
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				// System.out.println("1");
+				Log.e("LTZ", "RST IS NULL ");
 				return cDeface;
 			} else {
+				Log.e("LTZ", "FILE NOT EXISTS "+path);
 				// System.out.println("2");
 				return cDeface;
 			}
@@ -1041,7 +1047,7 @@ public class PrivacyManager
 
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1070,7 +1076,7 @@ public class PrivacyManager
 		if (name.equals("PRODUCT")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1099,12 +1105,14 @@ public class PrivacyManager
 		if (name.equals("RELEASE")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
 					String result = BufferedReaderJSON(path);
+					
 					if (result != null) {
+						
 						Gson mGson = new Gson();
 						PhoneDataBean mBases = mGson.fromJson(result, PhoneDataBean.class);
 						value = mBases.getAndroidCode();
@@ -1116,9 +1124,11 @@ public class PrivacyManager
 					e.printStackTrace();
 				}
 				// System.out.println("1");
+				Log.e("LTZ", "RST IS NULL ");
 				return cDeface;
 			} else {
 				// System.out.println("2");
+				
 				return cDeface;
 			}
 		}
@@ -1126,7 +1136,7 @@ public class PrivacyManager
 		if (name.equals("DATATYPE")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1154,7 +1164,7 @@ public class PrivacyManager
 		if (name.equals("DENSITY")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1182,7 +1192,7 @@ public class PrivacyManager
 		if (name.equals("TIMEAPP")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1213,12 +1223,11 @@ public class PrivacyManager
 		if (name.equals("SERIAL") || name.equals("%serialno")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
 					String result = BufferedReaderJSON(path);
-
 					if (result != null) {
 						Gson mGson = new Gson();
 						PhoneDataBean mBases = mGson.fromJson(result, PhoneDataBean.class);
@@ -1247,7 +1256,7 @@ public class PrivacyManager
 		if (name.equals("BMAC")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1277,7 +1286,7 @@ public class PrivacyManager
 		if (name.equals("MAC") || name.equals("%macaddr")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1310,7 +1319,7 @@ public class PrivacyManager
 		if (name.equals("getDeviceId") || name.equals("%imei")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1339,7 +1348,7 @@ public class PrivacyManager
 		if (name.equals("PhoneNumber") || name.equals("getLine1AlphaTag") || name.equals("getLine1Number") || name.equals("getMsisdn") || name.equals("getVoiceMailAlphaTag") || name.equals("getVoiceMailNumber") || name.equals("getCompleteVoiceMailNumber")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1367,7 +1376,7 @@ public class PrivacyManager
 		if (name.equals("ANDROID_ID")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1406,7 +1415,7 @@ public class PrivacyManager
 			// ISO country code
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1434,7 +1443,7 @@ public class PrivacyManager
 			// MCC+MNC: test network
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1463,7 +1472,7 @@ public class PrivacyManager
 		if (name.equals("getNetworkOperatorName")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1492,7 +1501,7 @@ public class PrivacyManager
 			// ISO country code
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1521,7 +1530,7 @@ public class PrivacyManager
 			// MCC+MNC: test network
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1549,7 +1558,7 @@ public class PrivacyManager
 		if (name.equals("getSimOperatorName")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1577,7 +1586,7 @@ public class PrivacyManager
 		if (name.equals("getSimSerialNumber") || name.equals("getIccSerialNumber") || name.equals("getIccSerialNumber")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1601,7 +1610,7 @@ public class PrivacyManager
 			// IMSI for a GSM phone
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1626,7 +1635,7 @@ public class PrivacyManager
 			// Default hidden network
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1653,7 +1662,7 @@ public class PrivacyManager
 		if (name.equals("GSF_ID")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1682,7 +1691,7 @@ public class PrivacyManager
 		if (name.equals("AdvertisingId")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1711,7 +1720,7 @@ public class PrivacyManager
 			// Set address
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1751,7 +1760,7 @@ public class PrivacyManager
 			// Set address
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1791,7 +1800,7 @@ public class PrivacyManager
 		if (name.equals("UA")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1828,7 +1837,7 @@ public class PrivacyManager
 		if (name.equals("MCC")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1856,7 +1865,7 @@ public class PrivacyManager
 		if (name.equals("MNC")) {
 			String value = null;
 			File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = sdcardDir.getPath() + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1912,7 +1921,7 @@ public class PrivacyManager
 		String value = null;
 		String sLat = null, sLon = null, sAlt = null;
 		File sdcardDir = Environment.getExternalStorageDirectory();
-		String path = sdcardDir.getPath() + "/xp_datafile/setting";
+		String path = "/mnt/sdcard" + "/xp_datafile/setting";
 		File mFile = new File(path);
 		if (mFile.exists()) {
 			try {

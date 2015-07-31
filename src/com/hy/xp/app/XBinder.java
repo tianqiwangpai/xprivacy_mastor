@@ -45,6 +45,8 @@ public class XBinder extends XHook
 	public static List<String> cServiceDescriptor = Arrays.asList(new String[] { "android.accounts.IAccountManager", "android.app.IActivityManager", "android.content.IClipboard", "android.net.IConnectivityManager", "android.content.IContentService", "android.location.ILocationManager", "com.android.internal.telephony.ITelephonyRegistry", "com.android.internal.telephony.ITelephonyRegistryMSim",
 			"android.content.pm.IPackageManager", "com.android.internal.telephony.IPhoneSubInfo", "com.android.internal.telephony.msim.IPhoneSubInfoMSim", "android.view.IWindowManager", "android.net.wifi.IWifiManager", "android.net.sip.ISipService", "com.android.internal.telephony.ISms", "android.nfc.INfcAdapter", "com.android.internal.appwidget.IAppWidgetService", "android.bluetooth.IBluetooth",
 			"android.bluetooth.IBluetoothManager", "android.hardware.input.IInputManager", "android.gui.SensorServer", "android.hardware.usb.IUsbManager", "android.hardware.ICameraService", "android.app.IApplicationThread", "android.content.IContentProvider", "android.view.IWindowSession" });
+	
+	
 	// @formatter:on
 
 	// @formatter:off

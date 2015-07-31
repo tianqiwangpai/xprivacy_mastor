@@ -462,14 +462,14 @@ public class NActivityTaskManager extends ActivityBase {
 				startActivity(it);
 				finish();
 				return true;
-			case R.id.task_import_file:
+			/*case R.id.task_import_file:
 				showChooser();
 				return true;
 			case R.id.task_permission_manager:
 				it = new Intent(NActivityTaskManager.this, ActivityMain.class);
 				startActivity(it);
 				finish();
-				break;
+				break;*/
 			default:
 				return super.onOptionsItemSelected(item);
 			}
@@ -477,7 +477,7 @@ public class NActivityTaskManager extends ActivityBase {
 			Util.bug(null, ex);
 			return true;
 		}
-		return false;
+		//return false;
 	}
 
 	private static final int REQUEST_CHOOSER = 1234;

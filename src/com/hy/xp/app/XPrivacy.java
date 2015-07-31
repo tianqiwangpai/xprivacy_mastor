@@ -694,15 +694,20 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 				Util.bug(null, ex);
 			}
 		
-		// Build PRODUCT
-		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "PRODUCT", secret))
+		// Build PRODUCT,BRAND
+		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "PRODUCT", secret)){
 			try {
 				Field mmod = Build.class.getField("PRODUCT");
 				mmod.setAccessible(true);
 				mmod.set(null, PrivacyManager.getDefacedProp(Process.myUid(), "PRODUCT"));
+				
+				Field mmod1 = Build.class.getField("BRAND");
+				mmod1.setAccessible(true);
+				mmod1.set(null, PrivacyManager.getDefacedProp(Process.myUid(), "PRODUCT"));
 			} catch (Throwable ex) {
 				Util.bug(null, ex);
 			}
+		}
 
 		// Android 版本
 		if (PrivacyManager.getRestriction(null, Process.myUid(), PrivacyManager.cIdentification, "RELEASE", secret))
@@ -942,8 +947,12 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 				long start = System.currentTimeMillis();
 
 				// Execute hook
+				try{
 				mHook.before(xparam);
-
+				}catch(Exception e){
+					e.printStackTrace();
+					return;
+				}
 				long ms = System.currentTimeMillis() - start;
 				if (ms > PrivacyManager.cWarnHookDelayMs)
 					Util.log(mHook, Log.WARN, String.format("%s %d ms", param.method.getName(), ms));

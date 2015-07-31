@@ -1011,6 +1011,13 @@ public class DBMgr {
         
     }
 	
+	public void cleandatabaserecord(String appname){
+	        SharedPreferences appcord = ApplicationEx.getContextObject().getSharedPreferences("appcord", Context.MODE_PRIVATE);
+	        SharedPreferences.Editor editor = appcord.edit();
+	        editor.putInt(appname, 0);
+            editor.commit();
+	}
+	
 	public void addtaskapp(String taskname, Object[] packagename) {
 		String sql = taskname;
 		for(Object temp : packagename){
@@ -1328,8 +1335,7 @@ public class DBMgr {
 				data = getfromnewdata();
 			}
 		} else if (stayway == 0x2) {
-			Random random = new Random();
-			if (random.nextBoolean()) {
+			if (getRandomboolean(getnewdatacount(getLastnewCord(getCurrentTaskname(), getListapp())[1])[1], getbackdatacount()[1])) {
 				data = getfromnewdata();
 				if (data == null) {
 					data = getfrombackrecord();
@@ -1374,6 +1380,32 @@ public class DBMgr {
 	        ApplicationEx.getContextObject().startService(localIntent);
 		}
 		return data;
+	}
+	
+	private boolean getRandomboolean(int a, int b){
+		int max,min;
+		boolean isnormal = true;
+		boolean rst = false;
+		if(a > b){
+			max=a;
+			min=b;
+		}{
+			isnormal = false;
+			max=b;
+			min=a;
+		}
+		
+		Random random = new Random();
+		int randomint = random.nextInt(max+min);
+		if(randomint >= min){
+			rst = true;
+		}else{
+			rst = false;
+		}
+		if(!isnormal){
+			rst = !rst;
+		}
+		return rst;
 	}
 	
 	private void insertback(int id){

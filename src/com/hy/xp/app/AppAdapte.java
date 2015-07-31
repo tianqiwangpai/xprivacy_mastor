@@ -65,7 +65,7 @@ public class AppAdapte extends SimpleAdapter {
 		listItemView.wzchecked.setOnCheckedChangeListener(null);
 		listItemView.wzchecked.setChecked(false);
 		if (Util.itemexists(dataselected.toArray(),
-				mdata.get(position).get("name").toString())) {
+				mdata.get(position).get("packagename").toString())) {
 			listItemView.wzchecked.setChecked(true);
 		} else {
 			listItemView.wzchecked.setChecked(false);
@@ -108,12 +108,12 @@ public class AppAdapte extends SimpleAdapter {
 			if (isChecked) {
 				if (!Util.itemexists(AppAdapte.dataselected.toArray(), appname)) {
 					setuidper(uid, packagename);
-					dataselected.add(appname);
+					dataselected.add(packagename);
 					cleanselected.add(appname);
 				}
 			} else {
 				cleanuidper(uid, packagename);
-				dataselected.remove(appname);
+				dataselected.remove(packagename);
 				cleanselected.remove(appname);
 			}
 
