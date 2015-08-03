@@ -120,6 +120,7 @@ public class ManagerCertermActivity extends Activity {
 	private EditText et_secondlives = null;
 	
 	private RadioGroup getway = null;
+	private RadioGroup filter = null;
 	
 	private Button createtask = null;
 	private Button editetask = null;
@@ -420,6 +421,27 @@ public class ManagerCertermActivity extends Activity {
 				stor_getstayway(value);
 			}
 		});
+		
+		filter = (RadioGroup) findViewById(R.id.filter);
+		filter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup arg0, int arg1) {
+				int value = 0;
+				switch (arg1) {
+					case R.id.filter_user:
+						value = 0;
+						filter_value = 0;
+						break;
+					case R.id.filter_system:
+						value = 1;
+						filter_value = 1;
+						break;
+				}
+				updatelistview(value);
+			}
+		});
+		
+		
 		int id = R.id.xlstayflag;
 		switch (dbmgr.getGetStayway()) {
 			case 0:
@@ -458,6 +480,30 @@ public class ManagerCertermActivity extends Activity {
 		createphoneinfo.setOnClickListener(new OnClikedListener());
 		
 		DisableView();
+	}
+	
+	private void updatelistview(int value) {
+		try{
+			SimpleAdapter mAppAdapter = null;
+			if(value == 0){
+				mAppAdapter = new AppAdapte(mcontext, 
+	            		list_user, 
+	            		R.layout.listviewcontent, 
+	            		new String[] { "name", "icon" }, 
+	            		new int[] {R.id.appname, R.id.appicon});
+			}else{
+				mAppAdapter = new AppAdapte(mcontext, 
+	            		list_system, 
+	            		R.layout.listviewcontent, 
+	            		new String[] { "name", "icon" }, 
+	            		new int[] {R.id.appname, R.id.appicon});
+			}
+			
+			appset.setAdapter(mAppAdapter);
+			mAppAdapter.notifyDataSetChanged();
+		}catch(Exception e){
+			
+		}
 	}
 	
 	private void initData(){
@@ -1088,14 +1134,12 @@ public class ManagerCertermActivity extends Activity {
 		return ((CheckBox)findViewById(_id)).isChecked();
 	}
 
-	
+	List<Map<String, ?>> list_user = null;
+	List<Map<String, ?>> list_system = null;
+	private int filter_value = 0;
 	class AppListTask extends AsyncTask <Object, Integer, List<ApplicationInfoEx>>{
         private ProgressDialog mProgressDialog;
-        
-        protected List<ApplicationInfoEx> doInBackground(Object params) {
-            return ApplicationInfoEx.getXApplicationList(ManagerCertermActivity.this, mProgressDialog);
-        }
-        
+                
         protected void onPreExecute() {
 			mProgressDialog = new ProgressDialog(ManagerCertermActivity.this);
 			mProgressDialog.setMessage(getString(R.string.msg_loading));
@@ -1109,23 +1153,37 @@ public class ManagerCertermActivity extends Activity {
 		protected void onPostExecute(List<ApplicationInfoEx> listApp) {        	
         	if (!ManagerCertermActivity.this.isFinishing()) {
 				// Display app list
-        		 List<Map<String, ?>> list = new ArrayList<Map<String,?>>();
+        		list_user = new ArrayList<Map<String,?>>();
+        		list_system = new ArrayList<Map<String,?>>();
         		for(ApplicationInfoEx appinfo : listApp){
         			HashMap<String, Object> localHashMap = new HashMap<String, Object>();
                     localHashMap.put("name", appinfo.getApplicationName().get(0));
                     localHashMap.put("icon", appinfo.getIcon(ManagerCertermActivity.this));
                     localHashMap.put("uuid", Integer.valueOf(((ApplicationInfoEx)appinfo).getUid()));
                     localHashMap.put("packagename", ((ApplicationInfoEx)appinfo).getPackageName().get(0));
-                    if ((localHashMap.get("name") != null) && (!"".equals(localHashMap.get("name"))))
-                        list.add(localHashMap);
+                    if ((localHashMap.get("name") != null) && (!"".equals(localHashMap.get("name")))){
+                    	if(appinfo.isSystem()){
+                    		list_system.add(localHashMap);
+                    	}else{
+                    		list_user.add(localHashMap);
+                    	}
+                    }                    	
         		}
+        		SimpleAdapter mAppAdapter = null;
+				if(filter_value == 0){
+					mAppAdapter = new AppAdapte(mcontext, 
+	                		list_user, 
+	                		R.layout.listviewcontent, 
+	                		new String[] { "name", "icon" }, 
+	                		new int[] {R.id.appname, R.id.appicon});
+				}else{
+					mAppAdapter = new AppAdapte(mcontext, 
+	                		list_system, 
+	                		R.layout.listviewcontent, 
+	                		new String[] { "name", "icon" }, 
+	                		new int[] {R.id.appname, R.id.appicon});
+				}
 				
-                SimpleAdapter mAppAdapter = new AppAdapte(mcontext, 
-                		list, 
-                		R.layout.listviewcontent, 
-                		new String[] { "name", "icon" }, 
-                		new int[] {R.id.appname, R.id.appicon});
-
         		appset.setAdapter(mAppAdapter);
         		
         		appset.setVisibility(View.VISIBLE);

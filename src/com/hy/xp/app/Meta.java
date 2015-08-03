@@ -519,6 +519,8 @@ public class Meta
 		mListHook.add(new Hook(null, "goingToSleep", "", 16, null, null));
 		mListHook.add(new Hook(null, "wakingUp", "", 16, null, null));
 		mListHook.add(new Hook(null, "shutdown", "", 15, null, null));
+		mListHook.add(new Hook(null, "crashApplication", "", 15, null, null));
+		mListHook.add(new Hook(null, "handleApplicationCrash", "", 15, null, null));
 
 		// AppIndexApi
 		mListHook.add(new Hook(null, "GMS5.viewEnd", "", 1, null, null));

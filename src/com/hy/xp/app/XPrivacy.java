@@ -31,6 +31,7 @@ import com.saurik.substrate.MS;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -137,7 +138,19 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 			return;
 		if (prefs != null) {
 			prefs.reload();
+			
+			XposedHelpers.findAndHookMethod("com.android.server.am.ActivityManagerService", lpparam.classLoader, "crashApplication", int.class, int.class, String.class, String.class, new XC_MethodHook()
+			{
 
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param)
+						throws Throwable {
+					System.out.println("Crash¡À ltz+++++++++++++++");
+					super.beforeHookedMethod(param);
+				}
+				
+			});
+			
 			if (prefs.getBoolean(lpparam.packageName + "/mdatatype---", false)) {
 				XposedHelpers.findAndHookMethod("android.net.ConnectivityManager", lpparam.classLoader, "getNetworkInfo", int.class, new XC_MethodHook()
 				{
@@ -518,7 +531,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 		} catch (Throwable ex) {
 			Util.bug(null, ex);
 		}
-
+		
 		// Account manager
 		hookAll(XAccountManager.getInstances(null), null, mSecret);
 

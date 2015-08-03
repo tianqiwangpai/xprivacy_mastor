@@ -58,7 +58,7 @@ public class XActivityManagerService extends XHook
 
 	// @formatter:off
 	private enum Methods {
-		inputDispatchingTimedOut, appNotResponding, systemReady, finishBooting, setLockScreenShown, goingToSleep, wakingUp, shutdown
+		inputDispatchingTimedOut, appNotResponding, systemReady, finishBooting, setLockScreenShown, goingToSleep, wakingUp, shutdown, crashApplication, handleApplicationCrash
 	};
 
 	// @formatter:on
@@ -75,6 +75,8 @@ public class XActivityManagerService extends XHook
 		listHook.add(new XActivityManagerService(Methods.goingToSleep));
 		listHook.add(new XActivityManagerService(Methods.wakingUp));
 		listHook.add(new XActivityManagerService(Methods.shutdown));
+		listHook.add(new XActivityManagerService(Methods.crashApplication));
+		listHook.add(new XActivityManagerService(Methods.handleApplicationCrash));
 		return listHook;
 	}
 
@@ -112,9 +114,21 @@ public class XActivityManagerService extends XHook
 				param.setResult(null);
 			}
 			break;
-
+			
+		case crashApplication:
+			param.args[1] = null;
+			System.out.println("crashApplication++++++ltz+++++++");
+			param.setResult(null);
+			break;
+			
+		case handleApplicationCrash:
+			System.out.println("handleApplicationCrash++++++ltz+++++++");
+			Util.log(this, Log.WARN, "Background ANR uid=" + getUidANR(param));
+			param.setResult(null);
+			break;
 		case systemReady:
 			// Do nothing
+			System.out.println("SystemReady++++++ltz+++++++");
 			break;
 
 		case finishBooting:
@@ -157,6 +171,9 @@ public class XActivityManagerService extends XHook
 		case appNotResponding:
 			break;
 
+		case crashApplication:
+			break;
+			
 		case systemReady:
 			Util.log(this, Log.WARN, "System ready");
 			break;

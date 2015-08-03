@@ -4,11 +4,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<Button
-	    android:id="@+id/appsetting"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:text="应用设置" />
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/appsetting"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="应用设置" />
+            
+            <RadioGroup
+                android:id="@+id/filter"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/filter_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="用户应用" />
+                
+                <RadioButton
+                    android:id="@+id/filter_system"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="系统应用" />
+
+            </RadioGroup>
+
+        </TableRow>
+    </TableLayout>
 
     <ListView
         android:id="@+id/appset"
@@ -16,13 +49,13 @@
         android:layout_height="400dip"
         android:visibility="gone" />
 
-    <Button 
+    <Button
         android:id="@+id/hidapplist"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="收起应用列表"/>
-    
+        android:text="收起应用列表"
+        android:visibility="gone" />
+
     <TabHost
         android:id="@+id/tabhost"
         android:layout_width="wrap_content"
@@ -79,8 +112,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="20"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="20" />
                     </TableRow>
 
                     <View
@@ -104,8 +137,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -151,8 +184,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -165,8 +198,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="5"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="5" />
                     </TableRow>
 
                     <TableRow
@@ -197,8 +230,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="10"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="10" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -211,42 +244,46 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="30"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="30" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
-                        
-                        <RadioGroup android:id="@+id/getway"
+
+                        <RadioGroup
+                            android:id="@+id/getway"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="horizontal">                            
-                            <RadioButton 
+                            android:orientation="horizontal" >
+
+                            <RadioButton
                                 android:id="@+id/xlstayflag"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:checked="true"
-                                android:text="新-留"/>
-                            <RadioButton 
+                                android:text="新-留" />
+
+                            <RadioButton
                                 android:id="@+id/lxstayflag"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="留-新"/>
-                            <RadioButton 
+                                android:text="留-新" />
+
+                            <RadioButton
                                 android:id="@+id/randomstayflag"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="随机"/>     
-                            <RadioButton 
+                                android:text="随机" />
+
+                            <RadioButton
                                 android:id="@+id/onlystayflag"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="只留存"/>                       
+                                android:text="只留存" />
                         </RadioGroup>
-                        
                     </TableRow>
 
                     <View
@@ -254,12 +291,13 @@
                         android:layout_height="1dip"
                         android:background="#B6B6B6" />
                 </TableLayout>
-                
+
                 <TableLayout
                     android:id="@+id/tab2"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
+
                     <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
@@ -288,8 +326,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="2"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="2" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -302,8 +340,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="3"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="3" />
                     </TableRow>
 
                     <TableRow
@@ -321,8 +359,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -368,8 +406,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -382,16 +420,17 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="3"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="3" />
                     </TableRow>
                 </TableLayout>
-                
+
                 <TableLayout
                     android:id="@+id/tab3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
+
                     <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
@@ -420,8 +459,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -467,8 +506,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -481,16 +520,17 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="4"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="4" />
                     </TableRow>
                 </TableLayout>
-                
+
                 <TableLayout
                     android:id="@+id/tab4"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
+
                     <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
@@ -519,8 +559,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -566,8 +606,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="0.20"
-                            android:hint="0~1" />
+                            android:hint="0~1"
+                            android:text="0.20" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -580,8 +620,8 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="2"
-                            android:hint="正整数" />
+                            android:hint="正整数"
+                            android:text="2" />
                     </TableRow>
                 </TableLayout>
             </FrameLayout>
@@ -596,7 +636,7 @@
 
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <TableRow
             android:layout_width="fill_parent"
@@ -649,25 +689,25 @@
                 android:layout_weight="1"
                 android:text="导入数据" />
         </TableRow>
-        
+
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
-			<Button
+
+            <Button
                 android:id="@+id/importmachine"
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="导入机型" />
-            
+
             <Button
                 android:id="@+id/createphoneinfo"
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="生成数据" />
-            
-            
+
             <Button
                 android:id="@+id/softwareusertime"
                 android:layout_width="1dip"
@@ -675,49 +715,53 @@
                 android:layout_weight="1"
                 android:text="软件时长" />
         </TableRow>
-        
-        <TableRow 
+
+        <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView 
+            android:layout_height="wrap_content" >
+
+            <TextView
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="日新增量(已完成/全部)"/>
-            <TextView 
+                android:text="日新增量(已完成/全部)" />
+
+            <TextView
+                android:id="@+id/newdatashow"
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="16sp"
-                android:id="@+id/newdatashow"/>
-            
-            <TextView 
+                android:textSize="16sp" />
+
+            <TextView
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="留存量(已完成/全部)"/>
-            <TextView 
+                android:text="留存量(已完成/全部)" />
+
+            <TextView
+                android:id="@+id/backdatashow"
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="16sp"
-                android:id="@+id/backdatashow"/>
+                android:textSize="16sp" />
         </TableRow>
-        
-        <TableRow 
+
+        <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView 
+            android:layout_height="wrap_content" >
+
+            <TextView
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="日期:"/>
-            
-            <TextView 
+                android:text="日期:" />
+
+            <TextView
                 android:id="@+id/nowdate"
                 android:layout_width="1dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
         </TableRow>
     </TableLayout>
 
