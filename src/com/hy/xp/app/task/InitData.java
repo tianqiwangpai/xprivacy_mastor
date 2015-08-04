@@ -4,7 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -12,6 +17,7 @@ import com.hy.xp.app.AppAdapte;
 import com.hy.xp.app.ApplicationEx;
 import com.hy.xp.app.ManagerCertermActivity;
 import com.hy.xp.app.SetConfigData;
+import com.hy.xp.app.UpdateService;
 
 public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {    
 	private int flag = 0;
@@ -59,6 +65,18 @@ public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {
 			flag = 1;
 			return null;
 		}
+		
+		//判断网络状况，如果网络不通，则提示用户
+        ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != State.CONNECTED
+        		&& connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != State.CONNECTED){
+        	Intent changeIntent = new Intent();
+	        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
+	        changeIntent.putExtra("Action", UpdateService.cActionNoNetwork);  
+	        PendingIntent pi = PendingIntent.getService(ApplicationEx.getContextObject(), 0, changeIntent, PendingIntent.FLAG_UPDATE_CURRENT);  
+	        AlarmManager manager = (AlarmManager)ApplicationEx.getContextObject().getSystemService(Context.ALARM_SERVICE);  
+	        manager.set(AlarmManager.RTC_WAKEUP, 5*60*1000, pi); 
+        }
 		
 		DBMgr.setTaskstarttime(sdf.format(date), arrayOfInt[1]);
 		

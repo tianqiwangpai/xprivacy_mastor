@@ -27,6 +27,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -749,6 +751,22 @@ public class ManagerCertermActivity extends Activity {
     }
 	
 	private void optioncreateinfo(){
+		//TODO 加入导入机型文件的提示信息
+		List<xpmodel> list = DBMgr.getInstance(ManagerCertermActivity.this).getXpmpdellist();
+		if(list == null || list.size() < 1){
+			AlertDialog.Builder mBuilder = new AlertDialog.Builder(ManagerCertermActivity.this);
+			mBuilder.setTitle("请先导入机型文件!");
+			mBuilder.setPositiveButton(ManagerCertermActivity.this.getString(android.R.string.ok), new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+			return;
+		}
+		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View mView = inflater.inflate(R.layout.apptime, null);
 		((TextView )mView.findViewById(R.id.apptime_readme)).setVisibility(View.GONE);

@@ -4,19 +4,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.hy.xp.app.task.DBMgr;
 
 public class UpdateService extends Service
 {
@@ -27,11 +33,16 @@ public class UpdateService extends Service
 	public static final int cActionFinished = 3;
 	public static final int cActionReady = 4;
 	public static final int cActionDataNull = 5;
+
+	public static final int cActionNoNetwork = 6;
 	
 	public static final String cFlush = "com.hy.xp.app.action.FLUSH";
 	public static final String cUpdate = "com.hy.xp.app.action.UPDATE";
 
 	private static Thread mWorkerThread;
+	
+	private static long oldtime = 0;
+	private static long newtime = 0;
 
 	@Override
 	public IBinder onBind(Intent intent)
@@ -77,8 +88,38 @@ public class UpdateService extends Service
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "任务已完成");
 				return 0;
 			}else if(action == cActionReady){
-				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "数据已就绪");
+				newtime = System.currentTimeMillis();
+				if(oldtime == 0){
+					oldtime = newtime;
+				}
+				
+				if(newtime - oldtime >= 5*60*1000){
+					notifynormalmessage(this, Util.NOTIFY_MIGRATE, "5分钟未抽取数据！！！！");
+				}else{
+					DBMgr dbmgr = DBMgr.getInstance(this);
+					int[] backrst = dbmgr.getbackdatacount();
+					int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
+					int[] newrst = dbmgr.getnewdatacount(taskid);
+					int rst = backrst[0]+newrst[0]-1;
+					notifynormalmessage(this, Util.NOTIFY_MIGRATE, "第"+rst+"个，数据设置成功");
+				}
+				
+				oldtime = System.currentTimeMillis();
+				Intent changeIntent = new Intent();
+		        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
+		        changeIntent.putExtra("Action", UpdateService.cActionReady);  
+		        PendingIntent pi = PendingIntent.getService(this, 0, changeIntent, PendingIntent.FLAG_UPDATE_CURRENT);  
+		        AlarmManager manager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);  
+		        manager.set(AlarmManager.RTC_WAKEUP, 5*60*1000, pi); 
 				return 0;
+			}else if(action == cActionNoNetwork){
+				//判断网络状况，如果网络不通，则提示用户
+		        ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);
+		        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != State.CONNECTED
+		        		&& connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != State.CONNECTED){
+		        	notifynormalmessage(this, Util.NOTIFY_MIGRATE, "警告，网络5分钟内未连接!");
+					return 0;
+		        }
 			}else if(action == cActionDataNull)
 			{
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "手机信息数据库已经耗完，请插入新数据!");
