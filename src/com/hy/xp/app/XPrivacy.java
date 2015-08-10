@@ -23,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Process;
+import android.text.BoringLayout.Metrics;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -224,6 +225,25 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 				}catch(Exception e){
 					
 				}
+				
+				XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.content.res.Resources", lpparam.classLoader), "getDisplayMetrics", new XC_MethodHook()
+				{
+					@Override
+					protected void afterHookedMethod(MethodHookParam param) throws Throwable
+					{
+						String mString = (String) PrivacyManager.getDefacedProp(Process.myUid(), "DENSITY");
+						String mUpperCase = mString.toUpperCase();
+						String[] s = mUpperCase.split("X");	
+						DisplayMetrics metrics = (DisplayMetrics) param.getResult();
+						metrics.widthPixels = new Integer(s[0]);
+						metrics.heightPixels = new Integer(s[1]);
+						metrics.densityDpi = 240;
+						param.setResult(metrics);
+						/*XposedHelpers.setIntField(param.getResult(), "widthPixels", new Integer(s[0]));
+						XposedHelpers.setIntField(param.getResult(), "heightPixels", new Integer(s[1]));
+						XposedHelpers.setIntField(param.getResult(), "densityDpi", 240);*/
+					}
+				});
 				
 				XposedHelpers.findAndHookMethod(XposedHelpers.findClass("android.view.Display", lpparam.classLoader), "getMetrics", DisplayMetrics.class, new XC_MethodHook()
 				{

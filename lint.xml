@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="InflateParams" severity="ignore" />
     <issue id="NewApi" severity="ignore" />
+    <issue id="SdCardPath">
+        <ignore path="src/com/hy/xp/app/ManagerCertermActivity.java" />
+    </issue>
 </lint>

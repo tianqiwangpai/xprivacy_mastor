@@ -966,31 +966,28 @@ public class DBMgr {
 		return mPhoneDataBean;
 	}
 
-	public int[] getLastnewCord(String taskname, Object[] packagename) {
+	public int[] getLastnewCord(String taskname,List<String> packagename) {
 		SharedPreferences appcord = ApplicationEx.getContextObject()
 				.getSharedPreferences("appcord", Context.MODE_PRIVATE);
-		String sql = "select _id, packagename from taskapp where taskname='"+taskname+"'";
+		String packmd5 = Util.MD5(packagename);
+		String sql = "select _id from taskapp where taskname='"+taskname+"'"
+					+" AND packagename='"+packmd5+"'";
 		int rst[] = {1, 0};
 		Cursor mCursor = db.rawQuery(sql, null);
         if((mCursor != null) && (mCursor.getCount() > 0)) {
             mCursor.moveToFirst();
-            boolean finded = false;
-            int maxid = 0;
-            do{
             int id = mCursor.getInt(mCursor.getColumnIndex("_id"));
-            String pname = mCursor.getString(mCursor.getColumnIndex("packagename"));
-            if(Util.itemexists(packagename, pname)){
-            	if(!finded){
-                	rst[1] = id;
-                	finded = true;
-            	}
-            	int currentid = appcord.getInt(pname, 1);
-            	maxid = maxid > currentid ? maxid : currentid;
-            }
-            }while(mCursor.moveToNext());
-            rst[0] = maxid;
+            rst[1] = id;            
         }
-		
+        
+        if(packagename != null && packagename.size()>0){
+            int maxid = 0;         
+        	for(String temp:packagename){  	
+            	int currentid = appcord.getInt(temp, 1);
+            	maxid = maxid > currentid ? maxid : currentid;
+            	rst[0] = maxid;
+            }        
+        }  
 		return rst;
 	}
 	
@@ -1018,19 +1015,19 @@ public class DBMgr {
             editor.commit();
 	}
 	
-	public void addtaskapp(String taskname, Object[] packagename) {
+	public void addtaskapp(String taskname, List<String> packagename) {
 		String sql = taskname;
-		for(Object temp : packagename){
-			sql = "select * from taskapp where packagename='"+temp.toString()+"' AND taskname='"+taskname+"'";
-			Cursor rst = db.rawQuery(sql, null);
-	        if((rst != null) && (rst.getCount() > 0)) {
-	        	continue;
-	        }
-	        ContentValues values = new ContentValues();
-	        values.put("taskname", taskname);
-	        values.put("packagename", temp.toString());
-	        db.insert("taskapp", null, values);
+		String temp = Util.MD5(packagename);
+		sql = "select * from taskapp where packagename='" + temp
+				+ "' AND taskname='" + taskname + "'";
+		Cursor rst = db.rawQuery(sql, null);
+		if ((rst != null) && (rst.getCount() > 0)) {
+			return;
 		}
+		ContentValues values = new ContentValues();
+		values.put("taskname", taskname);
+		values.put("packagename", temp);
+		db.insert("taskapp", null, values);
     }
 
 	public int gethour(int taskid, int leave) {
@@ -1237,11 +1234,17 @@ public class DBMgr {
 		}
 	}
 
-	public static String[] getListapp() {
+	public static List<String> getListapp() {
 		try {
 			String[] arrayOfString = new BufferedReader(new InputStreamReader(
 					ApplicationEx.getContextObject().openFileInput("applistselect"))).readLine().split("[|]");
-			return arrayOfString;
+			List<String> list = new ArrayList<String>();
+			if(arrayOfString.length>0){
+				for(String temp:arrayOfString){
+					list.add(temp);
+				}
+			}
+			return list;
 		} catch (Exception localException) {
 		}
 		return null;
@@ -1454,9 +1457,9 @@ public class DBMgr {
 				
 				int count = end - start;
 				int num = (int) (count * staylv);
-				if(tobelow){
+				/*if(tobelow){
 					num = num > lowest? num : lowest;
-				}
+				}*/
 				int breakcount = 0;
 				for(int t = start; t < end; t++){					
 					if(stayway == 0){
@@ -1476,8 +1479,13 @@ public class DBMgr {
 					}
 				}				
 				if(tobelow){
-					staylv *= lowlv;
-				}			
+					double newlv = staylv * (lowlv/100);
+					if(newlv > lowest/100){
+						staylv = newlv;
+					}else{
+						staylv = lowest/100;
+					}
+				}
 				if((times != -1)){
 					listentimes++;		
 				}						
@@ -1497,7 +1505,7 @@ public class DBMgr {
 				tobelow);
 	}
 
-	public int getTaskLastDay(String taskname, Object[] packagename) {
+	public int getTaskLastDay(String taskname, List<String> packagename) {
 		int taskid = getLastnewCord(taskname, packagename)[0x1];
 		String sql = "select day from newdata where taskid="+taskid+" order by _id DESC";
 		Cursor cursor = db.rawQuery(sql, null);

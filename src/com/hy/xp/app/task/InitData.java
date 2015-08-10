@@ -33,7 +33,7 @@ public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {
 		if(flag == 1){
     		Toast.makeText(mcontext, "当日任务数据已经生成过，无需再次生成", Toast.LENGTH_LONG).show();
     	}else{
-    		Toast.makeText(ApplicationEx.getContextObject(), "任务数据已就绪", Toast.LENGTH_LONG).show();
+    		Toast.makeText(ApplicationEx.getContextObject(), "第1条任务数据已就绪", Toast.LENGTH_LONG).show();
             mcontext.inittaskprocess();
     	}
 	}
@@ -51,11 +51,11 @@ public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {
 		DBMgr localDBMgr = DBMgr.getInstance(ApplicationEx.getContextObject());
 		
 		localDBMgr.addtaskapp(localTaskAttribute.getTaskName(),
-				AppAdapte.dataselected.toArray());
+				AppAdapte.dataselected);
 
 		int[] arrayOfInt = localDBMgr.getLastnewCord(
 				localTaskAttribute.getTaskName(),
-				AppAdapte.dataselected.toArray());
+				AppAdapte.dataselected);
 		
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 
@@ -70,12 +70,7 @@ public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {
         ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != State.CONNECTED
         		&& connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != State.CONNECTED){
-        	Intent changeIntent = new Intent();
-	        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
-	        changeIntent.putExtra("Action", UpdateService.cActionNoNetwork);  
-	        PendingIntent pi = PendingIntent.getService(ApplicationEx.getContextObject(), 0, changeIntent, PendingIntent.FLAG_UPDATE_CURRENT);  
-	        AlarmManager manager = (AlarmManager)ApplicationEx.getContextObject().getSystemService(Context.ALARM_SERVICE);  
-	        manager.set(AlarmManager.RTC_WAKEUP, 5*60*1000, pi); 
+        	UpdateService.resetpendingintent(0);
         }
 		
 		DBMgr.setTaskstarttime(sdf.format(date), arrayOfInt[1]);

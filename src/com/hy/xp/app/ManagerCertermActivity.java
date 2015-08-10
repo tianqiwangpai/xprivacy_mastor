@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +28,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -194,12 +193,11 @@ public class ManagerCertermActivity extends Activity {
 	}
 	
 	private void updatelist(){
-		String[] applist = DBMgr.getListapp();
-        if((applist != null) && (AppAdapte.dataselected.size() == 0)) {
-            for(int i = 0; i < applist.length; i++) {
-            	AppAdapte.dataselected.add(applist[i]);
-            }
-        }
+		if(DBMgr.getListapp() != null){
+			AppAdapte.dataselected = DBMgr.getListapp();			
+		}else{
+			AppAdapte.dataselected = new ArrayList<String>();
+		}
 	}
 	
 	private void initPrivacyManager() {
@@ -211,10 +209,11 @@ public class ManagerCertermActivity extends Activity {
             String s = Environment.getExternalStorageState();
             if("mounted".equals(s)) {
                 File sdcardDir = Environment.getExternalStorageDirectory();
-                String path = "/xp_log/";
+                String path = sdcardDir+"/xp_log/";
                 File logDir = new File(path);
                 if(!logDir.exists()) {
                     logDir.mkdirs();
+                    new File("/mnt/sdcard/xp_datafile/").mkdir();
                 }
                 Runtime.getRuntime().exec(path);
                 return;
@@ -227,12 +226,18 @@ public class ManagerCertermActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		List<xpmodel> list = DBMgr.getInstance(ManagerCertermActivity.this).getXpmpdellist();
+		if(list == null || list.size() < 1){
+			createphoneinfo.setEnabled(false);
+		}else{
+			createphoneinfo.setEnabled(true);
+		}
 		inittaskprocess();
 	}
 
 	public void inittaskprocess(){
 		int[] backrst = dbmgr.getbackdatacount();
-		int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
+		int taskid = dbmgr.getLastnewCord(DBMgr.getCurrentTaskname(), AppAdapte.dataselected)[1];
 		int[] newrst = dbmgr.getnewdatacount(taskid);
 		newdatashow.setText(newrst[0]-1+"/"+newrst[1]);
 		backdatashow.setText(backrst[0]+"/"+backrst[1]);
@@ -277,7 +282,7 @@ public class ManagerCertermActivity extends Activity {
 		});
 		
 		dbmgr = DBMgr.getInstance(this);
-		String taskname = dbmgr.getCurrentTaskname();
+		String taskname = DBMgr.getCurrentTaskname();
 		
 		et_taskname = (EditText) findViewById(R.id.et_taskname);
 		listview.add(et_taskname);
@@ -445,7 +450,7 @@ public class ManagerCertermActivity extends Activity {
 		
 		
 		int id = R.id.xlstayflag;
-		switch (dbmgr.getGetStayway()) {
+		switch (DBMgr.getGetStayway()) {
 			case 0:
 				id = R.id.xlstayflag;
 				break;
@@ -467,9 +472,7 @@ public class ManagerCertermActivity extends Activity {
 		hidapplist = (Button) findViewById(R.id.hidapplist);
 		
 		hidapplist.setOnClickListener(new OnClikedListener());
-		
-		
-		
+
 		editetask.setOnClickListener(new OnClikedListener());
 		deltetask.setOnClickListener(new OnClikedListener());
 		starttask.setOnClickListener(new OnClikedListener());
@@ -480,6 +483,13 @@ public class ManagerCertermActivity extends Activity {
 		oldversion.setOnClickListener(new OnClikedListener());
 		importmachine.setOnClickListener(new OnClikedListener());
 		createphoneinfo.setOnClickListener(new OnClikedListener());
+		
+		List<xpmodel> list = DBMgr.getInstance(ManagerCertermActivity.this).getXpmpdellist();
+		if(list == null || list.size() < 1){
+			createphoneinfo.setEnabled(false);
+		}else{
+			createphoneinfo.setEnabled(true);
+		}
 		
 		DisableView();
 	}
@@ -509,7 +519,7 @@ public class ManagerCertermActivity extends Activity {
 	}
 	
 	private void initData(){
-		String name = dbmgr.getCurrentTaskname();
+		String name = DBMgr.getCurrentTaskname();
 		if(name != null && !"".equals(name))
 		{
 			List<TaskAttribute> listattribute  = dbmgr.getTaskAttributeByTaskName(name);
@@ -590,10 +600,10 @@ public class ManagerCertermActivity extends Activity {
 				}	
 			}
 			
-			if(dbmgr.issecondelive()){
+			if(DBMgr.issecondelive()){
 				ck_secondeliveflag.setChecked(true);
-				et_secondlivef.setText(dbmgr.getsecondef()+"");
-				et_secondlives.setText(dbmgr.getsecondes()+"");
+				et_secondlivef.setText(DBMgr.getsecondef()+"");
+				et_secondlives.setText(DBMgr.getsecondes()+"");
 			}else{
 				ck_secondeliveflag.setChecked(false);
 			}
@@ -625,7 +635,7 @@ public class ManagerCertermActivity extends Activity {
 		}catch(Exception e){
 			return;
 		}			
-		String name = dbmgr.getCurrentTaskname();
+		String name = DBMgr.getCurrentTaskname();
 		if(name != null && !name.endsWith("")){
 			if(taskstrings.indexOf(name)>-1){
 				staskname.setSelection(taskstrings.indexOf(name));				
@@ -684,6 +694,7 @@ public class ManagerCertermActivity extends Activity {
 				appset.setVisibility(View.GONE);
 				v.setVisibility(View.GONE);
 				Saveapplist(AppAdapte.dataselected);
+				inittaskprocess();
 				break;
 			case R.id.softwareusertime:
 				optionApptime();
@@ -706,15 +717,15 @@ public class ManagerCertermActivity extends Activity {
 	}
 	
 	private void stor_getstayway(int way) {
-		dbmgr.setGetStayway(way);
+		DBMgr.setGetStayway(way);
 	}
 	
 	private void stor_secondlive(boolean ischecked){
-		dbmgr.setsecondelive(ischecked);
+		DBMgr.setsecondelive(ischecked);
 		if(ischecked){
 			try{
-				dbmgr.setsecondlivef(Integer.valueOf(et_secondlivef.getText().toString().trim()));
-				dbmgr.setsecondlives(Integer.valueOf(et_secondlives.getText().toString().trim()));
+				DBMgr.setsecondlivef(Integer.valueOf(et_secondlivef.getText().toString().trim()));
+				DBMgr.setsecondlives(Integer.valueOf(et_secondlives.getText().toString().trim()));
 			}catch(Exception e){
 				
 			}
@@ -731,18 +742,17 @@ public class ManagerCertermActivity extends Activity {
 	}
 	
 	public static boolean ischanged(List<String> applist) {
-        String[] listapp = DBMgr.getListapp();
+        List<String> listapp = DBMgr.getListapp();
         if(applist.size() > 0) {
             if(listapp == null) {
                 return true;
             }
-            if(applist.size() == listapp.length) {
-            	boolean isexists = false;
-                for(Object temp :applist.toArray()){
-                	if(!Util.itemexists(listapp, temp.toString())){
-                		isexists = true;
-                		break;
-                	}
+            if(applist.size() == listapp.size()) {
+            	boolean isexists = true;
+                Collections.sort(applist);
+                Collections.sort(listapp);
+                if(applist.equals(listapp)){
+                   isexists = false;
                 }
                 return isexists;
             }
@@ -764,6 +774,7 @@ public class ManagerCertermActivity extends Activity {
 					dialog.dismiss();
 				}
 			});
+			mBuilder.show();
 			return;
 		}
 		
@@ -837,8 +848,13 @@ public class ManagerCertermActivity extends Activity {
 	
 	public static void Saveapplist(List<String> applist) {
     	if (ischanged(applist)){
-    	      DBMgr.getInstance(ApplicationEx.getContextObject()).clean_task_cache(DBMgr.getCurrentTaskname());
-    	      AppAdapte.dataselected = applist;
+    		  //TODO 不必清空数据库改用MD5值来存储
+    	      //DBMgr.getInstance(ApplicationEx.getContextObject()).clean_task_cache(DBMgr.getCurrentTaskname());
+    	    if(applist == null){
+    	    	AppAdapte.dataselected = new ArrayList<String>();
+    	    }else{
+    	    	AppAdapte.dataselected = applist;
+    	    }    		
     	}
     	  try
     	    {
@@ -940,7 +956,7 @@ public class ManagerCertermActivity extends Activity {
 					editetask.setEnabled(false);
 				}else{
 					String value = et_taskname.getText().toString();
-					if(value == null || "".equals(value) || value.equals(dbmgr.getCurrentTaskname())){
+					if(value == null || "".equals(value) || value.equals(DBMgr.getCurrentTaskname())){
 						Toast.makeText(mcontext, "任务名称冲突或者为空", Toast.LENGTH_LONG).show();
 						return;
 					}
@@ -1126,7 +1142,7 @@ public class ManagerCertermActivity extends Activity {
 		}else if(!iscreate && edite){
 			staskname.setVisibility(View.GONE);
 			et_taskname.setVisibility(View.VISIBLE);
-			et_taskname.setText(dbmgr.getCurrentTaskname());
+			et_taskname.setText(DBMgr.getCurrentTaskname());
 			et_taskname.setEnabled(false);
 		}else if(!edite){
 			staskname.setVisibility(View.VISIBLE);
@@ -1275,7 +1291,7 @@ public class ManagerCertermActivity extends Activity {
 	
 	private void optionTaskdelete(String taskname) {
 		final String taskanem = taskname;
-		String currenttaskname = dbmgr.getCurrentTaskname();
+		String currenttaskname = DBMgr.getCurrentTaskname();
 		if(currenttaskname != null && currenttaskname.equals(taskname)){
 			opionTaskselect(null);
 		}

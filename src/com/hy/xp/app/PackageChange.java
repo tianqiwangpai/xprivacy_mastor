@@ -46,7 +46,7 @@ public class PackageChange extends BroadcastReceiver
 				// Check action
 				if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
 					// Check privacy service
-					boolean flag = false;
+					boolean flag = true;
 					if (PrivacyService.getClient() == null || flag)
 						return;
 
@@ -66,22 +66,9 @@ public class PackageChange extends BroadcastReceiver
 							PrivacyManager.clearPermissionCache(uid);
 
 							//TODO 处理新增安装包
-							List<String> liststr = new ArrayList<String>();
-							String[] old = DBMgr.getListapp();
-							boolean findit = false;
-							if(old != null){
-								for(int i=0; i<old.length; i++){
-									Log.e("LTZ",old[i]+"O:O"+packageName);
-									if(old[i].equals(packageName)){
-										findit = true;
-									}
-									liststr.add(old[i]);
-								}
-							}							
-							if(!findit){
-								liststr.add(packageName);
-								ManagerCertermActivity.Saveapplist(liststr);
-							}				
+							List<String> old = DBMgr.getListapp();
+							old.add(packageName);
+							ManagerCertermActivity.Saveapplist(old);
 							
 							// Apply template
 							PrivacyManager.applyTemplate(uid, Meta.cTypeTemplate, null, true, true, false);
@@ -164,18 +151,9 @@ public class PackageChange extends BroadcastReceiver
 					String packageName = inputUri.getSchemeSpecificPart();
 					ApplicationInfoEx appInfo = new ApplicationInfoEx(context, uid);
 					//TODO 处理卸载安装包
-					List<String> liststr = new ArrayList<String>();
-					String[] old = DBMgr.getListapp();
-					if(old != null){
-						for(int i=0; i<old.length; i++){
-							Log.e("LTZ",old[i]+"-:-"+packageName);
-							if(!old[i].equals(packageName)){
-								liststr.add(old[i]);
-								Log.e("LTZ",old[i]+":"+packageName);
-							}
-						}
-					}					
-					ManagerCertermActivity.Saveapplist(liststr);
+					List<String> old = DBMgr.getListapp();
+					old.remove(packageName);
+					ManagerCertermActivity.Saveapplist(old);
 
 					if (!replacing) {
 						// Package removed

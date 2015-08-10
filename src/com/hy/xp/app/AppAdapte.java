@@ -61,11 +61,9 @@ public class AppAdapte extends SimpleAdapter {
 			listItemView = (AppAdapte.ListItemView) convertView.getTag();
 		}
 		
-		
 		listItemView.wzchecked.setOnCheckedChangeListener(null);
 		listItemView.wzchecked.setChecked(false);
-		if (Util.itemexists(dataselected.toArray(),
-				mdata.get(position).get("packagename").toString())) {
+		if(dataselected != null && dataselected.contains(mdata.get(position).get("packagename").toString())){
 			listItemView.wzchecked.setChecked(true);
 		} else {
 			listItemView.wzchecked.setChecked(false);
@@ -77,13 +75,34 @@ public class AppAdapte extends SimpleAdapter {
 				.setOnCheckedChangeListener(onCheckedChangeListener);
 		
 		
+		listItemView.clcheckbox.setOnCheckedChangeListener(null);
+		listItemView.clcheckbox.setChecked(false);
+		String packagename = mdata.get(position).get("packagename").toString();
+		String value_param = PreferenceUtils.getParam(mcontext, "xp_clear" ,packagename, "NULL").toString();
+		System.out.println(value_param);
+		if(value_param.equals(packagename)){
+			listItemView.clcheckbox.setChecked(true);
+		} else {
+			listItemView.clcheckbox.setChecked(false);
+		}
+		
+		listItemView.clcheckbox.setTag(position);
 		listItemView.clcheckbox
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						Intent it = new Intent(mcontext,
-								ClearFileAcitivity.class);
-						mcontext.startActivity(it);
+							boolean isChecked) {						
+						HashMap<String, Object> data = (HashMap) mdata.get((Integer)buttonView.getTag());
+						String packagename = data.get("packagename").toString();
+						System.out.println(packagename+"000000");
+						if(isChecked){
+							PreferenceUtils
+							.setParam(mcontext, "xp_clear", packagename, packagename);
+							Intent it = new Intent(mcontext,
+									ClearFileAcitivity.class);
+							mcontext.startActivity(it);
+						}else{
+							PreferenceUtils.clearKey(mcontext, "xp_clear", packagename);
+						}
 					}
 				});
 		
@@ -109,12 +128,10 @@ public class AppAdapte extends SimpleAdapter {
 				if (!Util.itemexists(AppAdapte.dataselected.toArray(), appname)) {
 					setuidper(uid, packagename);
 					dataselected.add(packagename);
-					cleanselected.add(appname);
 				}
 			} else {
 				cleanuidper(uid, packagename);
 				dataselected.remove(packagename);
-				cleanselected.remove(appname);
 			}
 
 		}
@@ -127,8 +144,8 @@ public class AppAdapte extends SimpleAdapter {
 		PrivacyManager.clearPermissionCache(uid);
 		PrivacyManager.applyTemplate(uid, Meta.cTypeTemplate, null, true, true, false);
 		PrivacyManager.setSetting(uid, PrivacyManager.cSettingState, Integer.toString(ApplicationInfoEx.STATE_ATTENTION));
-		PreferenceUtils
-				.setParam(mcontext, "xp_clear", packagename, packagename);
+		/*PreferenceUtils
+				.setParam(mcontext, "xp_clear", packagename, packagename);*/
 		SharedPreferences prefs = mcontext.getSharedPreferences("ModSettings",
 				Context.MODE_WORLD_READABLE);
 		SharedPreferences.Editor e = prefs.edit();
@@ -143,7 +160,7 @@ public class AppAdapte extends SimpleAdapter {
 		PrivacyManager.deleteSettings(uid);
 		PrivacyManager.deleteUsage(uid);
 		PrivacyManager.clearPermissionCache(uid);
-		PreferenceUtils.clearKey(mcontext, "xp_clear", packagename);
+		/*PreferenceUtils.clearKey(mcontext, "xp_clear", packagename);*/
 		SharedPreferences prefs = mcontext.getSharedPreferences("ModSettings",
 				Context.MODE_WORLD_READABLE);
 		SharedPreferences.Editor e = prefs.edit();

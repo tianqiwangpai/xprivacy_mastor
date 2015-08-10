@@ -56,7 +56,7 @@ public class XX extends AppWidgetProvider
 				}
 				Toast.makeText(context, "制定的数据清理任务执行完毕！", Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(context, "当前没有可执行的任务，请添加任务！", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(context, "当前没有可执行的任务，请添加任务！", Toast.LENGTH_SHORT).show();
 			}
 			
 			

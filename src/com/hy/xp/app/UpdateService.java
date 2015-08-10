@@ -21,6 +21,7 @@ import android.os.Process;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hy.xp.app.task.DBMgr;
 
@@ -35,14 +36,12 @@ public class UpdateService extends Service
 	public static final int cActionDataNull = 5;
 
 	public static final int cActionNoNetwork = 6;
+	public static final int cActionNoData = 7;
 	
 	public static final String cFlush = "com.hy.xp.app.action.FLUSH";
 	public static final String cUpdate = "com.hy.xp.app.action.UPDATE";
 
 	private static Thread mWorkerThread;
-	
-	private static long oldtime = 0;
-	private static long newtime = 0;
 
 	@Override
 	public IBinder onBind(Intent intent)
@@ -86,33 +85,22 @@ public class UpdateService extends Service
 
 			if(action == cActionFinished){
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "任务已完成");
+				Toast.makeText(ApplicationEx.getContextObject(), "任务已完成", Toast.LENGTH_SHORT).show();
 				return 0;
-			}else if(action == cActionReady){
-				newtime = System.currentTimeMillis();
-				if(oldtime == 0){
-					oldtime = newtime;
-				}
-				
-				if(newtime - oldtime >= 5*60*1000){
-					notifynormalmessage(this, Util.NOTIFY_MIGRATE, "5分钟未抽取数据！！！！");
-				}else{
-					DBMgr dbmgr = DBMgr.getInstance(this);
-					int[] backrst = dbmgr.getbackdatacount();
-					int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
-					int[] newrst = dbmgr.getnewdatacount(taskid);
-					int rst = backrst[0]+newrst[0]-1;
-					notifynormalmessage(this, Util.NOTIFY_MIGRATE, "第"+rst+"个，数据设置成功");
-				}
-				
-				oldtime = System.currentTimeMillis();
-				Intent changeIntent = new Intent();
-		        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
-		        changeIntent.putExtra("Action", UpdateService.cActionReady);  
-		        PendingIntent pi = PendingIntent.getService(this, 0, changeIntent, PendingIntent.FLAG_UPDATE_CURRENT);  
-		        AlarmManager manager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);  
-		        manager.set(AlarmManager.RTC_WAKEUP, 5*60*1000, pi); 
+			}else if(action == cActionReady){	
+				DBMgr dbmgr = DBMgr.getInstance(this);
+				int[] backrst = dbmgr.getbackdatacount();
+				int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
+				int[] newrst = dbmgr.getnewdatacount(taskid);
+				int rst = backrst[0]+newrst[0]-1;
+				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "第"+rst+"个，数据设置成功");
+				Toast.makeText(ApplicationEx.getContextObject(), "第"+rst+"个，数据设置成功", Toast.LENGTH_SHORT).show();
+				resetpendingintent(1);
 				return 0;
-			}else if(action == cActionNoNetwork){
+			}else if(action == cActionNoData){
+				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "5分钟未抽取数据！！！！");
+				resetpendingintent(1);
+			}else if(action == cActionNoNetwork){		
 				//判断网络状况，如果网络不通，则提示用户
 		        ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);
 		        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != State.CONNECTED
@@ -440,7 +428,35 @@ public class UpdateService extends Service
 		builder.setContentText(message);
 		builder.setWhen(System.currentTimeMillis());
 		builder.setAutoCancel(true);
+		builder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE);
 		Notification notification = builder.build();
 		notificationManager.notify(id, notification);
+	}
+	static PendingIntent pi_network = null;
+	static PendingIntent pi_data = null;
+	public static void resetpendingintent(int type){
+		AlarmManager manager = (AlarmManager)ApplicationEx.getContextObject().getSystemService(Context.ALARM_SERVICE);  
+		if(type == 0){
+			//网络
+			if(pi_network == null){
+				Intent changeIntent = new Intent();
+		        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
+		        changeIntent.putExtra("Action", UpdateService.cActionNoNetwork);  
+		        pi_network = PendingIntent.getService(ApplicationEx.getContextObject(), 0, changeIntent, PendingIntent.FLAG_UPDATE_CURRENT);  
+			}else{
+				manager.cancel(pi_network);
+			}
+			manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5*60*1000,5*60*1000, pi_network); 
+		}else{
+			if(pi_data == null){
+				Intent changeIntent = new Intent();
+		        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
+		        changeIntent.putExtra("Action", UpdateService.cActionNoData);  
+		        pi_data = PendingIntent.getService(ApplicationEx.getContextObject(), 0, changeIntent, PendingIntent.FLAG_UPDATE_CURRENT);  
+			}else{
+				manager.cancel(pi_data);
+			}
+			manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5*60*1000+3*1000,5*60*1000+3*1000, pi_data); 
+		}
 	}
 }

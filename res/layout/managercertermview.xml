@@ -184,8 +184,12 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
+                            android:hint="正整数"
+                            android:text="20" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -199,7 +203,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
                             android:hint="正整数"
-                            android:text="5" />
+                            android:text="0" />
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
                     </TableRow>
 
                     <TableRow
@@ -406,9 +415,13 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
-
+                            android:hint="正整数"
+                            android:text="20" />
+						<TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
+						
                         <TextView
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
@@ -421,7 +434,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
                             android:hint="正整数"
-                            android:text="3" />
+                            android:text="0" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
                     </TableRow>
                 </TableLayout>
 
@@ -506,8 +523,13 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
+                            android:hint="正整数"
+                            android:text="20" />
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -521,7 +543,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
                             android:hint="正整数"
-                            android:text="4" />
+                            android:text="0" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
                     </TableRow>
                 </TableLayout>
 
@@ -606,8 +632,12 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
+                            android:hint="正整数"
+                            android:text="20" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
 
                         <TextView
                             android:layout_width="1dip"
@@ -621,7 +651,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
                             android:hint="正整数"
-                            android:text="2" />
+                            android:text="0" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%" />
                     </TableRow>
                 </TableLayout>
             </FrameLayout>

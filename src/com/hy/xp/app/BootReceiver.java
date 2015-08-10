@@ -49,7 +49,7 @@ public class BootReceiver extends BroadcastReceiver
 				notificationManager.notify(Util.NOTIFY_NOTXPOSED, notification);
 			}
 		}else if(bootIntent.getAction()  == ConnectivityManager.CONNECTIVITY_ACTION){
-			
+			UpdateService.resetpendingintent(0);
 		}
 	}
 }
