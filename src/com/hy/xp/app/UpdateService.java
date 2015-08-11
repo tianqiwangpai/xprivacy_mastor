@@ -92,7 +92,7 @@ public class UpdateService extends Service
 				int[] backrst = dbmgr.getbackdatacount();
 				int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
 				int[] newrst = dbmgr.getnewdatacount(taskid);
-				int rst = backrst[0]+newrst[0]-1;
+				int rst = backrst[0]+newrst[0];
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "第"+rst+"个，数据设置成功");
 				Toast.makeText(ApplicationEx.getContextObject(), "第"+rst+"个，数据设置成功", Toast.LENGTH_SHORT).show();
 				resetpendingintent(1);
@@ -428,7 +428,11 @@ public class UpdateService extends Service
 		builder.setContentText(message);
 		builder.setWhen(System.currentTimeMillis());
 		builder.setAutoCancel(true);
-		builder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE);
+		if(DBMgr.isallowvoice()){
+			builder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE);
+		}else{
+			builder.setDefaults(0);
+		}
 		Notification notification = builder.build();
 		notificationManager.notify(id, notification);
 	}

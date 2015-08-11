@@ -20,9 +20,8 @@
             
             <RadioGroup
                 android:id="@+id/filter"
-                android:layout_width="1dip"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal" >
 
                 <RadioButton
@@ -39,7 +38,12 @@
                     android:text="系统应用" />
 
             </RadioGroup>
-
+			<CheckBox 
+			    android:id="@+id/hasvoice"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:checked="true"
+			    android:text="提示音"/>
         </TableRow>
     </TableLayout>
 
@@ -59,7 +63,7 @@
     <TabHost
         android:id="@+id/tabhost"
         android:layout_width="wrap_content"
-        android:layout_height="340dip" >
+        android:layout_height="380dip" >
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -112,7 +116,7 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="正整数"
+                            android:hint="整数"
                             android:text="20" />
                     </TableRow>
 
@@ -136,10 +140,13 @@
                             android:id="@+id/datastaylv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
-
+                            android:layout_weight="3"
+                            android:hint="整数"
+                            android:text="20" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%    "/>
                         <TextView
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
@@ -183,13 +190,13 @@
                             android:id="@+id/datalowlv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="20" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
 
                         <TextView
                             android:layout_width="1dip"
@@ -201,14 +208,14 @@
                             android:id="@+id/datalowest"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="0" />
                         
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
                     </TableRow>
 
                     <TableRow
@@ -232,28 +239,29 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
-                            android:text="3-24:" />
+                            android:text="3-72:" />
 
                         <EditText
                             android:id="@+id/secondlivef"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="正整数"
+                            android:hint="整数"
                             android:text="10" />
 
                         <TextView
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
-                            android:text="24+:" />
+                            android:text="小时" />
 
                         <EditText
                             android:id="@+id/secondlives"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="正整数"
+                            android:visibility="invisible"
+                            android:hint="整数"
                             android:text="30" />
                     </TableRow>
 
@@ -335,7 +343,7 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="正整数"
+                            android:hint="整数"
                             android:text="2" />
 
                         <TextView
@@ -349,7 +357,7 @@
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:hint="正整数"
+                            android:hint="整数"
                             android:text="3" />
                     </TableRow>
 
@@ -367,9 +375,13 @@
                             android:id="@+id/nextdaystaylv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
+                            android:layout_weight="3"
+                            android:hint="整数"
+                            android:text="20" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%    "/>
 
                         <TextView
                             android:layout_width="1dip"
@@ -414,13 +426,13 @@
                             android:id="@+id/nextdaydatalowlv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="20" />
 						<TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
 						
                         <TextView
                             android:layout_width="1dip"
@@ -432,13 +444,13 @@
                             android:id="@+id/nextdaydatalowest"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="0" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
                     </TableRow>
                 </TableLayout>
 
@@ -475,10 +487,13 @@
                             android:id="@+id/nextweekstaylv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
-
+                            android:layout_weight="3"
+                            android:hint="整数"
+                            android:text="20" />
+						<TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%    "/>
                         <TextView
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
@@ -522,14 +537,14 @@
                             android:id="@+id/nextweekdatalowlv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="20" />
                         
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
 
                         <TextView
                             android:layout_width="1dip"
@@ -541,13 +556,13 @@
                             android:id="@+id/nextweekdatalowest"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="0" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
                     </TableRow>
                 </TableLayout>
 
@@ -584,10 +599,13 @@
                             android:id="@+id/nextmonthstaylv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="0~1"
-                            android:text="0.20" />
-
+                            android:layout_weight="3"
+                            android:hint="整数"
+                            android:text="20" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%    "/>
                         <TextView
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
@@ -631,13 +649,13 @@
                             android:id="@+id/nextmonthdatalowlv"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="20" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    "/>
 
                         <TextView
                             android:layout_width="1dip"
@@ -649,13 +667,13 @@
                             android:id="@+id/nextmonthdatalowest"
                             android:layout_width="1dip"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:hint="正整数"
+                            android:layout_weight="3"
+                            android:hint="整数"
                             android:text="0" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="%" />
+                            android:text="%    " />
                     </TableRow>
                 </TableLayout>
             </FrameLayout>

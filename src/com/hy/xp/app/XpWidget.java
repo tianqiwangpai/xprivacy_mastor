@@ -66,13 +66,13 @@ public class XpWidget extends AppWidgetProvider
 		sum = (Integer) PreferenceUtils.getParam(context, fileTask, "curl_file_count", 1);
 		settingReadFilesum = (Integer) PreferenceUtils.getParam(context, fileTask, "cSettingReadFileSum", 1);*/
 
-		if (intent.getAction().equals("com.sec.android.widgetapp.APPWIDGET_RESIZE") || intent.getAction().equals("com.hy.xp.app.update")) {
+		/*if (intent.getAction().equals("com.sec.android.widgetapp.APPWIDGET_RESIZE") || intent.getAction().equals("com.hy.xp.app.update")) {
 			rv = new RemoteViews(context.getPackageName(), R.layout.widget);
 			Intent startServiceInten = new Intent();
 			startServiceInten.setAction(ACTION_CLICK_NAME2);
 			PendingIntent Pintent = PendingIntent.getBroadcast(context, 0, startServiceInten, 0);
 			rv.setOnClickPendingIntent(R.id.imageView1, Pintent);
-		}
+		}*/
 		/*if (intent.getAction().equals(ACTION_CLICK_NAME2)) {
 			// 从文件中读取
 			PhoneDataBean mBean = null;

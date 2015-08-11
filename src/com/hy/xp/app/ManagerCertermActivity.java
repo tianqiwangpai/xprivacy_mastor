@@ -115,6 +115,8 @@ public class ManagerCertermActivity extends Activity {
 	private EditText et_nextmonthlowlv = null;
 	private EditText et_nextmonthlowest	= null;
 	
+	private CheckBox ck_voice = null;
+	
 	//¶þ´Î¼¤»î
 	private CheckBox ck_secondeliveflag = null;	
 	private EditText et_secondlivef = null;
@@ -329,6 +331,12 @@ public class ManagerCertermActivity extends Activity {
 		listview.add(et_datalowlv);
 		et_datalowest = (EditText) findViewById(R.id.datalowest);
 		listview.add(et_datalowest);
+		
+		ck_voice = (CheckBox) findViewById(R.id.hasvoice);
+		ck_voice.setOnCheckedChangeListener(new OnCheckedChangerListener());
+		if(!DBMgr.isallowvoice()){
+			ck_voice.setChecked(false);
+		}
 				
 		hiddatalow(ck_datalowflag.isChecked());
 		ck_datalowflag.setOnCheckedChangeListener(new OnCheckedChangerListener());
@@ -531,12 +539,12 @@ public class ManagerCertermActivity extends Activity {
 				et_taskname.setVisibility(View.GONE);
 				
 				et_datanew.setText(taskattribute.getTaskNewdata()+"");
-				et_datastaylv.setText(taskattribute.getTaskReturnratio()+"");
+				et_datastaylv.setText((int)taskattribute.getTaskReturnratio()+"");
 				sp_datastayway.setSelection(taskattribute.getTaskStayWay());
 				
 				if(taskattribute.isTaskDeclineFlag()){
 					ck_datalowflag.setChecked(true);
-					et_datalowlv.setText(taskattribute.getTaskDecilneRatio()+"");
+					et_datalowlv.setText((int)taskattribute.getTaskDecilneRatio()+"");
 					et_datalowest.setText(taskattribute.getTaskDecilneMin()+"");
 				}else{
 					ck_datalowflag.setChecked(false);
@@ -548,12 +556,12 @@ public class ManagerCertermActivity extends Activity {
 					et_nextdayinterval.setText(taskattribute.getTaskNextDayVisitInterval()+"");
 					et_nextdayintervalcount.setText(taskattribute.getTaskNextDayVisitIntervalCount()+"");
 					
-					et_nextdaystaylv.setText(taskattribute.getTaskNextDayVisitIntervalReturnRatio()+"");
+					et_nextdaystaylv.setText((int)taskattribute.getTaskNextDayVisitIntervalReturnRatio()+"");
 					sp_nextdaystayway.setSelection(taskattribute.getTaskNextDayVisitStayWay());
 					
 					if(taskattribute.isTaskNextDayVisitDeclineFlag()){
 						ck_nextdatalowflag.setChecked(true);
-						et_nextdatalowlv.setText(taskattribute.getTaskNextDayVisitDecilneRatio()+"");
+						et_nextdatalowlv.setText((int)taskattribute.getTaskNextDayVisitDecilneRatio()+"");
 						et_nextdatalowest.setText(taskattribute.getTaskNextDayVisitDecilneMin()+"");
 					}else{
 						ck_nextdatalowflag.setChecked(false);
@@ -566,12 +574,12 @@ public class ManagerCertermActivity extends Activity {
 				if(taskattribute.isTaskNextWeekFlag()){
 					ck_nextweekflag.setChecked(true);
 					
-					et_nextweekstaylv.setText(taskattribute.getTaskNextWeekVisitIntervalReturnRatio()+"");
+					et_nextweekstaylv.setText((int)taskattribute.getTaskNextWeekVisitIntervalReturnRatio()+"");
 					sp_nextweekstayway.setSelection(taskattribute.getTaskNextWeekVisitStayWay());
 					
 					if(taskattribute.isTaskNextWeekVisitDeclineFlag()){
 						ck_nextweeklowflag.setChecked(true);
-						et_nextweeklowlv.setText(taskattribute.getTaskNextWeekVisitDecilneRatio()+"");
+						et_nextweeklowlv.setText((int)taskattribute.getTaskNextWeekVisitDecilneRatio()+"");
 						et_nextweeklowest.setText(taskattribute.getTaskNextWeekVisitDecilneMin()+"");
 					}else{
 						ck_nextweeklowflag.setChecked(false);
@@ -584,12 +592,12 @@ public class ManagerCertermActivity extends Activity {
 				if(taskattribute.isTaskNextMonthFlag()){
 					ck_nextmonthflag.setChecked(true);
 					
-					et_nextmonthstaylv.setText(taskattribute.getTaskNextMonthVisitIntervalReturnRatio()+"");
+					et_nextmonthstaylv.setText((int)taskattribute.getTaskNextMonthVisitIntervalReturnRatio()+"");
 					sp_nextmonthstayway.setSelection(taskattribute.getTaskNextMonthVisitStayWay());
 					
 					if(taskattribute.isTaskNextMonthVisitDeclineFlag()){
 						ck_nextmonthlowflag.setChecked(true);
-						et_nextmonthlowlv.setText(taskattribute.getTaskNextMonthVisitDecilneRatio()+"");
+						et_nextmonthlowlv.setText((int)taskattribute.getTaskNextMonthVisitDecilneRatio()+"");
 						et_nextmonthlowest.setText(taskattribute.getTaskNextMonthVisitDecilneMin()+"");
 					}else{
 						ck_nextmonthlowflag.setChecked(false);
@@ -661,6 +669,9 @@ public class ManagerCertermActivity extends Activity {
 				break;
 			case R.id.secondeliveflag:
 				hiddataseconde(isChecked);
+				break;
+			case R.id.hasvoice:
+				DBMgr.setallowvoice(isChecked);
 				break;
 			default:
 				break;

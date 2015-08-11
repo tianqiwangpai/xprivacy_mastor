@@ -1,6 +1,11 @@
 package com.hy.xp.app.task;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,18 +21,15 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.text.Editable;
+import android.os.Environment;
 
-import com.hy.xp.app.AppAdapte;
 import com.hy.xp.app.ApplicationEx;
 import com.hy.xp.app.ApplicationInfoEx;
-import com.hy.xp.app.TaskMainActivity;
 import com.hy.xp.app.UpdateService;
 import com.hy.xp.app.Util;
 
 @SuppressLint("UseValueOf")
 public class DBMgr {
-
 	private static DBMgr instance;
 	SQLiteDatabase db;
 
@@ -1142,6 +1144,39 @@ public class DBMgr {
 		return preferences.getString("taskstarttime"+id, null);
 	}
 	
+	public static boolean isallowvoice() {
+		String filepath = Environment.getExternalStorageDirectory().getPath()+File.separator+"allowvoice";
+		File file = new File(filepath);
+		if(file.exists()){
+			try {
+				DataInputStream dis = new DataInputStream(new FileInputStream(file));
+				boolean rst = dis.readBoolean();
+				dis.close();
+				return rst;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
+	
+	public static void setallowvoice(boolean allow) {
+		String filepath = Environment.getExternalStorageDirectory().getPath()
+				+ File.separator + "allowvoice";
+		File file = new File(filepath);
+		try {
+			DataOutputStream dos = new DataOutputStream(new FileOutputStream(
+					file));
+			dos.writeBoolean(allow);
+			dos.flush();
+			dos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void setTaskstarttime(String value, int id){
 		SharedPreferences preferences = ApplicationEx.getContextObject()
 				.getSharedPreferences("task", Context.MODE_PRIVATE);
@@ -1217,13 +1252,20 @@ public class DBMgr {
 				getListapp())[1];
 
 		int first = getsecondef();
-		int seconde = getsecondes();
+		//int seconde = getsecondes();
 
-		if ((!ApplicationInfoEx.secondef) && (gethour(taskid, 10) >= first)) {
+		//修改为只有一个时间的模式 
+		if ((!ApplicationInfoEx.secondef) && (first > 48)&& (gethour(taskid, 60) >= first)) {
+			ApplicationInfoEx.secondef = true;
+			initseconddatatable(60, taskid);
+		} else if ((!ApplicationInfoEx.secondef)&& (first > 24) && (gethour(taskid, 30) >= first)) {
+			ApplicationInfoEx.secondef = true;
+			initseconddatatable(20, taskid);
+		} else if ((!ApplicationInfoEx.secondef) && (first > 3) && (gethour(taskid, 10) >= first)) {
 			initseconddatatable(4, taskid);
 			ApplicationInfoEx.secondef = true;
 		}
-		if ((!ApplicationInfoEx.secondes) && (seconde > 48)
+		/*if ((!ApplicationInfoEx.secondes) && (seconde > 48)
 				&& (gethour(taskid, 60) >= seconde)) {
 			ApplicationInfoEx.secondes = true;
 			initseconddatatable(60, taskid);
@@ -1231,7 +1273,7 @@ public class DBMgr {
 				&& (gethour(taskid, 30) >= seconde)) {
 			ApplicationInfoEx.secondes = true;
 			initseconddatatable(20, taskid);
-		}
+		}*/
 	}
 
 	public static List<String> getListapp() {
@@ -1428,7 +1470,7 @@ public class DBMgr {
 		String sql = "select startdataid, enddataid, current from newdata where taskid="+taskid+" order by day DESC";
 		Cursor cursor = db.rawQuery(sql, null);
 		if ((cursor != null) && (cursor.getCount() > 0)) {
-			double staylv = stay;
+			double staylv = stay/100;
 			int listentimes = 0;
 			if(stayway == 0){
 				//随机抽取
