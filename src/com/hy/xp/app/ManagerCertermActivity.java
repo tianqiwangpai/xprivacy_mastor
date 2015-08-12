@@ -241,7 +241,8 @@ public class ManagerCertermActivity extends Activity {
 		int[] backrst = dbmgr.getbackdatacount();
 		int taskid = dbmgr.getLastnewCord(DBMgr.getCurrentTaskname(), AppAdapte.dataselected)[1];
 		int[] newrst = dbmgr.getnewdatacount(taskid);
-		newdatashow.setText(newrst[0]-1+"/"+newrst[1]);
+		int newdata = newrst[0] -1>=0?newrst[0]-1:0;
+		newdatashow.setText(newdata+"/"+newrst[1]);
 		backdatashow.setText(backrst[0]+"/"+backrst[1]);
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 

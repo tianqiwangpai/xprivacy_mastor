@@ -273,12 +273,18 @@ public class DBMgr {
 			
 			mBean.setTaskStayWay(new Integer(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKSTAYWAY))));
-			mBean.setTaskNextDayVisitStayWay(new Integer(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITSTAYWAY))));
-			mBean.setTaskNextWeekVisitStayWay(new Integer(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITSTAYWAY))));
-			mBean.setTaskNextMonthVisitStayWay(new Integer(mCursor.getString(mCursor
-					.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITSTAYWAY))));
+			String nextdayvisitstayway = mCursor.getString(mCursor
+					.getColumnIndex(TaskAttribute.TASKNEXTDAYVISITSTAYWAY));
+			mBean.setTaskNextDayVisitStayWay(new Integer(nextdayvisitstayway==null?"0":nextdayvisitstayway));
+			
+			String nextweekvisitstayway = mCursor.getString(mCursor
+					.getColumnIndex(TaskAttribute.TASKNEXTWEEKVISITSTAYWAY));
+			
+			mBean.setTaskNextWeekVisitStayWay(new Integer(nextweekvisitstayway==null?"0":nextweekvisitstayway));
+			
+			String nextmonthvisitstayway = mCursor.getString(mCursor
+					.getColumnIndex(TaskAttribute.TASKNEXTMONTHVISITSTAYWAY));
+			mBean.setTaskNextMonthVisitStayWay(new Integer(nextmonthvisitstayway==null?"0":nextmonthvisitstayway));
 			
 			int TaskNextDayFlag = new Integer(mCursor.getString(mCursor
 					.getColumnIndex(TaskAttribute.TASKNEXTDAYFLAG)));
@@ -982,14 +988,16 @@ public class DBMgr {
             rst[1] = id;            
         }
         
-        if(packagename != null && packagename.size()>0){
+        rst[0] = appcord.getInt(packmd5+"_"+taskname, 1);
+        //TODO 修改任务和应用关联关系
+        /*if(packagename != null && packagename.size()>0){
             int maxid = 0;         
         	for(String temp:packagename){  	
             	int currentid = appcord.getInt(temp, 1);
             	maxid = maxid > currentid ? maxid : currentid;
             	rst[0] = maxid;
             }        
-        }  
+        }  */
 		return rst;
 	}
 	
@@ -1002,8 +1010,8 @@ public class DBMgr {
         	mCursor.moveToFirst();
         	do{
         		String appname = mCursor.getString(mCursor.getColumnIndex("packagename"));
-                int tmp = appcord.getInt(appname, 1) + newadd;
-                editor.putInt(appname, tmp);
+                int tmp = appcord.getInt(appname+"_"+taskname, 1) + newadd;
+                editor.putInt(appname+"_"+taskname, tmp);
                 editor.commit();
         	}while(mCursor.moveToNext());
         }
@@ -1306,6 +1314,7 @@ public class DBMgr {
 				data = getPhoneDataBeanById(id);
 				if(data == null){
 					Util.error_code = Util.error.NoPhoneInfo.ordinal();
+					return null;
 				}
 				ContentValues values = new ContentValues();
 				values.put("current", id + 1);
@@ -1327,6 +1336,7 @@ public class DBMgr {
 			data = getPhoneDataBeanById(_id);
 			if(data == null){
 				Util.error_code = Util.error.NoPhoneInfo.ordinal();
+				return null;
 			}
 			ContentValues value = new ContentValues();
 			value.put("visted", 1);
