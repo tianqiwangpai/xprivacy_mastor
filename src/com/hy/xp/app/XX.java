@@ -1,5 +1,8 @@
 package com.hy.xp.app;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -25,7 +28,6 @@ public class XX extends AppWidgetProvider
 	private static final String UPDATE_ACTION = "com.hy.xp.app.XX.UPDATE_ACTION";
 	private SharedPreferences sp;
 	int sum, settingReadFilesum;
-	private SharedPreferences sp_suji;
 
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
 	{
@@ -48,6 +50,10 @@ public class XX extends AppWidgetProvider
 	{
 		String action = intent.getAction();
 		if (UPDATE_ACTION.equals(action)) {
+			
+			// 关闭应用
+			long oldtime = System.currentTimeMillis();
+			
 			sp = PreferenceUtils.getSharedPreferences(context, "xp_clear");
 			Map<String, String> cleardatas = (Map<String, String>) sp.getAll();
 			if (null != cleardatas && cleardatas.size() > 0) {
@@ -59,7 +65,11 @@ public class XX extends AppWidgetProvider
 				//Toast.makeText(context, "当前没有可执行的任务，请添加任务！", Toast.LENGTH_SHORT).show();
 			}
 			
-			
+			long newtime = System.currentTimeMillis();
+			SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 
+			sdf.applyPattern("ss秒"); 
+			Date d  = new Date(newtime - oldtime);
+			System.out.println("LTZ&&&&&"+sdf.format(d));
 			
 			SetConfigData.SetDataByfile(ApplicationEx.getContextObject(), DBMgr.getInstance(context).getNextData(0));
 

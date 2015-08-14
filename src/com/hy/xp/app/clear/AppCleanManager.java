@@ -5,8 +5,11 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -36,12 +39,15 @@ public class AppCleanManager
 		// πÿ±’”¶”√
 		ApplicationInfo appInfo = null;
 		try {
+			System.out.println(packageName);
 			appInfo = packageManager.getApplicationInfo(packageName, 0);
 			System.out.println(appInfo.uid);
 			CloseApp.killProcessByApplicationInfo(appInfo, context);
+			System.out.println("finished kill "+packageName);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 
 		// Intent applyIntent = new Intent(Common.MY_PACKAGE_NAME +
 		// ".UPDATE_PERMISSIONS");

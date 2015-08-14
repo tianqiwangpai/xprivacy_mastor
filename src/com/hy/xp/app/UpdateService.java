@@ -42,6 +42,8 @@ public class UpdateService extends Service
 	public static final String cUpdate = "com.hy.xp.app.action.UPDATE";
 
 	private static Thread mWorkerThread;
+	
+	public static boolean currenttaskfinished = false;
 
 	@Override
 	public IBinder onBind(Intent intent)
@@ -84,30 +86,36 @@ public class UpdateService extends Service
 			}
 
 			if(action == cActionFinished){
+				currenttaskfinished = true;
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "任务已完成");
 				Toast.makeText(ApplicationEx.getContextObject(), "任务已完成", Toast.LENGTH_SHORT).show();
 				return 0;
 			}else if(action == cActionReady){	
+				currenttaskfinished = false;
 				DBMgr dbmgr = DBMgr.getInstance(this);
 				int[] backrst = dbmgr.getbackdatacount();
 				int taskid = dbmgr.getLastnewCord(dbmgr.getCurrentTaskname(), dbmgr.getListapp())[1];
 				int[] newrst = dbmgr.getnewdatacount(taskid);
 				int rst = backrst[0]+newrst[0];
-				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "第"+rst+"个，数据设置成功");
+				//notifynormalmessage(this, Util.NOTIFY_MIGRATE, "第"+rst+"个，数据设置成功");
 				Toast.makeText(ApplicationEx.getContextObject(), "第"+rst+"个，数据设置成功", Toast.LENGTH_SHORT).show();
 				resetpendingintent(1);
 				return 0;
 			}else if(action == cActionNoData){
-				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "5分钟未抽取数据！！！！");
-				resetpendingintent(1);
-			}else if(action == cActionNoNetwork){		
-				//判断网络状况，如果网络不通，则提示用户
-		        ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);
-		        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != State.CONNECTED
-		        		&& connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != State.CONNECTED){
-		        	notifynormalmessage(this, Util.NOTIFY_MIGRATE, "警告，网络5分钟内未连接!");
-					return 0;
-		        }
+				if(!currenttaskfinished){
+					notifynormalmessage(this, Util.NOTIFY_MIGRATE, "5分钟未抽取数据！！！！");
+					resetpendingintent(1);
+				}
+			}else if(action == cActionNoNetwork){
+				if(!currenttaskfinished){
+					//判断网络状况，如果网络不通，则提示用户
+			        ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);
+			        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != State.CONNECTED
+			        		&& connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != State.CONNECTED){
+			        	notifynormalmessage(this, Util.NOTIFY_MIGRATE, "警告，网络5分钟内未连接!");
+						return 0;
+			        }
+				}				
 			}else if(action == cActionDataNull)
 			{
 				notifynormalmessage(this, Util.NOTIFY_MIGRATE, "手机信息数据库已经耗完，请插入新数据!");

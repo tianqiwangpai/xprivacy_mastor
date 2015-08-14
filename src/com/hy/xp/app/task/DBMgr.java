@@ -1310,7 +1310,7 @@ public class DBMgr {
 			int endid = cursor.getInt(cursor.getColumnIndex("enddataid"));
 			int id = cursor.getInt(cursor.getColumnIndex("current"));
 			int day = cursor.getInt(cursor.getColumnIndex("day"));
-			if (id <= endid) {
+			if (id < endid) {
 				data = getPhoneDataBeanById(id);
 				if(data == null){
 					Util.error_code = Util.error.NoPhoneInfo.ordinal();

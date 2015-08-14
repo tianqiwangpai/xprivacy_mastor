@@ -23,6 +23,8 @@ public class SetConfigData
 	        changeIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
 	        changeIntent.putExtra("Action", UpdateService.cActionReady);
 	        ApplicationEx.getContextObject().startService(changeIntent);
+		}else{
+			return;
 		}
 		
 		String s = Environment.getExternalStorageState();
@@ -30,6 +32,10 @@ public class SetConfigData
 		if (Environment.MEDIA_MOUNTED.equals(s)) {
 			File sdcardDir = Environment.getExternalStorageDirectory();
 			path = sdcardDir.getPath() + "/xp_datafile/";
+			File tmp = new File(path);
+			if(!tmp.exists()){
+				tmp.mkdir();
+			}
 		}
 		Gson mGson = new Gson();
 		mGson.toJson(mPhoneDataBean);

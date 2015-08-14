@@ -22,7 +22,7 @@ public class CloseApp
 
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		String processName = applicationInfo.processName;
-		int pid = -1;// 进程ID
+		/*int pid = -1;// 进程ID
 		// 获取系统中所有正在运行的进程
 		List<RunningAppProcessInfo> appProcessInfos = activityManager.getRunningAppProcesses();
 		// 对系统中所有正在运行的进程进行迭代，如果进程名不是当前进程，则Kill掉
@@ -51,7 +51,7 @@ public class CloseApp
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	/**
