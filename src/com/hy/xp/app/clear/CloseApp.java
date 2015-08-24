@@ -20,8 +20,8 @@ public class CloseApp
 		// 强制关闭应用
 		forceStopPackage(applicationInfo.packageName);
 
-		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		String processName = applicationInfo.processName;
+		/*ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		String processName = applicationInfo.processName;*/
 		/*int pid = -1;// 进程ID
 		// 获取系统中所有正在运行的进程
 		List<RunningAppProcessInfo> appProcessInfos = activityManager.getRunningAppProcesses();

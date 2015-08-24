@@ -41,13 +41,14 @@ public class AppCleanManager
 		try {
 			System.out.println(packageName);
 			appInfo = packageManager.getApplicationInfo(packageName, 0);
-			System.out.println(appInfo.uid);
-			CloseApp.killProcessByApplicationInfo(appInfo, context);
-			System.out.println("finished kill "+packageName);
+			/*System.out.println(appInfo.uid);
+			//CloseApp.killProcessByApplicationInfo(appInfo, context);
+			System.out.println("finished kill "+packageName);*/
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+		String forceStopCmd = "am force-stop " + packageName;
+		suhelper.WriteCmd(forceStopCmd);
 
 		// Intent applyIntent = new Intent(Common.MY_PACKAGE_NAME +
 		// ".UPDATE_PERMISSIONS");
@@ -59,7 +60,12 @@ public class AppCleanManager
 
 		AppCache.addOneClear(packageName, context);// 添加一次清理记录
 
-		clearPackage(packageName);// 清理应用数据
+		//clearPackage(packageName);// 清理应用数据
+		
+		//清理数据：
+		String clearPackageCmd = "pm clear " + packageName;
+		suhelper.WriteCmd(clearPackageCmd);
+		
 		clearSdcard(context);// 清理SD卡，会根据选择好的文件夹清理数据
 		deleteFilesByDirectory(context, getDataDir(packageManager, packageName, context), packageName);
 
