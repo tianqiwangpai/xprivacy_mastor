@@ -37,6 +37,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.gson.Gson;
+import com.hy.xp.app.task.Appinfo;
 import com.hy.xp.app.task.PhoneDataBean;
 
 public class PrivacyManager
@@ -72,7 +73,10 @@ public class PrivacyManager
 	// This should correspond with the above definitions
 	//private static final String cRestrictionNames[] = new String[] { cAccounts, cBrowser, cCalendar, cCalling, cClipboard, cContacts, cDictionary, cEMail, cIdentification, cInternet, cIPC, cLocation, cMedia, cMessages, cNetwork, cNfc, cNotifications, cOverlay, cPhone, cSensors, cShell, cStorage, cSystem, cView };
 
-	private static final String cRestrictionNames[] = { "accounts", "identification", "location", "network", "phone", "storage" };
+	/*
+	 * cSystem:包含了应用列表获取的代码
+	 */
+	private static final String cRestrictionNames[] = { "accounts", "contacts", "identification", "location", "network", "phone", "storage", cSystem };
 
 	public static List<String> cMethodNoState = Arrays.asList(new String[] { "IntentFirewall", "checkPermission", "checkUidPermission" });
 
@@ -1908,6 +1912,32 @@ public class PrivacyManager
 
 		if (name.equals("BTName"))
 			return cDeface;
+		
+		//TODO 应用列表伪造支持
+		if(name.equals("Appinfo")){
+			List<Appinfo> value = null;
+			//File sdcardDir = Environment.getExternalStorageDirectory();
+			String path = "/mnt/sdcard" + "/xp_datafile/setting";
+			File mFile = new File(path);
+			if (mFile.exists()) {
+				try {
+					String result = BufferedReaderJSON(path);
+
+					if (result != null) {
+						Gson mGson = new Gson();
+						PhoneDataBean mBases = mGson.fromJson(result, PhoneDataBean.class);
+						value = mBases.getAppinfolist();
+						return value;
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			} else {
+				return null;
+			}
+		}
 
 		// Fallback
 		Util.log(null, Log.ERROR, "Fallback value name=" + name);

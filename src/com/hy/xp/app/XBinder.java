@@ -37,13 +37,13 @@ public class XBinder extends XHook
 	// Service name should one-to-one correspond to the other lists
 
 	// @formatter:off
-	public static List<String> cServiceName = Arrays.asList(new String[] { "account", "activity", "clipboard", "connectivity", "content", "location", "telephony.registry", "telephony.msim.registry", "package", "iphonesubinfo", "iphonesubinfo_msim", "window", "wifi", "sip", "isms", "nfc", "appwidget", "bluetooth", "bluetooth_manager", "input", "sensorservice", "usb", "media.camera", "<noname>",
+	public static List<String> cServiceName = Arrays.asList(new String[] { "account", "activity", "clipboard", "connectivity", "content", "location", "telephony.registry", "telephony.msim.registry", "package", "iphonesubinfo", "iphonesubinfo_msim", "window", /*"wifi",*/ "sip", "isms", "nfc", "appwidget", "bluetooth", "bluetooth_manager", "input", "sensorservice", "usb", "media.camera", "<noname>",
 			"<noname>", "<noname>" });
 	// @formatter:on
 
 	// @formatter:off
 	public static List<String> cServiceDescriptor = Arrays.asList(new String[] { "android.accounts.IAccountManager", "android.app.IActivityManager", "android.content.IClipboard", "android.net.IConnectivityManager", "android.content.IContentService", "android.location.ILocationManager", "com.android.internal.telephony.ITelephonyRegistry", "com.android.internal.telephony.ITelephonyRegistryMSim",
-			"android.content.pm.IPackageManager", "com.android.internal.telephony.IPhoneSubInfo", "com.android.internal.telephony.msim.IPhoneSubInfoMSim", "android.view.IWindowManager", "android.net.wifi.IWifiManager", "android.net.sip.ISipService", "com.android.internal.telephony.ISms", "android.nfc.INfcAdapter", "com.android.internal.appwidget.IAppWidgetService", "android.bluetooth.IBluetooth",
+			"android.content.pm.IPackageManager", "com.android.internal.telephony.IPhoneSubInfo", "com.android.internal.telephony.msim.IPhoneSubInfoMSim", "android.view.IWindowManager", /*"android.net.wifi.IWifiManager",*/ "android.net.sip.ISipService", "com.android.internal.telephony.ISms", "android.nfc.INfcAdapter", "com.android.internal.appwidget.IAppWidgetService", "android.bluetooth.IBluetooth",
 			"android.bluetooth.IBluetoothManager", "android.hardware.input.IInputManager", "android.gui.SensorServer", "android.hardware.usb.IUsbManager", "android.hardware.ICameraService", "android.app.IApplicationThread", "android.content.IContentProvider", "android.view.IWindowSession" });
 	
 	

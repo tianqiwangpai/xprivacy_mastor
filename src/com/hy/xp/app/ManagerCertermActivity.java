@@ -65,6 +65,8 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 
 public class ManagerCertermActivity extends Activity {
 	
+	public static boolean isfinishednewdata = false;
+	
 	private Spinner staskname=null;
 	
 	private List<View> listview = new ArrayList<View>();
@@ -242,7 +244,11 @@ public class ManagerCertermActivity extends Activity {
 		int taskid = dbmgr.getLastnewCord(DBMgr.getCurrentTaskname(), AppAdapte.dataselected)[1];
 		int[] newrst = dbmgr.getnewdatacount(taskid);
 		int newdata = newrst[0] -1>=0?newrst[0]-1:0;
-		newdatashow.setText(newdata+"/"+newrst[1]);
+		if(isfinishednewdata){
+			newdatashow.setText(newdata+1+"/"+newrst[1]);
+		}else{
+			newdatashow.setText(newdata+"/"+newrst[1]);
+		}
 		backdatashow.setText(backrst[0]+"/"+backrst[1]);
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 

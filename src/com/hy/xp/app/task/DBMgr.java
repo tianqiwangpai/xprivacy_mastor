@@ -25,6 +25,7 @@ import android.os.Environment;
 
 import com.hy.xp.app.ApplicationEx;
 import com.hy.xp.app.ApplicationInfoEx;
+import com.hy.xp.app.ManagerCertermActivity;
 import com.hy.xp.app.UpdateService;
 import com.hy.xp.app.Util;
 
@@ -1382,6 +1383,7 @@ public class DBMgr {
 		if (stayway == 0) {
 			data = getfromnewdata();
 			if (data == null) {
+				ManagerCertermActivity.isfinishednewdata = true;
 				data = getfrombackrecord();
 			}
 		}else if (stayway == 0x1) {
@@ -1393,6 +1395,7 @@ public class DBMgr {
 			if (getRandomboolean(getnewdatacount(getLastnewCord(getCurrentTaskname(), getListapp())[1])[1], getbackdatacount()[1])) {
 				data = getfromnewdata();
 				if (data == null) {
+					ManagerCertermActivity.isfinishednewdata = true;
 					data = getfrombackrecord();
 				}
 			} else {
@@ -1407,6 +1410,7 @@ public class DBMgr {
 			if (isfollownewdata) {
 				data = getfromnewdata();
 				if (data == null) {
+					ManagerCertermActivity.isfinishednewdata = true;
 					data = getfrombackrecord();
 				}
 				isfollownewdata = false;
@@ -1421,6 +1425,7 @@ public class DBMgr {
 		
 		//TODO 提示信息
 		if(data == null){
+			ManagerCertermActivity.isfinishednewdata = true;
 			Intent localIntent = new Intent();
 	        localIntent.setClass(ApplicationEx.getContextObject(), UpdateService.class);
 	        int action = 0;
@@ -1434,7 +1439,44 @@ public class DBMgr {
 	        localIntent.putExtra("Action", action);
 	        ApplicationEx.getContextObject().startService(localIntent);
 		}
+		
+		//TODO 随机抽取应用程序信息，形成应用程序信息列表 ，附加在phoneinfo中
+		data.setAppinfolist(getRandomAppinfolist());
+		
 		return data;
+	}
+	
+	private List<Appinfo> getRandomAppinfolist(){
+		List<Appinfo> listapp = new ArrayList<Appinfo>();
+		List<Appinfo> rstapplist = new ArrayList<Appinfo>();
+		Random r = new Random();
+		
+		String sql = "select * from applist";
+		Cursor rst = db.rawQuery(sql, null);
+		if(rst == null || rst.getCount() < 1){
+			return null;
+		}
+		rst.moveToFirst();
+		
+		do{
+			Appinfo info = new Appinfo(rst.getString(rst.getColumnIndex("pkgname")),
+					rst.getString(rst.getColumnIndex("appname")));
+			listapp.add(info);
+		}while(rst.moveToNext());
+		int num = r.nextInt(listapp.size() - 1);
+		if(num == 0){
+			num = 1;
+		}
+		for(int i=0; i<num; i++){
+			int j = r.nextInt(listapp.size() - i);
+			rstapplist.add(listapp.get(j));
+			listapp.remove(j);
+			listapp.add(j, listapp.get(listapp.size() - 1 -i));
+		}
+		//释放空间
+		listapp.removeAll(listapp);
+		listapp = null;
+		return rstapplist;
 	}
 	
 	private boolean getRandomboolean(int a, int b){
@@ -1531,11 +1573,14 @@ public class DBMgr {
 					}
 				}				
 				if(tobelow){
-					double newlv = staylv * (lowlv/100);
+					double newlv = staylv - (lowlv/100);
 					if(newlv > lowest/100){
 						staylv = newlv;
 					}else{
 						staylv = lowest/100;
+					}
+					if(staylv == 0){
+						break;
 					}
 				}
 				if((times != -1)){
@@ -1613,6 +1658,47 @@ public class DBMgr {
 		cursor.moveToFirst();
 		rst = cursor.getInt(cursor.getColumnIndex("mday"));
 		return rst;
+	}
+	
+	public void insertapptable(Appinfo appinfo){
+		ContentValues insertv = new ContentValues();
+		insertv.put("pkgname", appinfo.getPname());
+		insertv.put("appname", appinfo.getPlable());
+		insertv.put("appicon", appinfo.getPlable());
+		db.insert("applist", null, insertv);
+	}
+	
+	public void insertcontacttable(String name , String telephonenum){
+		ContentValues insertv = new ContentValues();
+		insertv.put("name", name);
+		insertv.put("telephone", telephonenum);
+		db.insert("contact", null, insertv);
+	}
+	
+	public void insertcontact_calltable(String telephonenum, long datatime){
+		ContentValues insertv = new ContentValues();
+		insertv.put("telephone", telephonenum);
+		insertv.put("datetime", datatime);
+		db.insert("contact_call", null, insertv);
+	}
+	
+	public void inittestdata(){
+		String name[] = {"张三", "李四", "王五", "马六", "田七", "牢八", "昊九", "初十"};
+		String telephone[] = {"13034564873", "13034564874", "13034564875", "13034564876", "13034564877", "13034564878", "13034564879", "13034564880"};
+		long now = System.currentTimeMillis();
+		long calltime[] = {now - 3600*3, now - 3600*4, now - 3600*5, now - 3600*6, now - 3600*7, now - 3600*8, now - 3600*9, now - 3600*10};
+		String appname[] = {"找你妹", "找你哥", "找你妈", "找你舅", "找你大爷", "找你弟", "找你儿", "找你女", "找工作", "找房子", "赶集网"};
+		String applable[] = {"com.ltz.znm", "com.ltz.zng", "com.ltz.znma", "com.ltz.znj", "com.ltz.zndy", "com.ltz.znd", "com.ltz.zne", "com.ltz.znn", "com.ltz.zgz", "com.ltz.zfz", "com.ltz.gjw"};
+		//List<Appinfo> applist = new ArrayList<Appinfo>();
+		String sql = "select * from applist";
+		Cursor rst = db.rawQuery(sql, null);
+		if(rst.getCount() > 0){
+			return;
+		}
+		for(int i=0; i<appname.length; i++){
+			Appinfo info = new Appinfo(appname[i], applable[i]);
+			insertapptable(info);
+		}
 	}
 
 }

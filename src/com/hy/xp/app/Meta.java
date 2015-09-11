@@ -414,6 +414,7 @@ public class Meta
 		mListHook.add(new Hook("storage", "openAssetFile", null, 5, "2.1.17", null).unsafe().dangerous().whitelist(cTypeFilename));
 		mListHook.add(new Hook("storage", "openFile", null, 5, "2.1.17", null).unsafe().dangerous().whitelist(cTypeFilename));
 
+		mListHook.add(new Hook("system", "loadLabel", "", 1, null, null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "getInstalledApplications", "", 1, null, null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "getInstalledPackages", "", 1, null, null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "getPackagesForUid", "", 1, "2.1.17", null).notAOSP(19).dangerous());

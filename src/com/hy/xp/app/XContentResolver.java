@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -363,13 +364,15 @@ public class XContentResolver extends XHook
 						}
 				}
 
-			} else if (uri.startsWith("content://com.android.contacts/contacts/name_phone_or_email")) {
+			}/* else if (uri.startsWith("content://com.android.contacts/contacts/name_phone_or_email")) {
 
 				// Do nothing
 
-			} else if (uri.startsWith("content://com.android.contacts/") && !uri.equals("content://com.android.contacts/")) {
-				// Contacts provider: allow selected contacts
+			}*/ else if (uri.startsWith("content://com.android.contacts/") && !uri.equals("content://com.android.contacts/")) {
+				// Contacts provider: allow selected contacts				
+				Log.e("LTZ", "uri:"+uri);
 				String[] components = uri.replace("content://com.android.", "").split("/");
+				Log.e("LTZ", "components:"+Arrays.toString(components)+" uri:"+uri);
 				String methodName = components[0] + "/" + components[1].split("\\?")[0];
 				if (methodName.equals("contacts/contacts") || methodName.equals("contacts/data") || methodName.equals("contacts/phone_lookup") || methodName.equals("contacts/raw_contacts")) {
 					if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
@@ -386,7 +389,7 @@ public class XContentResolver extends XHook
 						listColumn.addAll(Arrays.asList(cursor.getColumnNames()));
 						if (added)
 							listColumn.remove(listColumn.size() - 1);
-
+						Log.e("LTZ", "ColumnNames:"+Arrays.toString(cursor.getColumnNames()));
 						// Get blacklist setting
 						int uid = Binder.getCallingUid();
 						boolean blacklist = PrivacyManager.getSettingBool(-uid, PrivacyManager.cSettingBlacklist, false);
@@ -401,8 +404,10 @@ public class XContentResolver extends XHook
 								// Check if allowed
 								long id = (urlid >= 0 ? urlid : cursor.getLong(iid));
 								boolean allowed = PrivacyManager.getSettingBool(-uid, Meta.cTypeContact, Long.toString(id), false);
-								if (blacklist)
-									allowed = !allowed;
+								allowed = true;
+								/*if (blacklist)
+									allowed = !allowed;*/
+								Log.e("LTZ", "Change Value");
 								if (allowed)
 									copyColumns(cursor, result, listColumn.size());
 							}
@@ -601,6 +606,7 @@ public class XContentResolver extends XHook
 	{
 		try {
 			Object[] columns = new Object[count];
+			boolean hasmimetype = false;
 			for (int i = 0; i < count; i++)
 				switch (cursor.getType(i)) {
 				case Cursor.FIELD_TYPE_NULL:
@@ -613,7 +619,33 @@ public class XContentResolver extends XHook
 					columns[i] = cursor.getFloat(i);
 					break;
 				case Cursor.FIELD_TYPE_STRING:
-					columns[i] = cursor.getString(i);
+					if(cursor.getColumnNames()[i].equals("mimetype")){
+						columns[i] = cursor.getString(i);
+						Log.e("LTZ", "mimetype:"+cursor.getString(i));
+						if(columns[i].equals("vnd.android.cursor.item/name")){
+							hasmimetype=true;
+						}
+						break;
+					}
+					Log.e("LTZ", "-oldvalue-"+cursor.getColumnNames()[i]+":"+cursor.getString(i));
+					if(cursor.getColumnName(i).equals(Phone.DISPLAY_NAME)){
+						columns[i] = "刘天作";
+					}else{
+						if(hasmimetype&&cursor.getColumnName(i).equals("data1")){
+							columns[i] = "刘天作";
+						}
+						else if(hasmimetype&&cursor.getColumnName(i).equals("data3")){
+							columns[i] = "刘天作";
+						}else if(hasmimetype&&cursor.getColumnName(i).equals("data10")){
+							columns[i] = cursor.getString(i);
+						}else if(cursor.getString(cursor.getColumnIndex("mimetype")).equals("vnd.android.cursor.item/phone_v2")&& cursor.getColumnName(i).equals("data2")){
+							columns[i] = cursor.getString(i);
+						}else{
+							columns[i] = "13023895989";
+						}
+					}
+					Log.e("LTZ", "-----"+columns[i]);
+					//columns[i] = cursor.getString(i);
 					break;
 				case Cursor.FIELD_TYPE_BLOB:
 					columns[i] = cursor.getBlob(i);

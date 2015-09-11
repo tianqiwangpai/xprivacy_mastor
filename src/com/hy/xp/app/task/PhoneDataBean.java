@@ -1,6 +1,7 @@
 package com.hy.xp.app.task;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PhoneDataBean implements Serializable
 {
@@ -146,6 +147,9 @@ public class PhoneDataBean implements Serializable
 	private String datatype;
 	
 	private String BMacAddress = "";
+	
+	//TODO 应用列表
+	private List<Appinfo> appinfolist;
 
 	public String getModel()
 	{
@@ -155,6 +159,14 @@ public class PhoneDataBean implements Serializable
 	public void setModel(String model)
 	{
 		Model = model;
+	}
+
+	public List<Appinfo> getAppinfolist() {
+		return appinfolist;
+	}
+
+	public void setAppinfolist(List<Appinfo> appinfolist) {
+		this.appinfolist = appinfolist;
 	}
 
 	public String getManufacturer()

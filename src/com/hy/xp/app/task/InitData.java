@@ -57,14 +57,17 @@ public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {
 				localTaskAttribute.getTaskName(),
 				AppAdapte.dataselected);
 		
+		//TODO 初始化模拟数据
+		localDBMgr.inittestdata();
+		
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 
 		sdf.applyPattern("yyyy年MM月dd日"); 
-		/*if(DBMgr.getTaskstartime(arrayOfInt[1]) != null && sdf.format(date).equals(DBMgr.getTaskstartime(arrayOfInt[1]))){
+		if(DBMgr.getTaskstartime(arrayOfInt[1]) != null && sdf.format(date).equals(DBMgr.getTaskstartime(arrayOfInt[1]))){
 			//当日任务已完成，请等明天再继续
 			flag = 1;
 			return null;
-		}*/
+		}
 		
 		//判断网络状况，如果网络不通，则提示用户
         ConnectivityManager connectivityManager = (ConnectivityManager) ApplicationEx.getContextObject().getSystemService(Context.CONNECTIVITY_SERVICE);

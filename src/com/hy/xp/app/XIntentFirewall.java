@@ -46,6 +46,7 @@ public class XIntentFirewall extends XHook
 		mapIntentRestriction.put(NotificationListenerService.SERVICE_INTERFACE, PrivacyManager.cNotifications);
 
 		// Intent receive: package changes
+		//TODO liutianzuo for error 2015/09/03
 		mapIntentRestriction.put(Intent.ACTION_PACKAGE_ADDED, PrivacyManager.cSystem);
 		mapIntentRestriction.put(Intent.ACTION_PACKAGE_REPLACED, PrivacyManager.cSystem);
 		mapIntentRestriction.put(Intent.ACTION_PACKAGE_RESTARTED, PrivacyManager.cSystem);

@@ -81,6 +81,21 @@ public class DBHelper extends SQLiteOpenHelper
 		StringBuilder backrecord = new StringBuilder(
 				"create table backrecord(dataid int primary key, visted int);");
 		db.execSQL(backrecord.toString());
+		
+		// TODO 应用程序列表
+		StringBuilder applist = new StringBuilder(
+				"create table applist(dataid integer primary key autoincrement, pkgname text, appname text, appicon text)");
+		db.execSQL(applist.toString());
+		
+		// TODO 应用程序列表
+		StringBuilder contact = new StringBuilder(
+				"create table contact(dataid integer primary key autoincrement, name text, telephone text)");
+		db.execSQL(contact.toString());
+				
+		// TODO 应用程序列表
+		StringBuilder contact_call = new StringBuilder(
+				"create table contact_call(dataid integer primary key autoincrement, telephone text, datetime long)");
+		db.execSQL(contact_call.toString());
 	}
 
 	@Override

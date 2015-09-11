@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hy.xp.app.task.Appinfo;
+
 import android.content.ComponentName;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -269,6 +271,7 @@ public class XPackageManager extends XHook
 		case getInstalledPackages:
 		case getPackagesHoldingPermissions:
 		case getPreferredPackages:
+			Log.w("LTZ ", "getInstalledPackages");
 			if (param.getResult() != null)
 				if (isRestricted(param))
 					param.setResult(filterPackageInfo((List<PackageInfo>) param.getResult()));
@@ -364,18 +367,49 @@ public class XPackageManager extends XHook
 	private List<ApplicationInfo> filterApplicationInfo(List<ApplicationInfo> original)
 	{
 		ArrayList<ApplicationInfo> result = new ArrayList<ApplicationInfo>();
-		for (ApplicationInfo appInfo : original)
-			if (isPackageAllowed(appInfo.packageName))
-				result.add(appInfo);
+		Log.w("LTZ", "****"+original.size());
+		for (ApplicationInfo appInfo : original){
+			//if (isPackageAllowed(appInfo.packageName))
+			result.add(appInfo);
+			Log.w("LTZ", appInfo.packageName);
+			break;
+		}
 		return result;
 	}
 
 	private List<PackageInfo> filterPackageInfo(List<PackageInfo> original)
 	{
 		ArrayList<PackageInfo> result = new ArrayList<PackageInfo>();
-		for (PackageInfo pkgInfo : original)
-			if (isPackageAllowed(pkgInfo.packageName))
-				result.add(pkgInfo);
+		//Log.w("LTZ", "***filterPackageInfo**"+original.size());
+		for (PackageInfo pkgInfo : original){
+			List<Appinfo> value = (List<Appinfo>) PrivacyManager
+					.getDefacedProp(Binder.getCallingUid(), "Appinfo");
+			for(Appinfo temp:value){
+				Log.w("LTZ", "***filterPackageInfo**"+temp.getPlable());
+				PackageInfo packageInfo = new PackageInfo();
+				packageInfo.packageName = temp.getPlable();
+				packageInfo.firstInstallTime = pkgInfo.firstInstallTime;
+				packageInfo.activities = pkgInfo.activities;
+				packageInfo.services = pkgInfo.services;
+				packageInfo.applicationInfo = new ApplicationInfo();
+				packageInfo.applicationInfo.packageName = temp.getPlable();
+				packageInfo.permissions = pkgInfo.permissions;
+				packageInfo.signatures = pkgInfo.signatures;
+				//packageInfo.featureGroups = pkgInfo.featureGroups;
+				//packageInfo.gids = pkgInfo.gids;
+				packageInfo.sharedUserId = pkgInfo.sharedUserId;
+				packageInfo.sharedUserLabel = pkgInfo.sharedUserLabel;
+				packageInfo.versionCode = pkgInfo.versionCode;
+				packageInfo.versionName = pkgInfo.versionName;
+				//pkgInfo.packageName = temp.getPlable();
+				//Log.w("LTZ", "***filterPackageInfo**"+pkgInfo.packageName);
+				result.add(packageInfo);
+			}
+			//result.add(pkgInfo);			
+			break;
+			/*if (isPackageAllowed(pkgInfo.packageName))
+				result.add(pkgInfo);*/
+		}
 		return result;
 	}
 

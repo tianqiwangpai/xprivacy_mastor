@@ -79,8 +79,10 @@ public class XIoBridge extends XHook
 	{
 		com.github.snowdream.android.util.Log.setEnabled(true);
 		com.github.snowdream.android.util.Log.setLog2FileEnabled(true);
-
+		
+		//TODO 问题所在，导致异常退出的问题，可以进一步跟踪
 		boolean appsRestricted = PrivacyManager.getRestrictionEx(Util.getAppId(Process.myUid()), PrivacyManager.cSystem, null).restricted;
+		appsRestricted = false;
 		if (appsRestricted) {
 			String path = null;
 			int int_appid = Util.getAppId(Process.myUid());

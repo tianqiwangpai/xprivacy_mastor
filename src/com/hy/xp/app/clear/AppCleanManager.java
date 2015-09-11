@@ -88,6 +88,7 @@ public class AppCleanManager
 			process = Runtime.getRuntime().exec("su"); // «–ªªµΩroot’ ∫≈
 			os = new DataOutputStream(process.getOutputStream());
 			os.writeBytes(clearPackageCmd + "\n");
+			os.writeBytes("rm /mnt/sdcard/.tcookieid\n");
 			os.writeBytes("exit\n");
 			os.flush();
 			process.waitFor();

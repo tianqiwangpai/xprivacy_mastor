@@ -336,6 +336,7 @@
     <string name="storage_openTypedAssetFileDescriptor" translatable="false"><![CDATA[<a href="https://developer.android.com/reference/android/content/ContentResolver.html#openTypedAssetFileDescriptor(android.net.Uri,%20java.lang.String,%20android.os.Bundle)">Google documentation</a>]]></string>
 
     <!-- system -->
+    <string name="system_loadLabel" translatable="false"><![CDATA[<a href="https://developer.android.com/reference/android/content/pm/PackageManager.html#loadLabel(PackageManager)">Google documentation</a>]]></string>
     <string name="system_getInstalledApplications" translatable="false"><![CDATA[<a href="https://developer.android.com/reference/android/content/pm/PackageManager.html#getInstalledApplications(int)">Google documentation</a>]]></string>
     <string name="system_getInstalledPackages" translatable="false"><![CDATA[<a href="https://developer.android.com/reference/android/content/pm/PackageManager.html#getInstalledPackages(int)">Google documentation</a>]]></string>
     <string name="system_getPackagesHoldingPermissions" translatable="false"><![CDATA[<a href="https://developer.android.com/reference/android/content/pm/PackageManager.html#getPackagesHoldingPermissions(java.lang.String[],%20int)">Google documentation</a>]]></string>
