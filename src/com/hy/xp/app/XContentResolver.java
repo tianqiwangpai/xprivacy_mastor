@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.content.SyncAdapterType;
@@ -25,7 +26,33 @@ public class XContentResolver extends XHook
 	private Methods mMethod;
 	private boolean mClient;
 	private String mClassName;
-
+	
+	private final String content_photo = "content://com.android.contacts/contacts/3/photo";
+	private final String content_raw = "content://com.android.contacts/raw_contacts";
+	private final String contacts = "content://com.android.contacts/contacts";
+	private final String data = "content://com.android.contacts/data";
+	private final String mimetype_v1 = "vnd.android.cursor.item/name";
+	private final String mimetype_v2 = "mimetype:vnd.android.cursor.item/phone_v2";
+	
+	private final String data1 = "data1";
+	private final String data2 = "data2";
+	private final String data3 = "data3";
+	private final String data4 = "data4";
+	private final String data5 = "data5";
+	private final String data6 = "data6";
+	private final String data7 = "data7";
+	private final String data8 = "data8";
+	private final String data9 = "data9";
+	private final String data10 = "data10";
+	private final String data15 = "data15";
+	private final String mimetype = "mimetype";
+	private final String contact_id = "contact_id";
+	private final String custom_ringtone = "custom_ringtone";
+	private final String _id = "_id";
+	private final String starred = "starred";
+	private final String display_name = "display_name";
+	
+	
 	private XContentResolver(Methods method, String restrictionName, String className)
 	{
 		super(restrictionName, method.name().replace("Srv_", ""), method.name());
@@ -337,9 +364,8 @@ public class XContentResolver extends XHook
 					}
 					result.respond(cursor.getExtras());
 					param.setResult(result);
-					cursor.close();
+					cursor.close(); 
 				}
-
 			} else if (uri.startsWith("content://com.google.android.gsf.gservices")) {
 				// Google services provider: block only android_id
 				if (param.args.length > 3 && param.args[3] != null) {
@@ -369,11 +395,63 @@ public class XContentResolver extends XHook
 				// Do nothing
 
 			}*/ else if (uri.startsWith("content://com.android.contacts/") && !uri.equals("content://com.android.contacts/")) {
-				// Contacts provider: allow selected contacts				
-				Log.e("LTZ", "uri:"+uri);
+				Log.e("LTZ",uri.toString());
 				String[] components = uri.replace("content://com.android.", "").split("/");
-				Log.e("LTZ", "components:"+Arrays.toString(components)+" uri:"+uri);
 				String methodName = components[0] + "/" + components[1].split("\\?")[0];
+				if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
+					List<String> listColumn = new ArrayList<String>();
+					listColumn.addAll(Arrays.asList(cursor.getColumnNames()));
+					MatrixCursor result = new MatrixCursor(listColumn.toArray(new String[0]));
+					cursor.moveToNext();
+					Log.e("LTZ", "ColumnNames:"+Arrays.toString(cursor.getColumnNames()));
+					if(data.contains(methodName)){
+						for(int i=0; i<name.length; i++){
+							copydatacol(mimetype_v1, cursor, result, listColumn.size(), i);
+							copydatacol(mimetype_v2, cursor, result, listColumn.size(), i);
+						}						
+					}
+					else if(content_raw.contains(methodName)){
+						for(int i=0; i<name.length; i++){
+							copyColumnsraw(cursor, result, listColumn.size(), i);
+						}
+					}else if(contacts.contains(methodName)){
+						Log.e("LTZ","listColumn.size()"+listColumn.size()+"name size"+name.length);
+						for(int i=0; i<name.length; i++){
+							copyColumnsraw(cursor, result, listColumn.size(), i);
+						}
+					}else if(content_photo.contains(methodName)){
+						for(int i=0; i<name.length; i++){
+							copyColumnsraw(cursor, result, listColumn.size(), i);
+						}
+					}else{
+						Log.e("LTZ","listColumn.size()"+listColumn.size());
+						for(int i=0; i<name.length; i++){
+							copyColumnsraw(cursor, result, listColumn.size(), i);
+						}
+					}
+					result.respond(cursor.getExtras());
+					param.setResult(result);
+					cursor.close();
+				}else {
+					methodName = null;
+					if (uri.startsWith("content://com.android.contacts/profile"))
+						methodName = "contacts/profile";
+					else
+						methodName = "ContactsProvider2"; // fall-back
+
+					if (methodName != null)
+						if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
+							// Return empty cursor
+							MatrixCursor result = new MatrixCursor(cursor.getColumnNames());
+							result.respond(cursor.getExtras());
+							param.setResult(result);
+							cursor.close();
+						}
+				}
+				
+				
+				
+				/*
 				if (methodName.equals("contacts/contacts") || methodName.equals("contacts/data") || methodName.equals("contacts/phone_lookup") || methodName.equals("contacts/raw_contacts")) {
 					if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
 						// Get ID from URL if any
@@ -407,7 +485,7 @@ public class XContentResolver extends XHook
 								allowed = true;
 								/*if (blacklist)
 									allowed = !allowed;*/
-								Log.e("LTZ", "Change Value");
+								/*Log.e("LTZ", "Change Value");
 								if (allowed)
 									copyColumns(cursor, result, listColumn.size());
 							}
@@ -418,6 +496,7 @@ public class XContentResolver extends XHook
 						param.setResult(result);
 						cursor.close();
 					}
+					
 				} else {
 					methodName = null;
 					if (uri.startsWith("content://com.android.contacts/profile"))
@@ -434,7 +513,7 @@ public class XContentResolver extends XHook
 							cursor.close();
 						}
 				}
-
+				*/
 			} else {
 				// Other uri restrictions
 				String restrictionName = null;
@@ -523,6 +602,7 @@ public class XContentResolver extends XHook
 		}
 	}
 
+	
 	private void handleCallAfter(XParam param) throws Throwable
 	{
 		if (param.args.length > 1 && param.args[0] instanceof String && param.args[1] instanceof String) {
@@ -601,7 +681,172 @@ public class XContentResolver extends XHook
 	{
 		copyColumns(cursor, result, cursor.getColumnCount());
 	}
+	
+	private void copyColumns_photo(Cursor cursor, MatrixCursor result, int count){
+		Object[] columns = new Object[count];
+	}
+	
+	private static String[] name = {"刘天作", "张晓光", "李自成"};
+	private static String[] phone = {"13023895989", "13223895464", "13023895464"};
 
+	private void copydatacol(String mimetype_v12, Cursor cursor,
+			MatrixCursor result, int size, int index) {
+		Object[] columns = new Object[size];
+		if(mimetype_v12.equals(mimetype_v1)){
+			//name
+			try {
+				for (int i = 0; i < size; i++){
+					Log.e("LTZ", cursor.getColumnName(i)+":"+getType(cursor.getColumnName(i)));
+					switch (getType(cursor.getColumnName(i))) {
+						case Cursor.FIELD_TYPE_NULL:
+							columns[i] = null;
+							break;
+						case Cursor.FIELD_TYPE_INTEGER:
+							if(cursor.getColumnNames()[i].equals("contact_id")){
+								//该条数据对于的contace_id
+								//columns[i] = 
+								columns[i] = index;
+							}else{
+								columns[i] = cursor.getInt(i);
+							}
+							break;
+						case Cursor.FIELD_TYPE_FLOAT:
+							columns[i] = cursor.getFloat(i);
+							break;
+						case Cursor.FIELD_TYPE_STRING:
+							if(cursor.getColumnNames()[i].equals(mimetype)){
+								columns[i] = mimetype_v1;
+							}else if(cursor.getColumnNames()[i].equals(data10)){
+								columns[i] = "2";
+							}else if(cursor.getColumnNames()[i].equals(data1)){
+								//等于个自的名字 
+								columns[i] = name[index];
+							}else if(cursor.getColumnNames()[i].equals(data3)){
+								//等于个自的名字 
+								columns[i] = name[index];
+							}else{
+								columns[i] = "";
+							}
+							break;
+						case Cursor.FIELD_TYPE_BLOB:
+							columns[i] = cursor.getBlob(i);
+							break;
+						default:
+							Util.log(this, Log.WARN, "Unknown cursor data type=" + cursor.getType(i));
+					}
+				}
+				result.addRow(columns);
+			} catch (Throwable ex) {
+				Util.bug(this, ex);
+			}
+		}else if(mimetype_v12.equals(mimetype_v2)){
+			try {
+				for (int i = 0; i < size; i++){
+					Log.e("LTZ", cursor.getColumnName(i)+":"+getType(cursor.getColumnName(i)));
+					switch (getType(cursor.getColumnName(i))) {
+						case Cursor.FIELD_TYPE_NULL:
+							columns[i] = null;
+							break;
+						case Cursor.FIELD_TYPE_INTEGER:
+							if(cursor.getColumnNames()[i].equals("contact_id")){
+								//该条数据对于的contace_id
+								//columns[i] =
+								columns[i] = index;
+							}else{
+								columns[i] = cursor.getInt(i);
+							}
+							break;
+						case Cursor.FIELD_TYPE_FLOAT:
+							columns[i] = cursor.getFloat(i);
+							break;
+						case Cursor.FIELD_TYPE_STRING:
+							if(cursor.getColumnNames()[i].equals(mimetype)){
+								columns[i] = mimetype_v2;
+							}else if(cursor.getColumnNames()[i].equals(data4)){
+								columns[i] = "+86"+phone[index];
+							}else if(cursor.getColumnNames()[i].equals(data1)){
+								//等于个自的名字 
+								columns[i] = phone[index];
+							}else if(cursor.getColumnNames()[i].equals(data2)){
+								//等于个自的名字 
+								columns[i] = "2";
+							}else{
+								columns[i] = "";
+							}
+							break;
+						case Cursor.FIELD_TYPE_BLOB:
+							//columns[i] = cursor.getBlob(i);
+							break;
+						default:
+							Util.log(this, Log.WARN, "Unknown cursor data type=" + cursor.getType(i));
+					}
+				}
+				result.addRow(columns);
+			} catch (Throwable ex) {
+				Util.bug(this, ex);
+			}
+		}
+	}
+	
+	private void copyColumnsraw(Cursor cursor, MatrixCursor result, int count, int index)
+	{
+		try {
+			Object[] columns = new Object[count];
+			Log.e("LTZ", "count:"+count);
+			for (int i = 0; i < count; i++){
+				Log.e("LTZ", cursor.getColumnName(i));
+				Log.e("LTZ", ":"+getType(cursor.getColumnName(i)));
+				switch (getType(cursor.getColumnName(i))) {
+				case Cursor.FIELD_TYPE_NULL:
+					columns[i] = null;
+					break;
+				case Cursor.FIELD_TYPE_INTEGER:
+					if(cursor.getColumnNames()[i].equals(contact_id)
+							||cursor.getColumnNames()[i].equals("_id")){
+						columns[i] = index;
+					}else{
+						columns[i] = 1;
+					}
+					break;
+				case Cursor.FIELD_TYPE_FLOAT:
+					columns[i] = cursor.getFloat(i);
+					break;
+				case Cursor.FIELD_TYPE_STRING:
+					if(cursor.getColumnNames()[i].equals(display_name)
+							|| cursor.getColumnNames()[i].equals(data1)
+							|| cursor.getColumnNames()[i].equals(data3)){
+						columns[i] = name[index];
+					}else{
+						columns[i] = "";
+					}
+					break;
+				case Cursor.FIELD_TYPE_BLOB:
+					//columns[i] = cursor.getBlob(i);
+					break;
+				default:
+					Util.log(this, Log.WARN, "Unknown cursor data type=" + cursor.getType(i));
+				}
+			}
+			result.addRow(columns);
+		} catch (Throwable ex) {
+			Util.bug(this, ex);
+		}
+	}
+	
+	private int getType(String value){
+		if(value.equals("data15")){
+			return Cursor.FIELD_TYPE_BLOB;
+		}else if(value.contains("data")
+				||value.equals(display_name)
+				||value.equals(mimetype)
+				||value.equals("custom_ringtone")
+				||value.equals("lookup")){
+			return Cursor.FIELD_TYPE_STRING;
+		}else{
+			return Cursor.FIELD_TYPE_INTEGER;
+		}
+	}
+	
 	private void copyColumns(Cursor cursor, MatrixCursor result, int count)
 	{
 		try {
@@ -629,19 +874,19 @@ public class XContentResolver extends XHook
 					}
 					Log.e("LTZ", "-oldvalue-"+cursor.getColumnNames()[i]+":"+cursor.getString(i));
 					if(cursor.getColumnName(i).equals(Phone.DISPLAY_NAME)){
-						columns[i] = "刘天作";
+						columns[i] = "刘天作"+new Random().nextInt(9);
 					}else{
 						if(hasmimetype&&cursor.getColumnName(i).equals("data1")){
-							columns[i] = "刘天作";
+							columns[i] = "刘天作"+new Random().nextInt(9);
 						}
 						else if(hasmimetype&&cursor.getColumnName(i).equals("data3")){
-							columns[i] = "刘天作";
+							columns[i] = "刘天作"+new Random().nextInt(9);
 						}else if(hasmimetype&&cursor.getColumnName(i).equals("data10")){
 							columns[i] = cursor.getString(i);
 						}else if(cursor.getString(cursor.getColumnIndex("mimetype")).equals("vnd.android.cursor.item/phone_v2")&& cursor.getColumnName(i).equals("data2")){
 							columns[i] = cursor.getString(i);
 						}else{
-							columns[i] = "13023895989";
+							columns[i] = "1302389598"+new Random().nextInt(9);
 						}
 					}
 					Log.e("LTZ", "-----"+columns[i]);
