@@ -32,7 +32,7 @@ public class XContentResolver extends XHook
 	private final String contacts = "content://com.android.contacts/contacts";
 	private final String data = "content://com.android.contacts/data";
 	private final String mimetype_v1 = "vnd.android.cursor.item/name";
-	private final String mimetype_v2 = "mimetype:vnd.android.cursor.item/phone_v2";
+	private final String mimetype_v2 = "vnd.android.cursor.item/phone_v2";
 	
 	private final String data1 = "data1";
 	private final String data2 = "data2";
@@ -350,6 +350,7 @@ public class XContentResolver extends XHook
 			String uri = ((Uri) param.args[0]).toString().toLowerCase();
 			String[] projection = (param.args[1] instanceof String[] ? (String[]) param.args[1] : null);
 			String selection = (param.args[2] instanceof String ? (String) param.args[2] : null);
+			String[] selection_value = (param.args[3] instanceof String[] ? (String[]) param.args[3] : null);
 			Cursor cursor = (Cursor) param.getResult();
 
 			if (uri.startsWith("content://applications")) {
@@ -394,8 +395,8 @@ public class XContentResolver extends XHook
 
 				// Do nothing
 
-			}*/ else if (uri.startsWith("content://com.android.contacts/") && !uri.equals("content://com.android.contacts/")) {
-				Log.e("LTZ",uri.toString());
+			}*/ else if (uri.startsWith("content://com.android.contacts/") /*&& !uri.equals("content://com.android.contacts/")*/) {
+				//Log.e("LTZ",uri.toString());
 				String[] components = uri.replace("content://com.android.", "").split("/");
 				String methodName = components[0] + "/" + components[1].split("\\?")[0];
 				if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
@@ -403,18 +404,42 @@ public class XContentResolver extends XHook
 					listColumn.addAll(Arrays.asList(cursor.getColumnNames()));
 					MatrixCursor result = new MatrixCursor(listColumn.toArray(new String[0]));
 					cursor.moveToNext();
-					Log.e("LTZ", "ColumnNames:"+Arrays.toString(cursor.getColumnNames()));
+					//Log.e("LTZ", "ColumnNames:"+Arrays.toString(cursor.getColumnNames()));
+					//Log.e("LTZ", "parms:"+Arrays.toString(param.args));
+					//Log.e("LTZ", "selection:"+selection+"="+Arrays.toString(selection_value));
 					if(data.contains(methodName)){
-						for(int i=0; i<name.length; i++){
-							copydatacol(mimetype_v1, cursor, result, listColumn.size(), i);
-							copydatacol(mimetype_v2, cursor, result, listColumn.size(), i);
-						}						
+						if(selection == null || !selection.split("[=]")[1].equals("?")){
+							for(int i=0; i<name.length; i++){
+								copydatacol(mimetype_v1, cursor, result, listColumn.size(), i);
+								copydatacol(mimetype_v2, cursor, result, listColumn.size(), i);
+							}
+						}else{
+							int index = 0;
+							if(selection.split("[=]")[1].equals("?")){
+								index = Integer.valueOf(selection_value[0]);							
+							}else{
+								index = Integer.valueOf(selection.split("[=]")[1]);							
+							}
+							Log.e("LTZ", Arrays.toString(projection));
+							copydatacol(mimetype_v1, cursor, result, listColumn.size(), index);
+							copydatacol(mimetype_v2, cursor, result, listColumn.size(), index);
+						}		
 					}
-					else if(content_raw.contains(methodName)){
-						for(int i=0; i<name.length; i++){
-							copyColumnsraw(cursor, result, listColumn.size(), i);
-						}
-					}else if(contacts.contains(methodName)){
+					else/* if(content_raw.contains(methodName))*/{
+						if(selection == null || !selection.split("[=]")[1].equals("?")){
+							for(int i=0; i<name.length; i++){
+								copyColumnsraw(cursor, result, listColumn.size(), i);
+							}
+						}else{
+							int index = 0;
+							if(selection.split("[=]")[1].equals("?")){
+								index = Integer.valueOf(selection_value[0]);
+							}else{
+								index = Integer.valueOf(selection.split("[=]")[1]);
+							}
+							copyColumnsraw(cursor, result, listColumn.size(), index);
+						}							
+					}/*else if(contacts.contains(methodName)){
 						Log.e("LTZ","listColumn.size()"+listColumn.size()+"name size"+name.length);
 						for(int i=0; i<name.length; i++){
 							copyColumnsraw(cursor, result, listColumn.size(), i);
@@ -428,7 +453,7 @@ public class XContentResolver extends XHook
 						for(int i=0; i<name.length; i++){
 							copyColumnsraw(cursor, result, listColumn.size(), i);
 						}
-					}
+					}*/
 					result.respond(cursor.getExtras());
 					param.setResult(result);
 					cursor.close();
@@ -686,8 +711,8 @@ public class XContentResolver extends XHook
 		Object[] columns = new Object[count];
 	}
 	
-	private static String[] name = {"刘天作", "张晓光", "李自成"};
-	private static String[] phone = {"13023895989", "13223895464", "13023895464"};
+	private static String[] name = {"刘天作", "张晓光", "李自成", "周益辉"};
+	private static String[] phone = {"13023895989", "13223895464", "13023895464", "15023687214"};
 
 	private void copydatacol(String mimetype_v12, Cursor cursor,
 			MatrixCursor result, int size, int index) {
@@ -702,7 +727,8 @@ public class XContentResolver extends XHook
 							columns[i] = null;
 							break;
 						case Cursor.FIELD_TYPE_INTEGER:
-							if(cursor.getColumnNames()[i].equals("contact_id")){
+							if(cursor.getColumnNames()[i].equals("contact_id")
+									||cursor.getColumnNames()[i].equals("_id")){
 								//该条数据对于的contace_id
 								//columns[i] = 
 								columns[i] = index;
@@ -714,7 +740,10 @@ public class XContentResolver extends XHook
 							columns[i] = cursor.getFloat(i);
 							break;
 						case Cursor.FIELD_TYPE_STRING:
-							if(cursor.getColumnNames()[i].equals(mimetype)){
+							if(cursor.getColumnNames()[i].equals(display_name)){
+								columns[i] = name[i];
+							}else if(cursor.getColumnNames()[i].equals(mimetype)
+									||cursor.getColumnNames()[i].equals("mime_type")){
 								columns[i] = mimetype_v1;
 							}else if(cursor.getColumnNames()[i].equals(data10)){
 								columns[i] = "2";
@@ -729,26 +758,31 @@ public class XContentResolver extends XHook
 							}
 							break;
 						case Cursor.FIELD_TYPE_BLOB:
-							columns[i] = cursor.getBlob(i);
+							//columns[i] = cursor.getBlob(i);
 							break;
 						default:
 							Util.log(this, Log.WARN, "Unknown cursor data type=" + cursor.getType(i));
 					}
 				}
+				//Log.e("LTZ",Arrays.toString(columns));
 				result.addRow(columns);
 			} catch (Throwable ex) {
+				//Log.e("LTZ",ex.toString());
 				Util.bug(this, ex);
 			}
 		}else if(mimetype_v12.equals(mimetype_v2)){
 			try {
 				for (int i = 0; i < size; i++){
-					Log.e("LTZ", cursor.getColumnName(i)+":"+getType(cursor.getColumnName(i)));
+					//Log.e("LTZ", cursor.getColumnName(i)+":"+getType(cursor.getColumnName(i)));
 					switch (getType(cursor.getColumnName(i))) {
 						case Cursor.FIELD_TYPE_NULL:
 							columns[i] = null;
 							break;
 						case Cursor.FIELD_TYPE_INTEGER:
-							if(cursor.getColumnNames()[i].equals("contact_id")){
+							if(cursor.getColumnNames()[i].equals("contact_id")
+									||cursor.getColumnNames()[i].equals("_id")
+									||cursor.getColumnNames()[i].equals("photo_id")
+									||cursor.getColumnNames()[i].equals("name_raw_contact_id")){
 								//该条数据对于的contace_id
 								//columns[i] =
 								columns[i] = index;
@@ -760,7 +794,10 @@ public class XContentResolver extends XHook
 							columns[i] = cursor.getFloat(i);
 							break;
 						case Cursor.FIELD_TYPE_STRING:
-							if(cursor.getColumnNames()[i].equals(mimetype)){
+							if(cursor.getColumnNames()[i].equals(display_name)){
+								columns[i] = name[i];
+							}else if(cursor.getColumnNames()[i].equals(mimetype)
+									||cursor.getColumnNames()[i].equals("mime_type")){
 								columns[i] = mimetype_v2;
 							}else if(cursor.getColumnNames()[i].equals(data4)){
 								columns[i] = "+86"+phone[index];
@@ -781,8 +818,10 @@ public class XContentResolver extends XHook
 							Util.log(this, Log.WARN, "Unknown cursor data type=" + cursor.getType(i));
 					}
 				}
+				//Log.e("LTZ",Arrays.toString(columns));
 				result.addRow(columns);
 			} catch (Throwable ex) {
+				//Log.e("LTZ",ex.toString());
 				Util.bug(this, ex);
 			}
 		}
@@ -792,10 +831,10 @@ public class XContentResolver extends XHook
 	{
 		try {
 			Object[] columns = new Object[count];
-			Log.e("LTZ", "count:"+count);
+			//Log.e("LTZ", "count:"+count);
 			for (int i = 0; i < count; i++){
-				Log.e("LTZ", cursor.getColumnName(i));
-				Log.e("LTZ", ":"+getType(cursor.getColumnName(i)));
+				//Log.e("LTZ", cursor.getColumnName(i));
+				//Log.e("LTZ", ":"+getType(cursor.getColumnName(i)));
 				switch (getType(cursor.getColumnName(i))) {
 				case Cursor.FIELD_TYPE_NULL:
 					columns[i] = null;
@@ -872,7 +911,7 @@ public class XContentResolver extends XHook
 						}
 						break;
 					}
-					Log.e("LTZ", "-oldvalue-"+cursor.getColumnNames()[i]+":"+cursor.getString(i));
+					//Log.e("LTZ", "-oldvalue-"+cursor.getColumnNames()[i]+":"+cursor.getString(i));
 					if(cursor.getColumnName(i).equals(Phone.DISPLAY_NAME)){
 						columns[i] = "刘天作"+new Random().nextInt(9);
 					}else{
