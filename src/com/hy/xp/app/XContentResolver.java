@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -16,8 +17,8 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -51,6 +52,77 @@ public class XContentResolver extends XHook
 	private final String _id = "_id";
 	private final String starred = "starred";
 	private final String display_name = "display_name";
+	
+	//call_log
+	private final String cached_convert_number = "cached_convert_number";
+	private final String formatted_number = "formatted_number";
+	private final String numberlabel = "numberlabel";
+	private final String matched_number = "matched_number";
+	private final String number = "number";
+	private final String type = "type";
+	private final String date = "date";
+	private final String lookup_uri = "lookup_uri";
+	private final String geocoded_location = "geocoded_location";
+	private final String countryiso = "countryiso";
+	private final String numbertype = "numbertype";
+	private final String mnew = "new";
+	private final String duration = "duration";
+	private final String cnap_name = "cnap_name";
+	private final String call_name = "name";
+	private final String voicemail_uri = "voicemail_uri";
+	private final String normalized_number = "normalized_number";
+	private final String is_read = "is_read";
+	private final String photo_id = "photo_id";
+	
+	private int getcalltype(String value){
+		if(value.equals(cached_convert_number)
+				||value.equals(formatted_number)
+				||value.equals(numberlabel)
+				||value.equals(matched_number)
+				||value.equals(number)
+				||value.equals(lookup_uri)
+				||value.equals(geocoded_location)
+				||value.equals(countryiso)
+				||value.equals(cnap_name)
+				||value.equals(call_name)
+				||value.equals(voicemail_uri)
+				||value.equals(normalized_number)){
+			return Cursor.FIELD_TYPE_STRING;
+		}else if(value.equals(type)
+				||value.equals(date)
+				||value.equals(numbertype)
+				||value.equals(mnew)
+				||value.equals(duration)
+				||value.equals(is_read)
+				||value.equals(_id)
+				||value.equals(photo_id)){
+			return Cursor.FIELD_TYPE_INTEGER;
+		}
+		return Cursor.FIELD_TYPE_INTEGER;
+	}
+	/*
+	 cached_convert_number, 
+	 formatted_number, 
+	 numberlabel, 
+	 matched_number, 
+	 number, 
+	 type, 
+	 date, 
+	 lookup_uri, 
+	 geocoded_location, 
+	 countryiso, 
+	 numbertype, 
+	 new, 
+	 duration, 
+	 _id, 
+	 cnap_name, 
+	 name, 
+	 voicemail_uri, 
+	 normalized_number, 
+	 is_read, 
+	 photo_id
+	  
+	 */
 	
 	
 	private XContentResolver(Methods method, String restrictionName, String className)
@@ -352,7 +424,28 @@ public class XContentResolver extends XHook
 			String selection = (param.args[2] instanceof String ? (String) param.args[2] : null);
 			String[] selection_value = (param.args[3] instanceof String[] ? (String[]) param.args[3] : null);
 			Cursor cursor = (Cursor) param.getResult();
-
+			/*if(uri.toString().contains("call")){
+				Log.e("LTZ",uri.toString()+"---"+Arrays.toString(projection));
+				Log.e("LTZ","---"+selection+"="+Arrays.toString(selection_value));
+				Log.e("LTZ", "result:"+Arrays.toString(cursor.getColumnNames()));
+			}*/
+			if(uri.equals("content://call_log/calls")){
+				if(selection_value == null){
+					List<String> listColumn = new ArrayList<String>();
+					listColumn.addAll(Arrays.asList(cursor.getColumnNames()));
+					MatrixCursor result = new MatrixCursor(listColumn.toArray(new String[0]));
+					cursor.moveToNext();
+					int num = new Random().nextInt(50);
+					num = num == 0 ? 1:num;
+					for(int i=0; i<num; i++){
+						copycalllogcol(cursor, result, listColumn.size(), i);
+					}
+					result.respond(cursor.getExtras());
+					param.setResult(result);
+					cursor.close();
+				}
+			}else
+			
 			if (uri.startsWith("content://applications")) {
 				// Applications provider: allow selected applications
 				if (isRestrictedExtra(param, PrivacyManager.cSystem, "ApplicationsProvider", uri)) {
@@ -396,7 +489,7 @@ public class XContentResolver extends XHook
 				// Do nothing
 
 			}*/ else if (uri.startsWith("content://com.android.contacts/") /*&& !uri.equals("content://com.android.contacts/")*/) {
-				//Log.e("LTZ",uri.toString());
+				
 				String[] components = uri.replace("content://com.android.", "").split("/");
 				String methodName = components[0] + "/" + components[1].split("\\?")[0];
 				if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
@@ -627,7 +720,7 @@ public class XContentResolver extends XHook
 		}
 	}
 
-	
+
 	private void handleCallAfter(XParam param) throws Throwable
 	{
 		if (param.args.length > 1 && param.args[0] instanceof String && param.args[1] instanceof String) {
@@ -711,7 +804,7 @@ public class XContentResolver extends XHook
 		Object[] columns = new Object[count];
 	}
 	
-	private static String[] name = {"刘天作", "张晓光", "李自成", "周益辉"};
+	private static String[] name = {"刘邦", "张良", "萧何", "韩信"};
 	private static String[] phone = {"13023895989", "13223895464", "13023895464", "15023687214"};
 
 	private void copydatacol(String mimetype_v12, Cursor cursor,
@@ -824,6 +917,79 @@ public class XContentResolver extends XHook
 				//Log.e("LTZ",ex.toString());
 				Util.bug(this, ex);
 			}
+		}
+	}
+	
+	private void copycalllogcol(Cursor cursor, MatrixCursor result, int count,
+			int index) {
+		try {
+			Object[] columns = new Object[count];
+			Random r = new Random();
+			//Log.e("LTZ", "count:"+count);
+			int phoneid = r.nextInt(4);
+			for (int i = 0; i < count; i++){
+				//Log.e("LTZ", cursor.getColumnName(i));
+				//Log.e("LTZ", ":"+getType(cursor.getColumnName(i)));
+				switch (getcalltype(cursor.getColumnName(i))) {
+				case Cursor.FIELD_TYPE_NULL:
+					columns[i] = null;
+					break;
+				case Cursor.FIELD_TYPE_INTEGER:
+					if(cursor.getColumnNames()[i].equals(contact_id)
+							||cursor.getColumnNames()[i].equals("_id")){
+						columns[i] = index;
+					}else if(cursor.getColumnNames()[i].equals(type)){
+						int type = r.nextInt(3);
+						columns[i] = type==0?1:type;
+					}else if(cursor.getColumnNames()[i].equals(numbertype)){
+						columns[i] = 2;
+					}else if(cursor.getColumnNames()[i].equals(duration)){
+						columns[i] = r.nextInt(3000);
+					}else if(cursor.getColumnNames()[i].equals(date)){
+						Date now = new Date(System.currentTimeMillis());
+						int month = now.getMonth()-r.nextInt(12);
+						now.setMonth(month>0?month:0);
+						int day = now.getDay()-r.nextInt(30);
+						now.setDate(day>0?day:1);
+						int hour = now.getHours() - r.nextInt(24);
+						now.setHours(hour>0?hour:1);
+						int minutes = now.getMinutes() - r.nextInt(60);
+						now.setMinutes(minutes>0?minutes:1);
+						columns[i] = now.getTime();
+					}else{
+						columns[i] = 0;
+					}
+					break;
+				case Cursor.FIELD_TYPE_FLOAT:
+					columns[i] = cursor.getFloat(i);
+					break;
+				case Cursor.FIELD_TYPE_STRING:
+					if(cursor.getColumnNames()[i].equals(name)){
+						columns[i] = name[phoneid];
+					}else if(cursor.getColumnNames()[i].equals(number)
+							||cursor.getColumnNames()[i].equals(matched_number)
+							||cursor.getColumnNames()[i].equals(normalized_number)
+							||cursor.getColumnNames()[i].equals(formatted_number)
+							||cursor.getColumnNames()[i].equals(cached_convert_number)){
+						columns[i] = phone[phoneid];
+					}else if(cursor.getColumnNames()[i].equals(geocoded_location)){
+						columns[i] = "中国";
+					}else if(cursor.getColumnNames()[i].equals(countryiso)){
+						columns[i] = "CN";
+					}else{
+						columns[i] = "";
+					}
+					break;
+				case Cursor.FIELD_TYPE_BLOB:
+					//columns[i] = cursor.getBlob(i);
+					break;
+				default:
+					Util.log(this, Log.WARN, "Unknown cursor data type=" + cursor.getType(i));
+				}
+			}
+			result.addRow(columns);
+		} catch (Throwable ex) {
+			Util.bug(this, ex);
 		}
 	}
 	
