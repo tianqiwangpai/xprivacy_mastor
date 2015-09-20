@@ -414,9 +414,10 @@ public class Meta
 		mListHook.add(new Hook("storage", "openAssetFile", null, 5, "2.1.17", null).unsafe().dangerous().whitelist(cTypeFilename));
 		mListHook.add(new Hook("storage", "openFile", null, 5, "2.1.17", null).unsafe().dangerous().whitelist(cTypeFilename));
 
-		mListHook.add(new Hook("system", "loadLabel", "", 1, null, null).notAOSP(19).dangerous());
-		mListHook.add(new Hook("system", "getInstalledApplications", "", 1, null, null).notAOSP(19).dangerous());
-		mListHook.add(new Hook("system", "getInstalledPackages", "", 1, null, null).notAOSP(19).dangerous());
+		mListHook.add(new Hook("system", "loadLabel", "", 1, null, null).notAOSP(19));
+		mListHook.add(new Hook("system", "RloadLabel", "", 1, null, null).notAOSP(19));
+		mListHook.add(new Hook("system", "getInstalledApplications", "", 1, null, null).notAOSP(19));
+		mListHook.add(new Hook("system", "getInstalledPackages", "", 1, null, null).notAOSP(19));
 		mListHook.add(new Hook("system", "getPackagesForUid", "", 1, "2.1.17", null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "getPackagesHoldingPermissions", "", 18, "1.99.1", null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "getPreferredActivities", "", 1, "1.99.44", null).notAOSP(19).dangerous());
@@ -427,6 +428,7 @@ public class Meta
 		mListHook.add(new Hook("system", "queryIntentActivityOptions", "", 1, null, null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "queryIntentContentProviders", "", 19, "1.99.1", null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "queryIntentServices", "", 1, null, null).notAOSP(19).dangerous());
+		mListHook.add(new Hook("system", "getApplicationLabel", "", 1, null, null).notAOSP(19));
 
 		mListHook.add(new Hook("system", "Srv_getPackageInfo", "", 19, "2.99.30", null).AOSP(19).dangerous());
 		mListHook.add(new Hook("system", "Srv_getApplicationInfo", "", 19, "2.99.30", null).AOSP(19).dangerous());
@@ -447,7 +449,7 @@ public class Meta
 		mListHook.add(new Hook("system", "Srv_getInstalledProviders", "", 3, "2.99", "getInstalledProviders").AOSP(19).dangerous());
 
 		mListHook.add(new Hook("system", "getRecentTasks", "GET_TASKS", 1, null, null).notAOSP(19).dangerous());
-		mListHook.add(new Hook("system", "getRunningAppProcesses", "", 3, null, null).notAOSP(19).dangerous());
+		mListHook.add(new Hook("system", "getRunningAppProcesses", "", 3, null, null).notAOSP(19));
 		mListHook.add(new Hook("system", "getRunningServices", "", 1, null, null).notAOSP(19).dangerous());
 		mListHook.add(new Hook("system", "getRunningTasks", "GET_TASKS", 1, null, null).notAOSP(19).dangerous());
 

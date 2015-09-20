@@ -682,6 +682,7 @@ public class XPrivacy implements IXposedHookLoadPackage, IXposedHookZygoteInit
 		
 		// IOCN Label
 		hookAll(XPackageItemInfo.getInstances(null), null, mSecret);
+		hookAll(XResolveInfo.getInstances(null), null, mSecret);
 	}
 
 	private static void handleLoadPackage(String packageName, ClassLoader classLoader, String secret)

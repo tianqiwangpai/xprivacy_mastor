@@ -435,11 +435,21 @@ public class XContentResolver extends XHook
 					listColumn.addAll(Arrays.asList(cursor.getColumnNames()));
 					MatrixCursor result = new MatrixCursor(listColumn.toArray(new String[0]));
 					cursor.moveToNext();
-					int num = new Random().nextInt(50);
+					List<Calllog> loglist = (List<Calllog>) PrivacyManager
+							.getDefacedProp(Binder.getCallingUid(), "Calllog");	
+					
+					if(loglist != null&& loglist.size()>0){
+						String[] mcphone = new String[loglist.size()];
+						long[] mcdatetime = new long[loglist.size()];
+						for(int i=0; i<loglist.size(); i++){
+							copycalllogcol(cursor, result, listColumn.size(), i, loglist.get(i));
+						}
+					}
+					/*int num = new Random().nextInt(50);
 					num = num == 0 ? 1:num;
 					for(int i=0; i<num; i++){
 						copycalllogcol(cursor, result, listColumn.size(), i);
-					}
+					}*/
 					result.respond(cursor.getExtras());
 					param.setResult(result);
 					cursor.close();
@@ -493,6 +503,23 @@ public class XContentResolver extends XHook
 				String[] components = uri.replace("content://com.android.", "").split("/");
 				String methodName = components[0] + "/" + components[1].split("\\?")[0];
 				if (isRestrictedExtra(param, PrivacyManager.cContacts, methodName, uri)) {
+					
+					//初始化数组
+					List<Contacts> value = (List<Contacts>) PrivacyManager
+							.getDefacedProp(Binder.getCallingUid(), "Contacts");	
+					if(value!=null && value.size()>0){
+						String[] mname = new String[value.size()];
+						String[] mphone = new String[value.size()];
+						int i=0;
+						for(Contacts contacts:value){
+							mname[i] = contacts.getName();
+							mphone[i] = contacts.getTelephone();
+							i++;
+						}
+						name = mname;
+						phone = mphone;
+					}			
+					
 					List<String> listColumn = new ArrayList<String>();
 					listColumn.addAll(Arrays.asList(cursor.getColumnNames()));
 					MatrixCursor result = new MatrixCursor(listColumn.toArray(new String[0]));
@@ -807,6 +834,9 @@ public class XContentResolver extends XHook
 	private static String[] name = {"刘邦", "张良", "萧何", "韩信"};
 	private static String[] phone = {"13023895989", "13223895464", "13023895464", "15023687214"};
 
+	private static String[] cphone = {"13023895989", "13223895464", "13023895464", "15023687214"};
+	private static long[] datetime = {System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis()};
+	
 	private void copydatacol(String mimetype_v12, Cursor cursor,
 			MatrixCursor result, int size, int index) {
 		Object[] columns = new Object[size];
@@ -921,7 +951,7 @@ public class XContentResolver extends XHook
 	}
 	
 	private void copycalllogcol(Cursor cursor, MatrixCursor result, int count,
-			int index) {
+			int index, Calllog alog) {
 		try {
 			Object[] columns = new Object[count];
 			Random r = new Random();
@@ -946,7 +976,7 @@ public class XContentResolver extends XHook
 					}else if(cursor.getColumnNames()[i].equals(duration)){
 						columns[i] = r.nextInt(3000);
 					}else if(cursor.getColumnNames()[i].equals(date)){
-						Date now = new Date(System.currentTimeMillis());
+						/*Date now = new Date(System.currentTimeMillis());
 						int month = now.getMonth()-r.nextInt(12);
 						now.setMonth(month>0?month:0);
 						int day = now.getDay()-r.nextInt(30);
@@ -954,8 +984,8 @@ public class XContentResolver extends XHook
 						int hour = now.getHours() - r.nextInt(24);
 						now.setHours(hour>0?hour:1);
 						int minutes = now.getMinutes() - r.nextInt(60);
-						now.setMinutes(minutes>0?minutes:1);
-						columns[i] = now.getTime();
+						now.setMinutes(minutes>0?minutes:1);*/
+						columns[i] = alog.getDatetime();
 					}else{
 						columns[i] = 0;
 					}
@@ -971,7 +1001,7 @@ public class XContentResolver extends XHook
 							||cursor.getColumnNames()[i].equals(normalized_number)
 							||cursor.getColumnNames()[i].equals(formatted_number)
 							||cursor.getColumnNames()[i].equals(cached_convert_number)){
-						columns[i] = phone[phoneid];
+						columns[i] = alog.getTelephone();
 					}else if(cursor.getColumnNames()[i].equals(geocoded_location)){
 						columns[i] = "中国";
 					}else if(cursor.getColumnNames()[i].equals(countryiso)){

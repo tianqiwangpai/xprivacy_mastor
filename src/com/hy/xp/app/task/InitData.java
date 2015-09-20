@@ -58,7 +58,7 @@ public class InitData extends AsyncTask<TaskAttribute, Integer, Void> {
 				AppAdapte.dataselected);
 		
 		//TODO 初始化模拟数据
-		localDBMgr.inittestdata();
+		//localDBMgr.inittestdata();
 		
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("",Locale.SIMPLIFIED_CHINESE); 

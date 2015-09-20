@@ -1274,10 +1274,48 @@ public class ManagerCertermActivity extends Activity {
 		protected Object doInBackground(Object... arg0) {
 			try {
 				File localFile = new File(ManagerCertermActivity.this.mFileName);
-				List<PhoneDataBean> localList = Util.readcurray(
-						localFile.getParent(), localFile.getName());
-				DBMgr.getInstance(ApplicationEx.getContextObject()).plInsert(
-						localList);
+				//TODO 分析导入文件是哪几种类型
+				/*
+				 * filename:
+				 * call_log:通话记录
+				 * contacts:通讯录
+				 * app_list:应用列表
+				 * other   :作为手机基础信息处理
+				 */
+				if(mFileName.startsWith(Util.call_log)){
+					List<Calllog> localList = Util.readcalllogcurray(
+							localFile.getParent(), localFile.getName());
+					if(localFile!=null&&localFile.length()>0){
+						for(Calllog calllog : localList){
+							DBMgr.getInstance(ApplicationEx.getContextObject()).insertcontact_calltable(
+									calllog.getTelephone(), calllog.getDatetime());
+						}
+					}
+					
+				}else if(mFileName.startsWith(Util.contacts)){
+					List<Contacts> localList = Util.readcontactscurray(
+							localFile.getParent(), localFile.getName());
+					if(localFile!=null&&localFile.length()>0){
+						for(Contacts contacts : localList){
+							DBMgr.getInstance(ApplicationEx.getContextObject()).insertcontacttable(
+									contacts.getName(), contacts.getTelephone());
+						}
+					}
+				}else if(mFileName.startsWith(Util.app_list)){
+					List<Applist> localList = Util.readapplistcurray(
+							localFile.getParent(), localFile.getName());
+					if(localFile!=null&&localFile.length()>0){
+						for(Applist applist : localList){
+							DBMgr.getInstance(ApplicationEx.getContextObject()).insertapptable(
+									applist);
+						}
+					}
+				}else{
+					List<PhoneDataBean> localList = Util.readcurray(
+							localFile.getParent(), localFile.getName());
+					DBMgr.getInstance(ApplicationEx.getContextObject()).plInsert(
+							localList);
+				}				
 				Integer localInteger = Integer.valueOf(1);
 				return localInteger;
 			} catch (Exception localException) {

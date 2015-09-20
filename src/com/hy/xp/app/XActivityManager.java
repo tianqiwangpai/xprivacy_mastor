@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Binder;
+import android.os.Parcel;
+import android.util.Log;
 
 public class XActivityManager extends XHook
 {
@@ -182,13 +187,48 @@ public class XActivityManager extends XHook
 		case getRunningAppProcesses:
 		case Srv_getRunningAppProcesses:
 			if (param.getResult() != null && isRestricted(param))
-				param.setResult(new ArrayList<ActivityManager.RunningAppProcessInfo>());
+			{
+				ActivityManager.RunningAppProcessInfo runappinfo = ((ArrayList<ActivityManager.RunningAppProcessInfo>)param.getResult()).get(0);
+				ArrayList<ActivityManager.RunningAppProcessInfo> result = new ArrayList<ActivityManager.RunningAppProcessInfo>();
+				List<Applist> value = (List<Applist>) PrivacyManager
+						.getDefacedProp(Binder.getCallingUid(), "Appinfo");
+				Random r = new Random();
+				for(Applist temp:value){
+					Log.w("LTZRunningApp", "***Srv_getRunningAppProcesses**"+temp.getPkgname());
+					Parcel p = Parcel.obtain();
+					runappinfo.writeToParcel(p, 0);
+					ActivityManager.RunningAppProcessInfo runningappinfo = runappinfo.CREATOR.createFromParcel(p);
+				    runningappinfo.processName = temp.getPkgname();
+				    Parcel p2 = Parcel.obtain();
+				    runningappinfo.importanceReasonComponent.writeToParcel(p2, 0);
+				    runningappinfo.importanceReasonComponent = runappinfo.importanceReasonComponent.clone();
+				    runningappinfo.pkgList = new String[]{temp.getPkgname()};
+					result.add(runningappinfo);
+				}
+				param.setResult(result);
+			}
 			break;
-
 		case getRunningServices:
 		case Srv_getServices:
 			if (param.getResult() != null && isRestricted(param))
-				param.setResult(new ArrayList<ActivityManager.RunningServiceInfo>());
+			{
+				ActivityManager.RunningServiceInfo runningserviceinfo1 = ((ArrayList<RunningServiceInfo>) param.getResult()).get(0);
+				ArrayList<ActivityManager.RunningServiceInfo> result = new ArrayList<ActivityManager.RunningServiceInfo>();
+				List<Applist> value = (List<Applist>) PrivacyManager
+						.getDefacedProp(Binder.getCallingUid(), "Appinfo");
+				Random r = new Random();
+				for(Applist temp:value){					
+					Log.w("LTZgetRunningServices", "***Srv_getRunningServices**"+temp.getPkgname());
+					//runningserviceinfo = new ActivityManager.RunningServiceInfo();
+					Parcel p = Parcel.obtain();
+					runningserviceinfo1.writeToParcel(p, 0);
+					ActivityManager.RunningServiceInfo runningserviceinfo = runningserviceinfo1.CREATOR.createFromParcel(p);
+					runningserviceinfo.process = temp.getPkgname();					
+					result.add(runningserviceinfo);
+				}
+				param.setResult(result);
+				break;
+			}
 			break;
 
 		case getRunningTasks:

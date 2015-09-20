@@ -37,7 +37,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.gson.Gson;
-import com.hy.xp.app.task.Appinfo;
+import com.google.gson.reflect.TypeToken;
 import com.hy.xp.app.task.PhoneDataBean;
 
 public class PrivacyManager
@@ -1915,9 +1915,9 @@ public class PrivacyManager
 		
 		//TODO 应用列表伪造支持
 		if(name.equals("Appinfo")){
-			List<Appinfo> value = null;
+			List<Applist> value = null;
 			//File sdcardDir = Environment.getExternalStorageDirectory();
-			String path = "/mnt/sdcard" + "/xp_datafile/setting";
+			String path = "/mnt/sdcard" + "/xp_datafile/setting_applist";
 			File mFile = new File(path);
 			if (mFile.exists()) {
 				try {
@@ -1925,9 +1925,60 @@ public class PrivacyManager
 
 					if (result != null) {
 						Gson mGson = new Gson();
-						PhoneDataBean mBases = mGson.fromJson(result, PhoneDataBean.class);
-						value = mBases.getAppinfolist();
-						return value;
+						List<Applist> mBases = mGson.fromJson(result, new TypeToken<List<Applist>>()
+								{
+								}.getType());
+						return mBases;
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			} else {
+				return null;
+			}
+		}
+		
+		// TODO 通讯录伪造支持
+		if (name.equals("Contacts")) {
+			String path = "/mnt/sdcard" + "/xp_datafile/setting_contacts";
+			File mFile = new File(path);
+			if (mFile.exists()) {
+				try {
+					String result = BufferedReaderJSON(path);
+
+					if (result != null) {
+						Gson mGson = new Gson();
+						List<Contacts> mBases = mGson.fromJson(result,
+								new TypeToken<List<Contacts>>() {
+								}.getType());
+						return mBases;
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			} else {
+				return null;
+			}
+		}
+
+		// TODO 通话记录伪造支持
+		if (name.equals("Calllog")) {
+			String path = "/mnt/sdcard" + "/xp_datafile/setting_calllog";
+			File mFile = new File(path);
+			if (mFile.exists()) {
+				try {
+					String result = BufferedReaderJSON(path);
+
+					if (result != null) {
+						Gson mGson = new Gson();
+						List<Calllog> mBases = mGson.fromJson(result,
+								new TypeToken<List<Calllog>>() {
+								}.getType());
+						return mBases;
 					}
 
 				} catch (Exception e) {
@@ -1945,8 +1996,7 @@ public class PrivacyManager
 		return cDeface;
 	}
 
-	public static Location getDefacedLocation(int uid, Location location)
-	{
+	public static Location getDefacedLocation(int uid, Location location) {
 		// Christmas Island ~ -10.5 / 105.667
 		String value = null;
 		String sLat = null, sLon = null, sAlt = null;
@@ -1959,7 +2009,8 @@ public class PrivacyManager
 
 				if (result != null) {
 					Gson mGson = new Gson();
-					PhoneDataBean mBases = mGson.fromJson(result, PhoneDataBean.class);
+					PhoneDataBean mBases = mGson.fromJson(result,
+							PhoneDataBean.class);
 					sLat = mBases.getLatitude();
 					sLon = mBases.getLongitude();
 					sAlt = mBases.getAltitude();

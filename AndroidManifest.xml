@@ -340,6 +340,20 @@
                 android:resource="@xml/xclean_widget" />
         </receiver>
         
+        <!-- "XExtra" -->
+        <receiver android:name="com.hy.xp.app.XExtra" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.hy.xp.app.action.WIDGET" />
+                <action android:name="com.hy.xp.app.UPDATE_ACTION" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/xextra_widget" />
+        </receiver>
+        
         <provider
 		    android:name="com.ianhanniballake.localstorage.LocalStorageProvider"
 		    android:authorities="com.ianhanniballake.localstorage.documents"

@@ -8,9 +8,6 @@ import android.content.pm.PackageItemInfo;
 import android.os.Binder;
 import android.util.Log;
 
-import com.hy.xp.app.task.Appinfo;
-
-
 public class XPackageItemInfo extends XHook {
 
 	private Methods mMethod;
@@ -52,13 +49,13 @@ public class XPackageItemInfo extends XHook {
 		switch (mMethod) {
 			case loadLabel:{
 				if (isRestricted(param)){
-					List<Appinfo> value = (List<Appinfo>) PrivacyManager
+					List<Applist> value = (List<Applist>) PrivacyManager
 							.getDefacedProp(Binder.getCallingUid(), "Appinfo");
 					for(int i=0; i<value.size(); i++){
-						Log.w("LTZ", "param value :"+Arrays.toString(param.args));
-						Log.w("LTZ", "packagenameis :"+((PackageItemInfo)param.thisObject).packageName);
-						if(((PackageItemInfo)param.thisObject).packageName.equals(value.get(i).getPlable())){
-							param.setResult(value.get(i).getPname());
+						//Log.w("LTZ", "param value :"+Arrays.toString(param.args));
+						//Log.w("LTZ", "packagenameis :"+((PackageItemInfo)param.thisObject).packageName);
+						if(((PackageItemInfo)param.thisObject).packageName.equals(value.get(i).getPkgname())){
+							param.setResult(value.get(i).getAppname());
 							return;
 						}
 					}

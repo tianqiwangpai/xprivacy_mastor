@@ -62,6 +62,10 @@ public class Util
 	public static int NOTIFY_UPGRADE = 5;
 	public static int NOTIFY_UPDATE = 6;
 	
+	public static String call_log = "call_log";
+	public static String contacts = "contacts";
+	public static String app_list = "app_list";
+	
 	public static int error_code;
 	public static enum error{
 		Normal,
@@ -451,6 +455,59 @@ public class Util
 		}
 		return null;
 	}
+	
+	//TODO 扩展数据文件
+	public static List<Applist> readapplistcurray(String path, String filename) throws Exception
+	{
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			String mPath = path + "/" + filename;
+			String result = BufferedReaderJSON(mPath);
+
+			if (null != result) {
+				Gson mGson = new Gson();
+				List<Applist> mBases = mGson.fromJson(result, new TypeToken<List<Applist>>()
+				{
+				}.getType());
+				return mBases;
+			}
+		}
+		return null;
+	}
+	//TODO 扩展数据文件
+	public static List<Calllog> readcalllogcurray(String path, String filename) throws Exception
+		{
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				String mPath = path + "/" + filename;
+				String result = BufferedReaderJSON(mPath);
+
+				if (null != result) {
+					Gson mGson = new Gson();
+					List<Calllog> mBases = mGson.fromJson(result, new TypeToken<List<Calllog>>()
+					{
+					}.getType());
+					return mBases;
+				}
+			}
+			return null;
+		}
+		
+		//TODO 扩展数据文件
+		public static List<Contacts> readcontactscurray(String path, String filename) throws Exception
+		{
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				String mPath = path + "/" + filename;
+				String result = BufferedReaderJSON(mPath);
+
+				if (null != result) {
+					Gson mGson = new Gson();
+					List<Contacts> mBases = mGson.fromJson(result, new TypeToken<List<Contacts>>()
+					{
+					}.getType());
+					return mBases;
+				}
+			}
+			return null;
+		}
 
 	private static String BufferedReaderJSON(String str) throws Exception
 	{

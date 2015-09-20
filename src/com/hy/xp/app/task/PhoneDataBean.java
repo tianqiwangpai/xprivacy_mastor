@@ -148,9 +148,6 @@ public class PhoneDataBean implements Serializable
 	
 	private String BMacAddress = "";
 	
-	//TODO 应用列表
-	private List<Appinfo> appinfolist;
-
 	public String getModel()
 	{
 		return Model;
@@ -160,15 +157,7 @@ public class PhoneDataBean implements Serializable
 	{
 		Model = model;
 	}
-
-	public List<Appinfo> getAppinfolist() {
-		return appinfolist;
-	}
-
-	public void setAppinfolist(List<Appinfo> appinfolist) {
-		this.appinfolist = appinfolist;
-	}
-
+	
 	public String getManufacturer()
 	{
 		return Manufacturer;

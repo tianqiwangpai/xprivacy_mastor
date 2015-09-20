@@ -1,20 +1,29 @@
 package com.hy.xp.app;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.StreamCorruptedException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hy.xp.app.task.Appinfo;
-
 import android.content.ComponentName;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.os.Binder;
+import android.os.Parcel;
 import android.util.Log;
 
 public class XPackageManager extends XHook
@@ -109,7 +118,7 @@ public class XPackageManager extends XHook
 
 	// @formatter:off
 	private enum Methods {
-		getInstalledApplications, getInstalledPackages, getPackagesForUid, getPackagesHoldingPermissions, getPreferredActivities, getPreferredPackages, queryBroadcastReceivers, queryContentProviders, queryIntentActivities, queryIntentActivityOptions, queryIntentContentProviders, queryIntentServices,
+		getInstalledApplications, getInstalledPackages, getPackagesForUid, getPackagesHoldingPermissions, getPreferredActivities, getPreferredPackages, queryBroadcastReceivers, queryContentProviders, queryIntentActivities, queryIntentActivityOptions, queryIntentContentProviders, queryIntentServices, getApplicationLabel,
 
 		checkPermission, checkUidPermission,
 
@@ -152,6 +161,7 @@ public class XPackageManager extends XHook
 			listHook.add(new XPackageManager(Methods.queryIntentActivityOptions, PrivacyManager.cSystem, className));
 			listHook.add(new XPackageManager(Methods.queryIntentContentProviders, PrivacyManager.cSystem, className));
 			listHook.add(new XPackageManager(Methods.queryIntentServices, PrivacyManager.cSystem, className));
+			listHook.add(new XPackageManager(Methods.getApplicationLabel, PrivacyManager.cSystem, className));
 
 			listHook.add(new XPackageManager(Methods.checkPermission, PrivacyManager.cSystem));
 			listHook.add(new XPackageManager(Methods.checkUidPermission, PrivacyManager.cSystem));
@@ -286,6 +296,20 @@ public class XPackageManager extends XHook
 				if (isRestricted(param))
 					param.setResult(filterResolveInfo((List<ResolveInfo>) param.getResult()));
 			break;
+		case getApplicationLabel:
+			if (isRestricted(param)){
+				List<Applist> value = (List<Applist>) PrivacyManager
+						.getDefacedProp(Binder.getCallingUid(), "Appinfo");
+				for(int i=0; i<value.size(); i++){
+					Log.w("LTZ", "param value :"+((ApplicationInfo)param.args[0]).packageName);
+					if(((ApplicationInfo)param.args[0]).packageName.equals(value.get(i).getPkgname())){
+						param.setResult(value.get(i).getAppname());
+						return;
+					}
+				}
+				//param.setResult("ÁõÌì×÷ÔÚµ·ÂÒ");					
+			}
+			break;
 
 		case queryContentProviders:
 		case Srv_queryContentProviders:
@@ -370,8 +394,18 @@ public class XPackageManager extends XHook
 		Log.w("LTZ", "****"+original.size());
 		for (ApplicationInfo appInfo : original){
 			//if (isPackageAllowed(appInfo.packageName))
-			result.add(appInfo);
-			Log.w("LTZ", appInfo.packageName);
+			List<Applist> value = (List<Applist>) PrivacyManager
+					.getDefacedProp(Binder.getCallingUid(), "Appinfo");
+			for(Applist temp:value){
+				Parcel p = Parcel.obtain();
+				appInfo.writeToParcel(p, 0);
+				p.setDataPosition(0);
+				ApplicationInfo applicationInfo = appInfo.CREATOR.createFromParcel(p);
+				applicationInfo.name = temp.getAppname();
+				applicationInfo.packageName = temp.getPkgname();
+				result.add(appInfo);
+				Log.w("LTZ", appInfo.packageName);
+			}
 			break;
 		}
 		return result;
@@ -380,35 +414,35 @@ public class XPackageManager extends XHook
 	private List<PackageInfo> filterPackageInfo(List<PackageInfo> original)
 	{
 		ArrayList<PackageInfo> result = new ArrayList<PackageInfo>();
-		//Log.w("LTZ", "***filterPackageInfo**"+original.size());
 		for (PackageInfo pkgInfo : original){
-			List<Appinfo> value = (List<Appinfo>) PrivacyManager
-					.getDefacedProp(Binder.getCallingUid(), "Appinfo");
-			for(Appinfo temp:value){
-				Log.w("LTZ", "***filterPackageInfo**"+temp.getPlable());
-				PackageInfo packageInfo = new PackageInfo();
-				packageInfo.packageName = temp.getPlable();
-				packageInfo.firstInstallTime = pkgInfo.firstInstallTime;
-				packageInfo.activities = pkgInfo.activities;
-				packageInfo.services = pkgInfo.services;
-				packageInfo.applicationInfo = new ApplicationInfo();
-				packageInfo.applicationInfo.packageName = temp.getPlable();
-				packageInfo.permissions = pkgInfo.permissions;
-				packageInfo.signatures = pkgInfo.signatures;
-				//packageInfo.featureGroups = pkgInfo.featureGroups;
-				//packageInfo.gids = pkgInfo.gids;
-				packageInfo.sharedUserId = pkgInfo.sharedUserId;
-				packageInfo.sharedUserLabel = pkgInfo.sharedUserLabel;
-				packageInfo.versionCode = pkgInfo.versionCode;
-				packageInfo.versionName = pkgInfo.versionName;
-				//pkgInfo.packageName = temp.getPlable();
-				//Log.w("LTZ", "***filterPackageInfo**"+pkgInfo.packageName);
+			List<Applist> value = (List<Applist>) PrivacyManager
+					.getDefacedProp(Binder.getCallingUid(), "Appinfo");	
+			for(Applist temp:value){
+				Log.w("LTZ", "***filterPackageInfo**"+temp.getPkgname());
+				Parcel p = Parcel.obtain();
+				pkgInfo.writeToParcel(p, 0);
+				p.setDataPosition(0);
+				PackageInfo packageInfo = pkgInfo.CREATOR.createFromParcel(p);
+				Parcel p2 = Parcel.obtain();
+				p2.setDataPosition(0);
+				pkgInfo.applicationInfo.writeToParcel(p2, 0);
+				packageInfo.applicationInfo = pkgInfo.applicationInfo.CREATOR.createFromParcel(p2);
+				
+				packageInfo.packageName = temp.getPkgname();
+				packageInfo.versionCode=3;
+				packageInfo.versionName="3.00";
+				packageInfo.applicationInfo.processName = temp.getPkgname();
+				packageInfo.applicationInfo.packageName=temp.getPkgname();
+				packageInfo.applicationInfo.name=temp.getAppname();
+				packageInfo.applicationInfo.backupAgentName=temp.getAppname();
+				packageInfo.applicationInfo.className=temp.getAppname();
+				packageInfo.applicationInfo.dataDir="/data/data/"+temp.getPkgname()+"/";
+				packageInfo.applicationInfo.labelRes=0;
+				packageInfo.applicationInfo.publicSourceDir="";
+				packageInfo.applicationInfo.taskAffinity="";				
 				result.add(packageInfo);
-			}
-			//result.add(pkgInfo);			
+			}			
 			break;
-			/*if (isPackageAllowed(pkgInfo.packageName))
-				result.add(pkgInfo);*/
 		}
 		return result;
 	}
@@ -426,9 +460,25 @@ public class XPackageManager extends XHook
 	{
 		ArrayList<ResolveInfo> result = new ArrayList<ResolveInfo>();
 		for (ResolveInfo resInfo : original)
-			if (resInfo.activityInfo != null && resInfo.activityInfo.applicationInfo != null)
-				if (isPackageAllowed(resInfo.activityInfo.applicationInfo.packageName))
-					result.add(resInfo);
+		{
+			List<Applist> value = (List<Applist>) PrivacyManager
+					.getDefacedProp(Binder.getCallingUid(), "Appinfo");
+			for(Applist temp:value){
+				Log.w("LTZ", "***filterResolveInfo**"+temp.getPkgname());
+				Parcel p = Parcel.obtain();
+				resInfo.writeToParcel(p, 0);
+				p.setDataPosition(0);
+				ResolveInfo resolveInfo = resInfo.CREATOR.createFromParcel(p);
+				Parcel p1 = Parcel.obtain();
+				resInfo.activityInfo.writeToParcel(p1, 0);
+				p1.setDataPosition(0);
+				resolveInfo.activityInfo = resInfo.activityInfo.CREATOR.createFromParcel(p1);
+				resolveInfo.activityInfo.packageName = temp.getPkgname();
+				resolveInfo.labelRes = 0;
+				result.add(resolveInfo);
+			}
+			break;
+		}
 		return result;
 	}
 
