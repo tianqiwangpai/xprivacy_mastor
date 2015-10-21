@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.v4.app.NotificationCompat;
+import com.hy.xp.app.R;
 
 public class BootReceiver extends BroadcastReceiver
 {

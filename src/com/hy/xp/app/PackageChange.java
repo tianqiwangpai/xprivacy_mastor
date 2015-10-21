@@ -3,7 +3,6 @@ package com.hy.xp.app;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,9 +14,9 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.hy.xp.app.task.DBMgr;
 import com.hy.xp.app.task.PreferenceUtils;
+import com.hy.xp.app.R;
 
 /**
  * 

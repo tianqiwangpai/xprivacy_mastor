@@ -6,7 +6,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -17,11 +16,11 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-
 import com.hy.xp.app.clear.AppCleanManager;
 import com.hy.xp.app.task.DBMgr;
 import com.hy.xp.app.task.PhoneDataBean;
 import com.hy.xp.app.task.PreferenceUtils;
+import com.hy.xp.app.R;
 
 public class XX extends AppWidgetProvider
 {

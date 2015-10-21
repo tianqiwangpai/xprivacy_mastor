@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,9 +29,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.hy.xp.app.task.PhoneDataBean;
+import com.hy.xp.app.R;
 
 public class ActivitySettings extends ActivityBase implements OnCheckedChangeListener, OnClickListener
 {

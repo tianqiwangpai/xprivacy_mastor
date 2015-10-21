@@ -424,8 +424,8 @@ public class XPackageManager extends XHook
 				p.setDataPosition(0);
 				PackageInfo packageInfo = pkgInfo.CREATOR.createFromParcel(p);
 				Parcel p2 = Parcel.obtain();
-				p2.setDataPosition(0);
 				pkgInfo.applicationInfo.writeToParcel(p2, 0);
+				p2.setDataPosition(0);
 				packageInfo.applicationInfo = pkgInfo.applicationInfo.CREATOR.createFromParcel(p2);
 				
 				packageInfo.packageName = temp.getPkgname();

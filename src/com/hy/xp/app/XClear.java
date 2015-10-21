@@ -2,7 +2,6 @@ package com.hy.xp.app;
 
 import java.util.Map;
 import java.util.Map.Entry;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -11,9 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-
 import com.hy.xp.app.clear.AppCleanManager;
 import com.hy.xp.app.task.PreferenceUtils;
+import com.hy.xp.app.R;
 
 public class XClear extends AppWidgetProvider
 {

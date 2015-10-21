@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hy.xp.app"
     android:installLocation="internalOnly"
-    android:versionCode="464"
+    android:versionCode="465"
     android:versionName="3.6.2" >
 
     <uses-sdk
@@ -104,7 +104,7 @@
             android:value=".XPrivacy" />
 		
         <activity 
-            android:name=".ManagerCertermActivity"
+            android:name="com.hy.xp.app.ManagerCertermActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
@@ -121,13 +121,13 @@
         </activity>
         
 		<activity
-		    android:name=".TaskMainActivity"
+		    android:name="com.hy.xp.app.TaskMainActivity"
 		    android:configChanges="keyboardHidden|orientation|screenSize" >
  			
 		</activity>
 
         <activity
-            android:name=".ActivityMain"
+            android:name="com.hy.xp.app.ActivityMain"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
@@ -152,7 +152,7 @@
 		
         
         <activity
-            android:name=".ActivityApp"
+            android:name="com.hy.xp.app.ActivityApp"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:parentActivityName=".ActivityMain" >
@@ -167,7 +167,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivitySettings"
+            android:name="com.hy.xp.app.ActivitySettings"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:parentActivityName=".ActivityMain"
@@ -183,7 +183,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityUsage"
+            android:name="com.hy.xp.app.ActivityUsage"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".ActivityMain" >
             <meta-data
@@ -197,7 +197,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityShare"
+            android:name="com.hy.xp.app.ActivityShare"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".ActivityMain" >
             <meta-data
@@ -215,7 +215,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".PackageChange" >
+        <receiver android:name="com.hy.xp.app.PackageChange" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
@@ -224,14 +224,14 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".BootReceiver" >
+        <receiver android:name="com.hy.xp.app.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".DeviceAdministratorReceiver"
+            android:name="com.hy.xp.app.DeviceAdministratorReceiver"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
                 android:name="android.app.device_admin"
@@ -245,7 +245,7 @@
         </receiver>
 
         <service
-            android:name=".UpdateService"
+            android:name="com.hy.xp.app.UpdateService"
             android:enabled="true"
             android:exported="true"
             android:permission="com.hy.xp.app.MANAGE_XPRIVACY"
@@ -346,7 +346,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.hy.xp.app.action.WIDGET" />
-                <action android:name="com.hy.xp.app.UPDATE_ACTION" />
+                <action android:name="com.hy.xp.app.XX.EXTRA_ACTION" />
             </intent-filter>
 
             <meta-data

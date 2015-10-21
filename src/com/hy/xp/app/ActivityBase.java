@@ -1,7 +1,6 @@
 package com.hy.xp.app;
 
 import java.lang.reflect.Field;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -20,6 +19,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.TextView;
+import com.hy.xp.app.R;
 
 @SuppressLint("Registered")
 public class ActivityBase extends Activity

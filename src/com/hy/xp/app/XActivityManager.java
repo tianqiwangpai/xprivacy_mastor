@@ -197,10 +197,12 @@ public class XActivityManager extends XHook
 					Log.w("LTZRunningApp", "***Srv_getRunningAppProcesses**"+temp.getPkgname());
 					Parcel p = Parcel.obtain();
 					runappinfo.writeToParcel(p, 0);
+					p.setDataPosition(0);
 					ActivityManager.RunningAppProcessInfo runningappinfo = runappinfo.CREATOR.createFromParcel(p);
 				    runningappinfo.processName = temp.getPkgname();
 				    Parcel p2 = Parcel.obtain();
 				    runningappinfo.importanceReasonComponent.writeToParcel(p2, 0);
+				    p2.setDataPosition(0);
 				    runningappinfo.importanceReasonComponent = runappinfo.importanceReasonComponent.clone();
 				    runningappinfo.pkgList = new String[]{temp.getPkgname()};
 					result.add(runningappinfo);
@@ -222,6 +224,7 @@ public class XActivityManager extends XHook
 					//runningserviceinfo = new ActivityManager.RunningServiceInfo();
 					Parcel p = Parcel.obtain();
 					runningserviceinfo1.writeToParcel(p, 0);
+					p.setDataPosition(0);
 					ActivityManager.RunningServiceInfo runningserviceinfo = runningserviceinfo1.CREATOR.createFromParcel(p);
 					runningserviceinfo.process = temp.getPkgname();					
 					result.add(runningserviceinfo);

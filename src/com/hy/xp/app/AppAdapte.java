@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,10 +17,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
 import com.hy.xp.app.clear.AppCleanManager;
 import com.hy.xp.app.clear.ClearFileAcitivity;
 import com.hy.xp.app.task.PreferenceUtils;
+import com.hy.xp.app.R;
 
 public class AppAdapte extends SimpleAdapter {
 	private Context mcontext;

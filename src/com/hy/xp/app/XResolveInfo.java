@@ -5,20 +5,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.pm.PackageItemInfo;
+import android.content.pm.ResolveInfo;
 import android.os.Binder;
 import android.util.Log;
 
-public class XPackageItemInfo extends XHook {
+public class XResolveInfo  extends XHook {
 
 	private Methods mMethod;
 	private String mClassName;
-	private static final String cClassName = "android.content.pm.PackageItemInfo";
+	private static final String cClassName = "android.content.pm.ResolveInfo";
 	
 	private enum Methods {
-		loadLabel
+		RloadLabel
 	};
 	
-	protected XPackageItemInfo(Methods method, String restrictionName, String className) {
+	protected XResolveInfo(Methods method, String restrictionName, String className) {
 		super(restrictionName, method.name(), null);
 		mMethod = method;
 		mClassName = className;
@@ -35,7 +36,7 @@ public class XPackageItemInfo extends XHook {
 			if (className == null)
 				className = cClassName;
 
-			listHook.add(new XPackageItemInfo(Methods.loadLabel, PrivacyManager.cSystem, className));
+			listHook.add(new XResolveInfo(Methods.RloadLabel, PrivacyManager.cSystem, className));
 		}
 		return listHook;
 	}
@@ -47,19 +48,17 @@ public class XPackageItemInfo extends XHook {
 	@Override
 	protected void after(XParam param) throws Throwable {
 		switch (mMethod) {
-			case loadLabel:{
+			case RloadLabel:{
 				if (isRestricted(param)){
 					List<Applist> value = (List<Applist>) PrivacyManager
 							.getDefacedProp(Binder.getCallingUid(), "Appinfo");
-					for(int i=0; i<value.size(); i++){
-						Log.w("LTZ", "param value :"+Arrays.toString(param.args));
-						Log.w("LTZ", "packagenameis :"+((PackageItemInfo)param.thisObject).packageName);
-						if(((PackageItemInfo)param.thisObject).packageName.equals(value.get(i).getPkgname())){
-							param.setResult(value.get(i).getAppname());
+					/*for(int i=0; i<value.size(); i++){
+						if(((ResolveInfo)param.thisObject).activityInfo.packageName.equals(value.get(i).getPlable())){
+							param.setResult(value.get(i).getPname());
 							return;
 						}
-					}
-					//param.setResult("刘天作在捣乱");					
+					}*/
+					param.setResult("刘天作在捣乱");					
 				}
 				break;
 			}

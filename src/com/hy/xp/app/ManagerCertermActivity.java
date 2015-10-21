@@ -17,7 +17,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -52,7 +51,6 @@ import android.widget.SpinnerAdapter;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.hy.xp.app.task.ActivityModel;
 import com.hy.xp.app.task.DBMgr;
 import com.hy.xp.app.task.InitData;
@@ -60,6 +58,7 @@ import com.hy.xp.app.task.PhoneDataBean;
 import com.hy.xp.app.task.TaskAttribute;
 import com.hy.xp.app.task.XpHelper;
 import com.hy.xp.app.task.xpmodel;
+import com.hy.xp.app.R;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
@@ -1282,7 +1281,8 @@ public class ManagerCertermActivity extends Activity {
 				 * app_list:应用列表
 				 * other   :作为手机基础信息处理
 				 */
-				if(mFileName.startsWith(Util.call_log)){
+				System.out.println(mFileName+":"+localFile.getName());
+				if(localFile.getName().startsWith(Util.call_log)){
 					List<Calllog> localList = Util.readcalllogcurray(
 							localFile.getParent(), localFile.getName());
 					if(localFile!=null&&localFile.length()>0){
@@ -1292,7 +1292,7 @@ public class ManagerCertermActivity extends Activity {
 						}
 					}
 					
-				}else if(mFileName.startsWith(Util.contacts)){
+				}else if(localFile.getName().startsWith(Util.contacts)){
 					List<Contacts> localList = Util.readcontactscurray(
 							localFile.getParent(), localFile.getName());
 					if(localFile!=null&&localFile.length()>0){
@@ -1301,7 +1301,7 @@ public class ManagerCertermActivity extends Activity {
 									contacts.getName(), contacts.getTelephone());
 						}
 					}
-				}else if(mFileName.startsWith(Util.app_list)){
+				}else if(localFile.getName().startsWith(Util.app_list)){
 					List<Applist> localList = Util.readapplistcurray(
 							localFile.getParent(), localFile.getName());
 					if(localFile!=null&&localFile.length()>0){

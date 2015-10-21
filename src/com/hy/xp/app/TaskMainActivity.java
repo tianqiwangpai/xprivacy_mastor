@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -40,11 +39,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
-
 import com.hy.xp.app.task.DBMgr;
 import com.hy.xp.app.task.InitData;
 import com.hy.xp.app.task.NActivityTaskManager;
 import com.hy.xp.app.task.TaskAttribute;
+import com.hy.xp.app.R;
 
 public class TaskMainActivity extends Activity {
     private TextView datalowest;

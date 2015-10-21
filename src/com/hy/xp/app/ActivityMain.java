@@ -12,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -64,12 +63,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.hy.xp.app.clear.ClearFileAcitivity;
 import com.hy.xp.app.task.DBMgr;
 import com.hy.xp.app.task.PreferenceUtils;
 import com.hy.xp.app.task.TaskAttribute;
 import com.hy.xp.app.task.TaskListActivity;
+import com.hy.xp.app.R;
 
 public class ActivityMain extends ActivityBase implements OnItemSelectedListener
 {

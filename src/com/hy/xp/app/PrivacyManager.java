@@ -76,7 +76,7 @@ public class PrivacyManager
 	/*
 	 * cSystem:包含了应用列表获取的代码
 	 */
-	private static final String cRestrictionNames[] = { "accounts", "contacts", "identification", "location", "network", "phone", "storage", cSystem };
+	private static final String cRestrictionNames[] = { "accounts", "contacts", "identification", "location", "network", "phone", cSystem };
 
 	public static List<String> cMethodNoState = Arrays.asList(new String[] { "IntentFirewall", "checkPermission", "checkUidPermission" });
 
@@ -1891,14 +1891,14 @@ public class PrivacyManager
 				return "01";
 			}
 		}
-
+		//基站定位
 		if (name.equals("CID"))
 			try {
 				return Integer.parseInt("0") & 0xFFFF;
 			} catch (Throwable ignored) {
 				return -1;
 			}
-
+		//基站定位
 		if (name.equals("LAC"))
 
 			try {

@@ -1,7 +1,6 @@
 package com.hy.xp.app;
 
 import java.util.Random;
-
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -11,8 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
-
 import com.hy.xp.app.task.DBMgr;
+import com.hy.xp.app.R;
 
 public class XpWidget extends AppWidgetProvider
 {

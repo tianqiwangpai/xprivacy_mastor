@@ -3,7 +3,6 @@ package com.hy.xp.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -22,8 +21,8 @@ import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.hy.xp.app.task.DBMgr;
+import com.hy.xp.app.R;
 
 public class UpdateService extends Service
 {
