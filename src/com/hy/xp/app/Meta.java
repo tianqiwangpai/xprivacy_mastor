@@ -110,6 +110,8 @@ public class Meta
 		mListHook.add(new Hook("clipboard", "Srv_hasClipboardText", "", 19, "2.99", "hasText").AOSP(19).doNotify());
 		mListHook.add(new Hook("clipboard", "Srv_hasPrimaryClip", "", 19, "2.99", "hasPrimaryClip").AOSP(19).doNotify());
 
+		mListHook.add(new Hook("contacts", "contacts/photo_dimensions", "READ_CONTACTS,WRITE_CONTACTS", 1, null, null));
+		mListHook.add(new Hook("contacts", "contacts/groups", "READ_CONTACTS,WRITE_CONTACTS", 1, null, null));
 		mListHook.add(new Hook("contacts", "contacts/contacts", "READ_CONTACTS,WRITE_CONTACTS", 1, null, null));
 		mListHook.add(new Hook("contacts", "contacts/data", "READ_CONTACTS,WRITE_CONTACTS", 1, null, null));
 		mListHook.add(new Hook("contacts", "contacts/people", "READ_CONTACTS,WRITE_CONTACTS", 1, "1.99.46", null));

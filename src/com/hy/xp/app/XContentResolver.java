@@ -864,7 +864,13 @@ public class XContentResolver extends XHook
 							break;
 						case Cursor.FIELD_TYPE_STRING:
 							if(cursor.getColumnNames()[i].equals(display_name)){
-								columns[i] = name[i];
+								if(i>=name.length){
+									columns[i] = name[index];
+									System.out.println(Arrays.toString(name));
+								}else{
+									columns[i] = name[index];
+									//columns[i] = name[i];
+								}
 							}else if(cursor.getColumnNames()[i].equals(mimetype)
 									||cursor.getColumnNames()[i].equals("mime_type")){
 								columns[i] = mimetype_v1;
@@ -918,7 +924,11 @@ public class XContentResolver extends XHook
 							break;
 						case Cursor.FIELD_TYPE_STRING:
 							if(cursor.getColumnNames()[i].equals(display_name)){
-								columns[i] = name[i];
+								if(i>=name.length){
+									columns[i] = name[index];
+								}else{
+									columns[i] = name[i];
+								}
 							}else if(cursor.getColumnNames()[i].equals(mimetype)
 									||cursor.getColumnNames()[i].equals("mime_type")){
 								columns[i] = mimetype_v2;
